@@ -28,9 +28,14 @@ namespace WHampson.PigeonLocator
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal unsafe struct Vect3d
     {
-        public float X;
-        public float Y;
-        public float Z;
+        public float X { get; }
+        public float Y { get; }
+        public float Z { get; }
+
+        public override string ToString()
+        {
+            return string.Format("<{0}, {1}, {2}>", X, Y, Z);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
