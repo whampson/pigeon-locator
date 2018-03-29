@@ -25,6 +25,9 @@ using System.Runtime.InteropServices;
 
 namespace WHampson.PigeonLocator
 {
+    /// <summary>
+    /// Represents a vector in 3-space.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal unsafe struct Vect3d
     {
@@ -35,8 +38,19 @@ namespace WHampson.PigeonLocator
             Z = z;
         }
 
+        /// <summary>
+        /// The x-component of the vector.
+        /// </summary>
         public float X { get; }
+
+        /// <summary>
+        /// The y-component of the vector.
+        /// </summary>
         public float Y { get; }
+
+        /// <summary>
+        /// The z-component of the vector.
+        /// </summary>
         public float Z { get; }
 
         public override string ToString()
@@ -45,6 +59,9 @@ namespace WHampson.PigeonLocator
         }
     }
 
+    /// <summary>
+    /// GTA IV savegame file header.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal unsafe struct FileHeader
     {
@@ -55,6 +72,9 @@ namespace WHampson.PigeonLocator
         public fixed char LastMissionName[128];
     }
 
+    /// <summary>
+    /// GTA IV savegame data block header.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal unsafe struct BlockHeader
     {
@@ -62,6 +82,9 @@ namespace WHampson.PigeonLocator
         public uint BlockSize;
     }
 
+    /// <summary>
+    /// A collectible object in the game world.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal unsafe struct Pickup
     {
@@ -81,20 +104,26 @@ namespace WHampson.PigeonLocator
         public uint _Unknown3C;
         public float _Unknown40;
         public uint _Unknown44;
-        public ObjectType ObjectId;
+        public ObjectId Object;
         public short ReferenceNumber;
-        public PickupType Type;
+        public PickupId Type;
         public byte AvailabilityFlags;
         public short _Unknown4C;
         public uint _Unknown50;
     }
 
-    internal enum PickupType : byte
+    /// <summary>
+    /// IDs for each <see cref="Pickup"/> type.
+    /// </summary>
+    internal enum PickupId : byte
     {
         Pigeon = 3
     }
 
-    internal enum ObjectType : short
+    /// <summary>
+    /// IDs for each game object.
+    /// </summary>
+    internal enum ObjectId : short
     {
         Pigeon = 0x08DC
     }

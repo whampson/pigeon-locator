@@ -46,7 +46,7 @@
     <Compile Include="IvSavegame.cs" />
     <Compile Include="ObjectUtilities.cs" />
     <Compile Include="PigeonLocator.cs" />
-    <Compile Include="Structures.cs" />
+    <Compile Include="IvStructures.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
