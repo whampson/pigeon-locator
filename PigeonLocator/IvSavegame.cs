@@ -37,15 +37,15 @@ namespace WHampson.PigeonLocator
         private const string FoooterSignature = "END";
         private const string BlockSignature = "BLOCK";
 
+        private const int PickupsBlock = 7;
+        private const int BlockCount = 32;
+
+        private const int PickupCount = 419;
+
         public static IvSavegame Load(string path)
         {
             FileHeader* header;
-            int headerLen;
-            long fileLen;
-            string sig;
-            IntPtr data;
-            byte[] buf;
-            int bytesRead;
+            IntPtr fileStartPtr;
             
             if (!File.Exists(path))
             {
@@ -54,47 +54,55 @@ namespace WHampson.PigeonLocator
 
             using (FileStream fs = File.OpenRead(path))
             {
+                int bytesRead;
+                byte[] buf;
+                IntPtr blockStartPtr;
+                int headerLen;
+                long fileLen;
+                string sig;
+
                 headerLen = Marshal.SizeOf(typeof(FileHeader));
                 fileLen = fs.Length;
-                data = Marshal.AllocHGlobal(headerLen);
-                header = (FileHeader*) data;
+                fileStartPtr = Marshal.AllocHGlobal(headerLen);
+                header = (FileHeader*) fileStartPtr;
 
                 // Check for valid header
                 buf = new byte[headerLen];
                 bytesRead = fs.Read(buf, 0, headerLen);
-                Marshal.Copy(buf, 0, data, buf.Length);
+                Marshal.Copy(buf, 0, fileStartPtr, buf.Length);
 
                 sig = Marshal.PtrToStringAnsi((IntPtr) header->Signature, HeaderSignature.Length);
                 if (bytesRead != headerLen || sig != HeaderSignature)
                 {
-                    Marshal.FreeHGlobal(data);
+                    Marshal.FreeHGlobal(fileStartPtr);
                     throw new InvalidDataException("Not a valid GTA IV savegame file.");
                 }
 
                 if (header->FileSize != fileLen)
                 {
-                    Marshal.FreeHGlobal(data);
+                    Marshal.FreeHGlobal(fileStartPtr);
                     throw new InvalidDataException("Invalid savegame header.");
                 }
 
                 // Read the rest of the file
-                data = Marshal.ReAllocHGlobal(data, (IntPtr) fileLen);
+                fileStartPtr = Marshal.ReAllocHGlobal(fileStartPtr, (IntPtr) fileLen);
+                blockStartPtr = AdvancePointer(fileStartPtr, headerLen);
                 buf = new byte[fileLen - headerLen];
                 bytesRead = fs.Read(buf, 0, buf.Length);
-                Marshal.Copy(buf, 0, new IntPtr(data.ToInt64() + headerLen), buf.Length);
+                Marshal.Copy(buf, 0, blockStartPtr, buf.Length);
 
                 // Sanity check: 'BLOCK' should immediately follow the header
-                sig = Marshal.PtrToStringAnsi(new IntPtr(data.ToInt64() + headerLen), BlockSignature.Length);
+                sig = Marshal.PtrToStringAnsi(blockStartPtr, BlockSignature.Length);
                 if (sig != BlockSignature)
                 {
-                    throw new InvalidDataException("Savegame data misaligned in memory!");
+                    throw new InvalidDataException("Savegame data misaligned in memory.");
                 }
 
                 // Reassign header pointer because we re-allocated the buffer
-                header = (FileHeader*) data;
+                header = (FileHeader*) fileStartPtr;
             }
 
-            return new IvSavegame(data, header);
+            return new IvSavegame(fileStartPtr, header);
         }
 
         private IntPtr dataPtr;
@@ -132,7 +140,62 @@ namespace WHampson.PigeonLocator
 
         public Vect3d[] GetRemainingPigeonLocations()
         {
-            return new Vect3d[0];
+            List<Vect3d> pigeonLocations = new List<Vect3d>();
+            IntPtr cursor = LocateBlock(PickupsBlock);
+            cursor = AdvancePointer(cursor, Marshal.SizeOf(typeof(BlockHeader)));
+
+            for (int i = 0; i < PickupCount; i++)
+            {
+                Pickup* pPickup = (Pickup*) cursor;
+
+                if (pPickup->ObjectId == ObjectType.Pigeon)
+                {
+                    pigeonLocations.Add(pPickup->Location);
+                }
+
+                cursor = AdvancePointer(cursor, Marshal.SizeOf(typeof(Pickup)));
+            }
+
+            return pigeonLocations.ToArray();
+        }
+
+        private IntPtr LocateBlock(int index)
+        {
+            if (index < 0 || index > BlockCount - 1)
+            {
+                return IntPtr.Zero;
+            }
+
+
+            IntPtr cursor = dataPtr;
+            int i = -1;
+            BlockHeader* pBlockHeader = null;
+
+            do
+            {
+                cursor = (i == -1)
+                    ? AdvancePointer(cursor, Marshal.SizeOf(typeof(FileHeader)))    // Skip file header
+                    : AdvancePointer(cursor, (int) pBlockHeader->BlockSize);        // Skip block
+
+                pBlockHeader = (BlockHeader*) cursor;
+
+                if (cursor.ToInt64() < dataPtr.ToInt64())
+                {
+                    throw new InvalidDataException("Reached end of buffer when locating block.");
+                }
+
+                // Sanity check
+                string sig = Marshal.PtrToStringAnsi((IntPtr) pBlockHeader->Signature, BlockSignature.Length);
+                if (sig != BlockSignature)
+                {
+                    string fmt = "Expected block signature not present for block {0}.";
+                    throw new InvalidDataException(string.Format(fmt, i + 1));
+                }
+            } while (++i != index);
+
+
+
+            return cursor;
         }
 
         #region Disposal
@@ -178,6 +241,11 @@ namespace WHampson.PigeonLocator
             };
 
             return ObjectUtilities.GenerateToString(this, properties);
+        }
+
+        private static IntPtr AdvancePointer(IntPtr ptr, int offset)
+        {
+            return new IntPtr(ptr.ToInt64() + offset);
         }
     }
 }
