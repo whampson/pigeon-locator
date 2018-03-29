@@ -46,14 +46,12 @@ namespace WHampson.PigeonLocator
         {
             FileHeader* header;
             IntPtr fileStartPtr;
-            
-            if (!File.Exists(path))
-            {
+
+            if (!File.Exists(path)) {
                 throw new FileNotFoundException("File does not exist.", path);
             }
 
-            using (FileStream fs = File.OpenRead(path))
-            {
+            using (FileStream fs = File.OpenRead(path)) {
                 int bytesRead;
                 byte[] buf;
                 IntPtr blockStartPtr;
@@ -72,14 +70,12 @@ namespace WHampson.PigeonLocator
                 Marshal.Copy(buf, 0, fileStartPtr, buf.Length);
 
                 sig = Marshal.PtrToStringAnsi((IntPtr) header->Signature, HeaderSignature.Length);
-                if (bytesRead != headerLen || sig != HeaderSignature)
-                {
+                if (bytesRead != headerLen || sig != HeaderSignature) {
                     Marshal.FreeHGlobal(fileStartPtr);
                     throw new InvalidDataException("Not a valid GTA IV savegame file.");
                 }
 
-                if (header->FileSize != fileLen)
-                {
+                if (header->FileSize != fileLen) {
                     Marshal.FreeHGlobal(fileStartPtr);
                     throw new InvalidDataException("Invalid savegame header.");
                 }
@@ -93,8 +89,7 @@ namespace WHampson.PigeonLocator
 
                 // Sanity check: 'BLOCK' should immediately follow the header
                 sig = Marshal.PtrToStringAnsi(blockStartPtr, BlockSignature.Length);
-                if (sig != BlockSignature)
-                {
+                if (sig != BlockSignature) {
                     throw new InvalidDataException("Savegame data misaligned in memory.");
                 }
 
@@ -144,12 +139,10 @@ namespace WHampson.PigeonLocator
             IntPtr cursor = LocateBlock(PickupsBlock);
             cursor = AdvancePointer(cursor, Marshal.SizeOf(typeof(BlockHeader)));
 
-            for (int i = 0; i < PickupCount; i++)
-            {
+            for (int i = 0; i < PickupCount; i++) {
                 Pickup* pPickup = (Pickup*) cursor;
 
-                if (pPickup->ObjectId == ObjectType.Pigeon)
-                {
+                if (pPickup->ObjectId == ObjectType.Pigeon) {
                     pigeonLocations.Add(pPickup->Location);
                 }
 
@@ -161,8 +154,7 @@ namespace WHampson.PigeonLocator
 
         private IntPtr LocateBlock(int index)
         {
-            if (index < 0 || index > BlockCount - 1)
-            {
+            if (index < 0 || index > BlockCount - 1) {
                 return IntPtr.Zero;
             }
 
@@ -171,23 +163,24 @@ namespace WHampson.PigeonLocator
             int i = -1;
             BlockHeader* pBlockHeader = null;
 
-            do
-            {
-                cursor = (i == -1)
-                    ? AdvancePointer(cursor, Marshal.SizeOf(typeof(FileHeader)))    // Skip file header
-                    : AdvancePointer(cursor, (int) pBlockHeader->BlockSize);        // Skip block
+            do {
+                if (i == -1) {
+                    // Skip file header
+                    cursor = AdvancePointer(cursor, Marshal.SizeOf(typeof(FileHeader)));
+                } else {
+                    // Skip block
+                    cursor = AdvancePointer(cursor, (int) pBlockHeader->BlockSize);
+                }
 
                 pBlockHeader = (BlockHeader*) cursor;
 
-                if (cursor.ToInt64() < dataPtr.ToInt64())
-                {
+                if (cursor.ToInt64() < dataPtr.ToInt64()) {
                     throw new InvalidDataException("Reached end of buffer when locating block.");
                 }
 
                 // Sanity check
                 string sig = Marshal.PtrToStringAnsi((IntPtr) pBlockHeader->Signature, BlockSignature.Length);
-                if (sig != BlockSignature)
-                {
+                if (sig != BlockSignature) {
                     string fmt = "Expected block signature not present for block {0}.";
                     throw new InvalidDataException(string.Format(fmt, i + 1));
                 }
@@ -201,15 +194,12 @@ namespace WHampson.PigeonLocator
         #region Disposal
         protected virtual void Dispose(bool isDisposing)
         {
-            if (!hasBeenDisposed)
-            {
-                if (isDisposing)
-                {
+            if (!hasBeenDisposed) {
+                if (isDisposing) {
                     // TODO: dispose managed state (managed objects).
                 }
 
-                if (dataPtr != IntPtr.Zero)
-                {
+                if (dataPtr != IntPtr.Zero) {
                     Marshal.FreeHGlobal(dataPtr);
                     dataPtr = IntPtr.Zero;
                 }

@@ -43,8 +43,7 @@ namespace WHampson.PigeonLocator
             Console.WriteLine(savegame.ToString());
 
             Vect3d[] locs = savegame.GetRemainingPigeonLocations();
-            foreach (Vect3d loc in locs)
-            {
+            foreach (Vect3d loc in locs) {
                 Console.WriteLine(loc);
             }
 

@@ -52,14 +52,12 @@ namespace WHampson.PigeonLocator
         /// </returns>
         public static string GenerateToString(object obj, string[] propertyNames)
         {
-            if (obj == null)
-            {
+            if (obj == null) {
                 return null;
             }
 
             string body = "";
-            for (int i = 0; i < propertyNames.Length; i++)
-            {
+            for (int i = 0; i < propertyNames.Length; i++) {
                 string propName = propertyNames[i];
                 object propVal = GetPropertyValueByName(obj, propName);
                 body += string.Format("{0} = {1}; ", propName, propVal);
@@ -85,15 +83,13 @@ namespace WHampson.PigeonLocator
         /// </returns>
         public static object GetPropertyValueByName(object obj, string propertyName)
         {
-            if (obj == null || propertyName == null)
-            {
+            if (obj == null || propertyName == null) {
                 return null;
             }
 
             Type t = obj.GetType();
             PropertyInfo p = t.GetProperty(propertyName);   // TODO: binding flags?
-            if (p == null)
-            {
+            if (p == null) {
                 return null;
             }
 
