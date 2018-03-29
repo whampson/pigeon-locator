@@ -31,6 +31,9 @@ using System.Text;
 
 namespace WHampson.PigeonLocator
 {
+    /// <summary>
+    /// Represents a GTA IV savedata file.
+    /// </summary>
     internal unsafe class IvSavegame : IDisposable
     {
         private const string HeaderSignature = "SAVE";
@@ -42,6 +45,22 @@ namespace WHampson.PigeonLocator
 
         private const int PickupCount = 419;
 
+        /// <summary>
+        /// Creates a new <see cref="IvSavegame"/> object and loads the savegame
+        /// data from the specified file.
+        /// </summary>
+        /// <param name="path">
+        /// The path to the file to load.
+        /// </param>
+        /// <returns>
+        /// A <see cref="IvSavegame"/> object containing the savegame data.
+        /// </returns>
+        /// <exception cref="FileNotFoundException">
+        /// Thrown if the specified file does not exist.
+        /// </exception>
+        /// <exception cref="InvalidDataException">
+        /// Thrown if the file is not a valid GTA IV savegame file.
+        /// </exception>
         public static IvSavegame Load(string path)
         {
             FileHeader* header;
@@ -111,21 +130,33 @@ namespace WHampson.PigeonLocator
             hasBeenDisposed = false;
         }
 
+        /// <summary>
+        /// Gets the file version.
+        /// </summary>
         public uint FileVersion
         {
             get { return fileInfo->FileVersion; }
         }
 
+        /// <summary>
+        /// Gets the file size in bytes.
+        /// </summary>
         public uint FileSize
         {
             get { return fileInfo->FileSize; }
         }
 
+        /// <summary>
+        /// Gets the size of the global variables pool in bytes.
+        /// </summary>
         public uint GlobalVarsSize
         {
             get { return fileInfo->GlobalVarsSize; }
         }
 
+        /// <summary>
+        /// Gets the name of the last mission passed.
+        /// </summary>
         public string LastMissionName
         {
             get { return new string(fileInfo->LastMissionName); }
@@ -133,6 +164,12 @@ namespace WHampson.PigeonLocator
         //public int Timestamp { get; }
 
 
+        /// <summary>
+        /// Returns an array of map coordinates for each remaining pigeon.
+        /// </summary>
+        /// <returns>
+        /// An array of <see cref="Vect3d"/> values, each corresponding to a pigeon location.
+        /// </returns>
         public Vect3d[] GetRemainingPigeonLocations()
         {
             List<Vect3d> pigeonLocations = new List<Vect3d>();
@@ -142,7 +179,7 @@ namespace WHampson.PigeonLocator
             for (int i = 0; i < PickupCount; i++) {
                 Pickup* pPickup = (Pickup*) cursor;
 
-                if (pPickup->ObjectId == ObjectType.Pigeon) {
+                if (pPickup->Object == ObjectId.Pigeon) {
                     pigeonLocations.Add(pPickup->Location);
                 }
 
@@ -152,6 +189,16 @@ namespace WHampson.PigeonLocator
             return pigeonLocations.ToArray();
         }
 
+        /// <summary>
+        /// Gets a pointer to a data block.
+        /// </summary>
+        /// <param name="index">
+        /// The index of the data block.
+        /// </param>
+        /// <returns>
+        /// An <see cref="IntPtr"/> to the data block.
+        /// If the index is out of range, <see cref="IntPtr.Zero"/> is returned.
+        /// </returns>
         private IntPtr LocateBlock(int index)
         {
             if (index < 0 || index > BlockCount - 1) {
@@ -185,8 +232,6 @@ namespace WHampson.PigeonLocator
                     throw new InvalidDataException(string.Format(fmt, i + 1));
                 }
             } while (++i != index);
-
-
 
             return cursor;
         }
@@ -233,6 +278,18 @@ namespace WHampson.PigeonLocator
             return ObjectUtilities.GenerateToString(this, properties);
         }
 
+        /// <summary>
+        /// Adds an offset to an <see cref="IntPtr"/>.
+        /// </summary>
+        /// <param name="ptr">
+        /// The base address.
+        /// </param>
+        /// <param name="offset">
+        /// The offset to add to the base address.
+        /// </param>
+        /// <returns>
+        /// The new <see cref="IntPtr"> that is the sum of the old pointer and the offset.
+        /// </returns>
         private static IntPtr AdvancePointer(IntPtr ptr, int offset)
         {
             return new IntPtr(ptr.ToInt64() + offset);
