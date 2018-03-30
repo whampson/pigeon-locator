@@ -22,32 +22,17 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WHampson.PigeonLocator
 {
     class PigeonLocator
     {
+        [STAThread]
         static void Main(string[] args)
         {
-            string testFile = Environment.GetEnvironmentVariable("LocalAppData")
-                + @"\Rockstar Games\GTA IV\savegames\user_1000100010001000\SGTA407";
-
-            string testFile2 = @"C:\Users\Wes\Documents\GTA3 User Files\GTA3SF1.b";
-
-            IvSavegame savegame = IvSavegame.Load(testFile);
-            Console.WriteLine(savegame.ToString());
-
-            Vect3d[] locs = savegame.GetRemainingPigeonLocations();
-            foreach (Vect3d loc in locs) {
-                Console.WriteLine(loc);
-            }
-
-            Console.ReadLine();
+            Application.EnableVisualStyles();
+            Application.Run(new PigeonLocatorForm());
         }
     }
 }
