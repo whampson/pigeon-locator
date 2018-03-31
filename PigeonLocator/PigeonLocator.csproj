@@ -50,6 +50,12 @@
     <Compile Include="ObjectUtilities.cs" />
     <Compile Include="PigeonLocator.cs" />
     <Compile Include="IvStructures.cs" />
+    <Compile Include="UI\ImagePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ImagePanel.Designer.cs">
+      <DependentUpon>ImagePanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\PigeonLocatorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +76,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\ImagePanel.resx">
+      <DependentUpon>ImagePanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\PigeonLocatorForm.resx">
       <DependentUpon>PigeonLocatorForm.cs</DependentUpon>
     </EmbeddedResource>

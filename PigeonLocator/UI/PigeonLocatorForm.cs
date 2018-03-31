@@ -43,6 +43,9 @@ namespace WHampson.PigeonLocator
             InitializeComponent();
             Savegame = null;
             Status = "No file loaded.";
+            imagePanel1.Image = Resources.GTAIV_Map_3072x2304;
+            imagePanel1.CanvasSize = imagePanel1.Size;
+            imagePanel1.Zoom = 0.25f;
         }
 
         private IvSavegame Savegame
@@ -135,6 +138,11 @@ namespace WHampson.PigeonLocator
                 PigeonLocator.GetProgramVersion(),
                 PigeonLocator.GetCopyright());
             ShowInfoDialog("About", aboutString);
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            imagePanel1.Zoom = trackBar1.Value * 0.01f;
         }
     }
 }
