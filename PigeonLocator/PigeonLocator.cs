@@ -22,17 +22,54 @@
 #endregion
 
 using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace WHampson.PigeonLocator
 {
-    class PigeonLocator
+    internal static class PigeonLocator
     {
         [STAThread]
-        static void Main(string[] args)
+        internal static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.Run(new PigeonLocatorForm());
+        }
+
+        internal static string GetProgramName()
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+            if (asm == null) {
+                return "";
+            }
+
+            AssemblyTitleAttribute attr = (AssemblyTitleAttribute) Attribute.GetCustomAttribute(asm, typeof(AssemblyTitleAttribute), false);
+            if (attr == null) {
+                return "";
+            }
+
+            return attr.Title;
+        }
+
+        internal static string GetProgramVersion()
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+            if (asm == null) {
+                return "";
+            }
+
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(asm.Location);
+            if (versionInfo == null) {
+                return "";
+            }
+
+            return versionInfo.ProductVersion;
+        }
+
+        internal static string GetCopyright()
+        {
+            return "Copyright (C) 2018 W. Hampson";
         }
     }
 }
