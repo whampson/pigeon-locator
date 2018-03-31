@@ -50,10 +50,10 @@
     <Compile Include="ObjectUtilities.cs" />
     <Compile Include="PigeonLocator.cs" />
     <Compile Include="IvStructures.cs" />
-    <Compile Include="PigeonLocatorForm.cs">
+    <Compile Include="UI\PigeonLocatorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PigeonLocatorForm.Designer.cs">
+    <Compile Include="UI\PigeonLocatorForm.Designer.cs">
       <DependentUpon>PigeonLocatorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -70,7 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PigeonLocatorForm.resx">
+    <EmbeddedResource Include="UI\PigeonLocatorForm.resx">
       <DependentUpon>PigeonLocatorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
