@@ -37,15 +37,50 @@ namespace WHampson.PigeonLocator
     public partial class PigeonLocatorForm : Form
     {
         private IvSavegame _savegame;
+        private bool ctrlPressed;
 
         public PigeonLocatorForm()
         {
             InitializeComponent();
             Savegame = null;
+            ctrlPressed = false;
             Status = "No file loaded.";
             imagePanel1.Image = Resources.GTAIV_Map_3072x2304;
             imagePanel1.CanvasSize = imagePanel1.Size;
-            imagePanel1.Zoom = 0.25f;
+            imagePanel1.MinimumZoom = trackBar1.Minimum * 0.01f;
+            imagePanel1.MaximumZoom = trackBar1.Maximum * 0.01f;
+            imagePanel1.Zoom = imagePanel1.MinimumZoom;
+            imagePanel1.ZoomEvent += new ImagePanel.ZoomEventHandler(ImagePanel_OnZoom);
+
+            MouseWheel += new MouseEventHandler(PigeonLocatorForm_OnMouseWheel);
+            KeyDown += new KeyEventHandler(PigeonLocatorForm_OnKeyDown);
+            KeyUp += new KeyEventHandler(PigeonLocatorForm_OnKeyUp);
+        }
+
+        private void ImagePanel_OnZoom(object sender, ImagePanel.ZoomEventArgs e)
+        {
+            int val = (int) (e.Value * 100);
+            if (val > trackBar1.Maximum) {
+                val = trackBar1.Maximum;
+            } else if (val < trackBar1.Minimum) {
+                val = trackBar1.Minimum;
+            }
+
+            trackBar1.Value = val;
+        }
+
+        private void PigeonLocatorForm_OnMouseWheel(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void PigeonLocatorForm_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            ctrlPressed = e.Control;
+        }
+
+        private void PigeonLocatorForm_OnKeyUp(object sender, KeyEventArgs e)
+        {
+            ctrlPressed = e.Control;
         }
 
         private IvSavegame Savegame
@@ -141,6 +176,11 @@ namespace WHampson.PigeonLocator
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            DoScroll();
+        }
+
+        private void DoScroll()
         {
             imagePanel1.Zoom = trackBar1.Value * 0.01f;
         }

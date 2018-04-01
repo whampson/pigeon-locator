@@ -76,7 +76,7 @@ namespace WHampson.PigeonLocator
             this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1270, 40);
+            this.menuStrip.Size = new System.Drawing.Size(1254, 40);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -146,9 +146,9 @@ namespace WHampson.PigeonLocator
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 798);
+            this.statusStrip.Location = new System.Drawing.Point(0, 852);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1270, 37);
+            this.statusStrip.Size = new System.Drawing.Size(1254, 37);
             this.statusStrip.SizingGrip = false;
             this.statusStrip.TabIndex = 3;
             this.statusStrip.Text = "statusStrip1";
@@ -156,20 +156,22 @@ namespace WHampson.PigeonLocator
             // statusLabel
             // 
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(55, 32);
-            this.statusLabel.Text = "Foo";
+            this.statusLabel.Size = new System.Drawing.Size(109, 32);
+            this.statusLabel.Text = "<status>";
             // 
             // trackBar1
             // 
             this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.Location = new System.Drawing.Point(1008, 705);
+            this.trackBar1.LargeChange = 20;
+            this.trackBar1.Location = new System.Drawing.Point(992, 759);
             this.trackBar1.Maximum = 200;
             this.trackBar1.Minimum = 20;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(250, 90);
-            this.trackBar1.SmallChange = 5;
+            this.trackBar1.SmallChange = 10;
             this.trackBar1.TabIndex = 5;
-            this.trackBar1.TickFrequency = 10;
+            this.trackBar1.TabStop = false;
+            this.trackBar1.TickFrequency = 20;
             this.trackBar1.Value = 20;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
@@ -182,8 +184,9 @@ namespace WHampson.PigeonLocator
             this.imagePanel1.Image = null;
             this.imagePanel1.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
             this.imagePanel1.Location = new System.Drawing.Point(0, 43);
+            this.imagePanel1.Margin = new System.Windows.Forms.Padding(6);
             this.imagePanel1.Name = "imagePanel1";
-            this.imagePanel1.Size = new System.Drawing.Size(1270, 656);
+            this.imagePanel1.Size = new System.Drawing.Size(1254, 710);
             this.imagePanel1.TabIndex = 6;
             this.imagePanel1.Zoom = 1F;
             // 
@@ -191,12 +194,13 @@ namespace WHampson.PigeonLocator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1270, 835);
+            this.ClientSize = new System.Drawing.Size(1254, 889);
             this.Controls.Add(this.imagePanel1);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.DoubleBuffered = true;
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "PigeonLocatorForm";
             this.Text = "GTA IV Pigeon Locator";
