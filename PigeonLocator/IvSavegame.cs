@@ -65,10 +65,12 @@ namespace WHampson.PigeonLocator
         {
             FileHeader* header;
             IntPtr fileStartPtr;
+            DateTime timestamp;
 
             if (!File.Exists(path)) {
                 throw new FileNotFoundException("File does not exist.", path);
             }
+            timestamp = File.GetLastWriteTime(path);
 
             using (FileStream fs = File.OpenRead(path)) {
                 int bytesRead;
@@ -116,18 +118,19 @@ namespace WHampson.PigeonLocator
                 header = (FileHeader*) fileStartPtr;
             }
 
-            return new IvSavegame(fileStartPtr, header);
+            return new IvSavegame(fileStartPtr, header, timestamp);
         }
 
         private IntPtr dataPtr;
         private FileHeader* fileInfo;
         private bool hasBeenDisposed;
 
-        private IvSavegame(IntPtr dataPtr, FileHeader* fileInfo)
+        private IvSavegame(IntPtr dataPtr, FileHeader* fileInfo, DateTime timestamp)
         {
             this.dataPtr = dataPtr;
             this.fileInfo = fileInfo;
             hasBeenDisposed = false;
+            Timestamp = timestamp;
         }
 
         /// <summary>
@@ -161,7 +164,11 @@ namespace WHampson.PigeonLocator
         {
             get { return new string(fileInfo->LastMissionName); }
         }
-        //public int Timestamp { get; }
+
+        public DateTime Timestamp
+        {
+            get;
+        }
 
 
         /// <summary>
@@ -269,7 +276,7 @@ namespace WHampson.PigeonLocator
         {
             string[] properties = {
                 nameof(LastMissionName),
-                //nameof(Timestamp),
+                nameof(Timestamp),
                 nameof(FileVersion),
                 nameof(FileSize),
                 nameof(GlobalVarsSize)
