@@ -58,6 +58,9 @@
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "ImagePanel";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImagePanel_OnKeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ImagePanel_OnKeyUp);
+            this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ImagePanel_OnMouseWheel);
             this.ResumeLayout(false);
 
         }

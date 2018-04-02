@@ -29,15 +29,23 @@ using System.Drawing.Drawing2D;
 namespace WHampson.PigeonLocator
 {
     /// <summary>
-    /// 
+    /// Implements a zoomable and pannable panel for viewing images.
     /// </summary>
     /// <remarks>
     /// Adapted from https://www.codeproject.com/Articles/26532/A-Zoomable-and-Scrollable-PictureBox.
     /// </remarks>
     public partial class ImagePanel : UserControl
     {
+        /// <summary>
+        /// Represents the method that handles the Zoom event of an <see cref="ImagePanel"/>.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">A <see cref="ZoomEventArgs"/> that contains the event data.</param>
         public delegate void ZoomEventHandler(object sender, ZoomEventArgs e);
 
+        /// <summary>
+        /// Represents the event that occurs when the image is zoomed in or out.
+        /// </summary>
         public event ZoomEventHandler ZoomEvent;
 
         private Bitmap image;
@@ -52,6 +60,9 @@ namespace WHampson.PigeonLocator
         private bool controlPressed;
         private bool shiftPressed;
 
+        /// <summary>
+        /// Instantiates a new <see cref="ImagePanel"/> object.
+        /// </summary>
         public ImagePanel()
         {
             image = null;
@@ -77,17 +88,11 @@ namespace WHampson.PigeonLocator
                 ControlStyles.OptimizedDoubleBuffer |
                 ControlStyles.AllPaintingInWmPaint,
                 true);
-
-            MouseWheel += new MouseEventHandler(ImagePanel_OnMouseWheel);
-            KeyDown += new KeyEventHandler(ImagePanel_OnKeyDown);
-            KeyUp += new KeyEventHandler(ImagePanel_OnKeyUp);
         }
 
-        protected virtual void OnZoomEvent(ZoomEventArgs e)
-        {
-            ZoomEvent?.Invoke(this, e);
-        }
-
+        /// <summary>
+        /// Gets or set the displayed image.
+        /// </summary>
         public Bitmap Image
         {
             get { return image; }
@@ -100,6 +105,12 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        /// <summary>
+        /// Gets or sets the maximum view boundaries.
+        /// </summary>
+        /// <remarks>
+        /// When an image is loaded, this property is set to the image dimensions.
+        /// </remarks>
         public Size CanvasSize
         {
             get { return canvasSize; }
@@ -112,6 +123,9 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        /// <summary>
+        /// Gets or sets the current image scale factor.
+        /// </summary>
         public float Zoom
         {
             get { return zoom; }
@@ -138,6 +152,9 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        /// <summary>
+        /// Gets or sets the minimum image scale factor.
+        /// </summary>
         public float MinimumZoom
         {
             get { return minZoom; }
@@ -155,6 +172,9 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        /// <summary>
+        /// Gets or sets the maximum image scale factor.
+        /// </summary>
         public float MaximumZoom
         {
             get { return maxZoom; }
@@ -170,17 +190,27 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        /// <summary>
+        /// Gets or sets the image graphics interpolation mode.
+        /// </summary>
         public InterpolationMode InterpolationMode
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets the viewing area dimensions and position.
+        /// </summary>
         public Rectangle ViewRectangle
         {
             get { return new Rectangle(viewRectX, viewRectY, viewRectWidth, viewRectHeight); }
         }
 
+        /// <summary>
+        /// Gets or sets the current scroll position.
+        /// The position is a fraction between 0 and 1.
+        /// </summary>
         public PointF ViewPosition
         {
             get {
@@ -210,16 +240,28 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        /// <summary>
+        /// Gets or sets the cursor that is displayed when the mouse pointer is over the control.
+        /// </summary>
         public override Cursor Cursor
         {
+            // Reimplementing to keep default cursor over scollbars.
             get { return base.Cursor; }
             set {
                 base.Cursor = value;
-                vScrollBar.Cursor = Cursors.Default;
-                hScrollBar.Cursor = Cursors.Default;
+
+                Cursor scrollCursor = (Parent != null)
+                    ? Parent.Cursor
+                    : Cursors.Default;
+                vScrollBar.Cursor = scrollCursor;
+                hScrollBar.Cursor = scrollCursor;
             }
         }
 
+        /// <summary>
+        /// Updates the scrollbar min, max, and delta values based on
+        /// the current viewing area and scale factor.
+        /// </summary>
         private void UpdateScrollbarValues()
         {
             const int LargeChangeModifier = 10;
@@ -267,6 +309,9 @@ namespace WHampson.PigeonLocator
             vScrollBar.Maximum += vScrollBar.LargeChange;
         }
 
+        /// <summary>
+        /// Updates the visibility of the scrollbars based on whether or not they are needed.
+        /// </summary>
         private void UpdateScrollbarVisibility()
         {
             viewRectWidth = this.Width;
@@ -298,6 +343,11 @@ namespace WHampson.PigeonLocator
             vScrollBar.Height = viewRectHeight;
         }
 
+        /// <summary>
+        /// Sets the value of a scrollbar and updates the viewing area.
+        /// </summary>
+        /// <param name="scroll">The <see cref="ScrollBar"/> to modify.</param>
+        /// <param name="delta">The amount to scroll.</param>
         private void AdjustScrollbar(ScrollBar scroll, int delta)
         {
             const float SpeedModifier = 5.0f;
@@ -317,19 +367,29 @@ namespace WHampson.PigeonLocator
             Invalidate();
         }
 
+        /// <summary>
+        /// Increments the current zoom value.
+        /// </summary>
+        /// <param name="delta">The amount to adjust the zoom by.</param>
+        /// <remarks>
+        /// Triggers a <see cref="ZoomEvent"/>.
+        /// </remarks>
         private void AdjustZoom(int delta)
         {
             const float SpeedModifier = 1250.0f;
 
-            float val = zoom + (delta / SpeedModifier);
-            if (val < MinimumZoom) {
-                val = MinimumZoom;
-            } else if (val > MaximumZoom) {
-                val = MaximumZoom;
+            float oldVal, newVal;
+
+            newVal = zoom + (delta / SpeedModifier);
+            if (newVal < MinimumZoom) {
+                newVal = MinimumZoom;
+            } else if (newVal > MaximumZoom) {
+                newVal = MaximumZoom;
             }
 
-            Zoom = val;
-            OnZoomEvent(new ZoomEventArgs(val));
+            oldVal = Zoom;
+            Zoom = newVal;
+            ZoomEvent?.Invoke(this, new ZoomEventArgs(oldVal, newVal));
         }
 
         private void HScrollBar_OnValueChanged(object sender, EventArgs e)
@@ -420,14 +480,31 @@ namespace WHampson.PigeonLocator
             g.DrawImage(image, destRect, srcRect, GraphicsUnit.Pixel);
         }
 
+        /// <summary>
+        /// Provides data for the Zoom event.
+        /// </summary>
         public class ZoomEventArgs : EventArgs
         {
-            public ZoomEventArgs(float value)
+            /// <summary>
+            /// Creates a new <see cref="ZoomEventArgs"/> instance.
+            /// </summary>
+            /// <param name="oldValue">The old zoom value.</param>
+            /// <param name="newValue">The new zoom value.</param>
+            public ZoomEventArgs(float oldValue, float newValue)
             {
-                Value = value;
+                OldValue = oldValue;
+                NewValue = newValue;
             }
 
-            public float Value { get; }
+            /// <summary>
+            /// Gets the old zoom value.
+            /// </summary>
+            public float OldValue { get; }
+
+            /// <summary>
+            /// Gets the new zoom value.
+            /// </summary>
+            public float NewValue { get; }
         }
     }
 }
