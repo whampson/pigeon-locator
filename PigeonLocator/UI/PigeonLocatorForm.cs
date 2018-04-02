@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -33,20 +34,18 @@ namespace WHampson.PigeonLocator
         private const float ZoomControlScaleFactor = 100.0f;
 
         private IvSavegame _savegame;
+        private PointF _mapCoords;
         private ToolTip locationInfoToolTip;
         private bool isLocationInfoShowing;
 
         public PigeonLocatorForm()
         {
-            InitializeComponent();
-
-            Savegame = null;
-            Status = "No file loaded.";
+            _savegame = null;
+            _mapCoords = new PointF(0, 0);
             locationInfoToolTip = new ToolTip();
             isLocationInfoShowing = false;
 
-            mapPanel.ViewPosition = new PointF(0, 0.667f);
-            mapPanel.Focus();
+            InitializeComponent();
         }
 
         private IvSavegame Savegame
@@ -55,6 +54,17 @@ namespace WHampson.PigeonLocator
             set {
                 _savegame = value;
                 fileInformationMenuItem.Enabled = (_savegame != null);
+            }
+        }
+
+        private PointF MapCoords
+        {
+            get { return _mapCoords; }
+            set {
+                _mapCoords = value;
+
+                xLabel.Text = string.Format("X: {0:0.000}", value.X);
+                yLabel.Text = string.Format("Y: {0:0.000}", value.Y);
             }
         }
 
@@ -107,9 +117,11 @@ namespace WHampson.PigeonLocator
         {
             string fileInfo = string.Format(
                 "Mission Name: {0}\n" +
-                "File Size: {1}\n" +
-                "File Version: {2}",
+                "Timestamp: {1}\n" +
+                "File Size: {2} bytes\n" +
+                "File Version: {3}",
                 Savegame.LastMissionName,
+                Savegame.Timestamp.ToString("MMM d, yyyy HH:mm:ss"),
                 Savegame.FileSize,
                 Savegame.FileVersion);
             ShowInfoMsgDialog("File Information", fileInfo);
@@ -118,12 +130,19 @@ namespace WHampson.PigeonLocator
         private void ShowAboutDialog()
         {
             string desc = "Maps-out all remaining flying rats in a GTA IV savegame.";
+            FileVersionInfo vers = PigeonLocator.GetProgramVersion();
+
             string aboutString = string.Format(
-                "{0}\nVersion: {1}\n\n{2}\n\n{3}",
+                "{0}\n" +
+                "Version: {1}\n\n" +
+                "{2}\n\n" +
+                "{3}",
                 PigeonLocator.GetProgramName(),
-                PigeonLocator.GetProgramVersion(),
+                (vers == null)
+                    ? "null"
+                    : string.Format("{0} (build {1})", vers.ProductVersion, vers.FilePrivatePart),
                 desc,
-                PigeonLocator.GetCopyright());
+                PigeonLocator.GetCopyrightString());
             ShowInfoMsgDialog("About", aboutString);
         }
 
@@ -176,7 +195,7 @@ namespace WHampson.PigeonLocator
 
         private void MapPanel_OnZoom(object sender, ImagePanel.ZoomEventArgs e)
         {
-            int val = (int) (e.Value * ZoomControlScaleFactor);
+            int val = (int) (e.NewValue * ZoomControlScaleFactor);
             if (val > trackBar.Maximum) {
                 val = trackBar.Maximum;
             } else if (val < trackBar.Minimum) {
@@ -188,9 +207,7 @@ namespace WHampson.PigeonLocator
 
         private void MapPanel_OnMouseMove(object sender, MouseEventArgs e)
         {
-            PointF gameCoords = GetGameWorldCoords(e.X, e.Y);
-            xLabel.Text = string.Format("X: {0:0.000}", gameCoords.X);
-            yLabel.Text = string.Format("Y: {0:0.000}", gameCoords.Y);
+            MapCoords = GetGameWorldCoords(e.X, e.Y);
 
             //if (Math.Abs(gameCoords.X - 1160) <= 10 && Math.Abs(gameCoords.Y + 570) <= 10) {
             //    if (!isLocationInfoShowing) {
@@ -203,6 +220,19 @@ namespace WHampson.PigeonLocator
             //    locationInfoToolTip.Hide(this);
             //    isLocationInfoShowing = false;
             //}
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // Update UI elements
+            Savegame = null;
+            Status = "No file loaded.";
+            MapCoords = new PointF(0, 0);
+
+            mapPanel.ViewPosition = new PointF(0, 0.667f);
+            mapPanel.Focus();
         }
 
     }
