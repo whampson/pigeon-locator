@@ -300,6 +300,22 @@ namespace WHampson.PigeonLocator
             ShowLocationToolTip(e.X, e.Y);
         }
 
+        private void OnDragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        private void OnDragDrop(object sender, DragEventArgs e)
+        {
+            string[] paths = (string[]) e.Data.GetData(DataFormats.FileDrop);
+            if (paths.Length > 1) {
+                ShowErrorMsgDialog("Too Many Files", "Only one file may be opened at a time.");
+                return;
+            }
+
+            LoadFile(paths[0]);
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -312,6 +328,5 @@ namespace WHampson.PigeonLocator
             mapPanel.ViewPosition = new PointF(0, 0.667f);
             mapPanel.Focus();
         }
-
     }
 }

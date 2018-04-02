@@ -221,6 +221,7 @@ namespace WHampson.PigeonLocator
             // 
             // PigeonLocatorForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1254, 889);
@@ -236,6 +237,8 @@ namespace WHampson.PigeonLocator
             this.MainMenuStrip = this.menuStrip;
             this.Name = "PigeonLocatorForm";
             this.Text = "GTA IV Pigeon Locator";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.OnDragEnter);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
