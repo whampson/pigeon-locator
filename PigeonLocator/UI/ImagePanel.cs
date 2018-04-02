@@ -119,12 +119,21 @@ namespace WHampson.PigeonLocator
                 if (value < minZoom) {
                     value = minZoom;
                 }
-                zoom = value;
 
+                PointF viewPos = ViewPosition;
+
+                zoom = value;
                 UpdateScrollbarVisibility();
                 UpdateScrollbarValues();
-                //hScrollBar.Value = (int) (viewRectX * zoom);
-                //vScrollBar.Value = (int) (viewRectY * zoom);
+
+                if (float.IsNaN(viewPos.X) && !float.IsNaN(ViewPosition.X)) {
+                    viewPos.X = 0.5f;
+                }
+                if (float.IsNaN(viewPos.Y) && !float.IsNaN(ViewPosition.Y)) {
+                    viewPos.Y = 0.5f;
+                }
+
+                ViewPosition = viewPos;
                 Invalidate();
             }
         }
@@ -167,8 +176,42 @@ namespace WHampson.PigeonLocator
             set;
         }
 
+        public Rectangle ViewRectangle
+        {
+            get { return new Rectangle(viewRectX, viewRectY, viewRectWidth, viewRectHeight); }
+        }
+
+        public PointF ViewPosition
+        {
+            get {
+                float xFrac = (float) hScrollBar.Value / (hScrollBar.Maximum - hScrollBar.Minimum);
+                float yFrac = (float) vScrollBar.Value / (vScrollBar.Maximum - vScrollBar.Minimum);
+                return new PointF(xFrac, yFrac);
+            }
+            set {
+                if (value.X < 0) {
+                    value.X = 0;
+                } else if (value.X > 1) {
+                    value.X = 1;
+                }
+
+                if (value.Y < 0) {
+                    value.Y = 0;
+                } else if (value.Y > 1) {
+                    value.Y = 1;
+                }
+
+                if (!float.IsNaN(value.X)) {
+                    hScrollBar.Value = (int) (value.X * (hScrollBar.Maximum - hScrollBar.Minimum));
+                }
+                if (!float.IsNaN(value.Y)) {
+                    vScrollBar.Value = (int) (value.Y * (vScrollBar.Maximum - vScrollBar.Minimum));
+                }
+            }
+        }
+
         public override Cursor Cursor
-        {        
+        {
             get { return base.Cursor; }
             set {
                 base.Cursor = value;
@@ -177,13 +220,11 @@ namespace WHampson.PigeonLocator
             }
         }
 
-        public Rectangle ViewWindow
-        {
-            get { return new Rectangle(viewRectX, viewRectY, viewRectWidth, viewRectHeight); }
-        }
-
         private void UpdateScrollbarValues()
         {
+            const int LargeChangeModifier = 10;
+            const int SmallChangeModifier = 20;
+
             int val;
 
             hScrollBar.Minimum = 0;
@@ -202,8 +243,8 @@ namespace WHampson.PigeonLocator
                 }
             }
 
-            hScrollBar.LargeChange = hScrollBar.Maximum / 10;
-            hScrollBar.SmallChange = hScrollBar.Maximum / 20;
+            hScrollBar.LargeChange = hScrollBar.Maximum / LargeChangeModifier;
+            hScrollBar.SmallChange = hScrollBar.Maximum / SmallChangeModifier;
 
             hScrollBar.Maximum += hScrollBar.LargeChange;
 
@@ -220,8 +261,8 @@ namespace WHampson.PigeonLocator
                 }
             }
 
-            vScrollBar.LargeChange = vScrollBar.Maximum / 10;
-            vScrollBar.SmallChange = vScrollBar.Maximum / 20;
+            vScrollBar.LargeChange = vScrollBar.Maximum / LargeChangeModifier;
+            vScrollBar.SmallChange = vScrollBar.Maximum / SmallChangeModifier;
 
             vScrollBar.Maximum += vScrollBar.LargeChange;
         }
@@ -259,11 +300,13 @@ namespace WHampson.PigeonLocator
 
         private void AdjustScrollbar(ScrollBar scroll, int delta)
         {
+            const float SpeedModifier = 5.0f;
+
             if (!scroll.Visible) {
                 return;
             }
 
-            int val = scroll.Value + (int) (zoom * delta / 5);
+            int val = scroll.Value + (int) (zoom * delta / SpeedModifier);
             if (val < scroll.Minimum) {
                 val = scroll.Minimum;
             } else if (val > scroll.Maximum - (scroll.LargeChange - 1)) {
@@ -276,7 +319,9 @@ namespace WHampson.PigeonLocator
 
         private void AdjustZoom(int delta)
         {
-            float val = zoom + (delta / 1250.0f);
+            const float SpeedModifier = 1250.0f;
+
+            float val = zoom + (delta / SpeedModifier);
             if (val < MinimumZoom) {
                 val = MinimumZoom;
             } else if (val > MaximumZoom) {
@@ -292,19 +337,9 @@ namespace WHampson.PigeonLocator
             viewRectX = hScrollBar.Value;
         }
 
-        private void HScrollBar_OnScroll(object sender, ScrollEventArgs e)
-        {
-            Invalidate();
-        }
-
         private void VScrollBar_OnValueChanged(object sender, EventArgs e)
         {
             viewRectY = vScrollBar.Value;
-        }
-
-        private void VScrollBar_OnScroll(object sender, ScrollEventArgs e)
-        {
-            Invalidate();
         }
 
         private void ImagePanel_OnMouseWheel(object sender, MouseEventArgs e)

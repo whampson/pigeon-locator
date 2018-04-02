@@ -22,15 +22,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using WHampson.PigeonLocator.Properties;
 
 namespace WHampson.PigeonLocator
 {
@@ -50,6 +44,9 @@ namespace WHampson.PigeonLocator
             Status = "No file loaded.";
             locationInfoToolTip = new ToolTip();
             isLocationInfoShowing = false;
+
+            mapPanel.ViewPosition = new PointF(0, 0.667f);
+            mapPanel.Focus();
         }
 
         private IvSavegame Savegame
@@ -89,11 +86,11 @@ namespace WHampson.PigeonLocator
             const float MapCenterOffsetY = 750;
             const float GameWorldScaleFactor = 500f / 256f; // Each 256 pixels corresponds to 500 meters
 
-            float worldX = ((mouseX + mapPanel.ViewWindow.X) / mapPanel.Zoom) - (mapPanel.Image.Width / 2);
+            float worldX = ((mouseX + mapPanel.ViewRectangle.X) / mapPanel.Zoom) - (mapPanel.Image.Width / 2);
             worldX *= GameWorldScaleFactor;
             worldX += MapCenterOffsetX;
 
-            float worldY = (-(mouseY + mapPanel.ViewWindow.Y) / mapPanel.Zoom) + (mapPanel.Image.Height / 2);
+            float worldY = (-(mouseY + mapPanel.ViewRectangle.Y) / mapPanel.Zoom) + (mapPanel.Image.Height / 2);
             worldY *= GameWorldScaleFactor;
             worldY += MapCenterOffsetY;
 
