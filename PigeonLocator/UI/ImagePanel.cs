@@ -402,6 +402,16 @@ namespace WHampson.PigeonLocator
             viewRectY = vScrollBar.Value;
         }
 
+        private void HScrollBar_OnScroll(object sender, ScrollEventArgs e)
+        {
+            Invalidate();
+        }
+
+        private void VScrollBar_OnScroll(object sender, ScrollEventArgs e)
+        {
+            Invalidate();
+        }
+
         private void ImagePanel_OnMouseWheel(object sender, MouseEventArgs e)
         {
             ScrollBar scroll;
