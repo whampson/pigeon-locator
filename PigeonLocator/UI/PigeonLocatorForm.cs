@@ -325,7 +325,7 @@ namespace WHampson.PigeonLocator
             Status = "No file loaded.";
             MapCursorCoords = new PointF(0, 0);
 
-            mapPanel.ViewPosition = new PointF(0, 0.667f);
+            mapPanel.ViewPosition = new PointF(0, 2f / 3f);
             mapPanel.Focus();
         }
     }
