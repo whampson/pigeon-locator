@@ -22,8 +22,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -137,20 +139,28 @@ namespace WHampson.PigeonLocator
         private void RedrawPigeonBlips()
         {
             mapPanel.Image = Resources.GTAIV_Map_3072x2304;
+            Bitmap blipImage = Resources.GTAIV_Pigeon_240x240;
             Graphics g = Graphics.FromImage(mapPanel.Image);
 
             foreach (Vect3d loc in pigeonCoords) {
-                PlotPigeonBlip(g, loc.X, loc.Y);
+                PlotPigeonBlip(g, blipImage, loc.X, loc.Y);
             }
 
             mapPanel.Invalidate();
         }
 
-        private void PlotPigeonBlip(Graphics g, float worldX, float worldY)
+        private void PlotPigeonBlip(Graphics g, Bitmap blipImg, float worldX, float worldY)
         {
             Point mapPixel = GetMapImagePixel(worldX, worldY);
-            g.FillRectangle(
-                Brushes.Red,
+            //g.FillRectangle(
+            //    Brushes.Red,
+            //    mapPixel.X - (BlipDimension / 2),
+            //    mapPixel.Y - (BlipDimension / 2),
+            //    BlipDimension,
+            //    BlipDimension);
+
+            g.DrawImage(
+                blipImg,
                 mapPixel.X - (BlipDimension / 2),
                 mapPixel.Y - (BlipDimension / 2),
                 BlipDimension,

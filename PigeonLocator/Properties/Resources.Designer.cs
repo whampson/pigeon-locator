@@ -69,5 +69,25 @@ namespace WHampson.PigeonLocator.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GTAIV_Pigeon_240x240 {
+            get {
+                object obj = ResourceManager.GetObject("GTAIV_Pigeon_240x240", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon GTAIV_PigeonIcon_240x240 {
+            get {
+                object obj = ResourceManager.GetObject("GTAIV_PigeonIcon_240x240", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }
