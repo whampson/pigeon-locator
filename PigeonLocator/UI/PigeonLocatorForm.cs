@@ -36,51 +36,20 @@ namespace WHampson.PigeonLocator
 {
     public partial class PigeonLocatorForm : Form
     {
+        private const float ZoomControlScaleFactor = 100.0f;
+
         private IvSavegame _savegame;
-        private bool ctrlPressed;
+        private ToolTip locationInfoToolTip;
+        private bool isLocationInfoShowing;
 
         public PigeonLocatorForm()
         {
             InitializeComponent();
+
             Savegame = null;
-            ctrlPressed = false;
             Status = "No file loaded.";
-            imagePanel1.Image = Resources.GTAIV_Map_3072x2304;
-            imagePanel1.CanvasSize = imagePanel1.Size;
-            imagePanel1.MinimumZoom = trackBar1.Minimum * 0.01f;
-            imagePanel1.MaximumZoom = trackBar1.Maximum * 0.01f;
-            imagePanel1.Zoom = imagePanel1.MinimumZoom;
-            imagePanel1.ZoomEvent += new ImagePanel.ZoomEventHandler(ImagePanel_OnZoom);
-
-            MouseWheel += new MouseEventHandler(PigeonLocatorForm_OnMouseWheel);
-            KeyDown += new KeyEventHandler(PigeonLocatorForm_OnKeyDown);
-            KeyUp += new KeyEventHandler(PigeonLocatorForm_OnKeyUp);
-        }
-
-        private void ImagePanel_OnZoom(object sender, ImagePanel.ZoomEventArgs e)
-        {
-            int val = (int) (e.Value * 100);
-            if (val > trackBar1.Maximum) {
-                val = trackBar1.Maximum;
-            } else if (val < trackBar1.Minimum) {
-                val = trackBar1.Minimum;
-            }
-
-            trackBar1.Value = val;
-        }
-
-        private void PigeonLocatorForm_OnMouseWheel(object sender, MouseEventArgs e)
-        {
-        }
-
-        private void PigeonLocatorForm_OnKeyDown(object sender, KeyEventArgs e)
-        {
-            ctrlPressed = e.Control;
-        }
-
-        private void PigeonLocatorForm_OnKeyUp(object sender, KeyEventArgs e)
-        {
-            ctrlPressed = e.Control;
+            locationInfoToolTip = new ToolTip();
+            isLocationInfoShowing = false;
         }
 
         private IvSavegame Savegame
@@ -106,12 +75,29 @@ namespace WHampson.PigeonLocator
             } catch (FileNotFoundException ex) {
                 string title = "File Not Found";
                 string fmt = "The following file could not be found: {0}";
-                ShowErrorDialog(title, string.Format(fmt, path));
+                ShowErrorMsgDialog(title, string.Format(fmt, path));
             } catch (InvalidDataException ex) {
                 string title = "Invalid File Format";
                 string msg = "Not a valid GTA IV savedata file!";
-                ShowErrorDialog(title, msg);
+                ShowErrorMsgDialog(title, msg);
             }
+        }
+
+        private PointF GetGameWorldCoords(int mouseX, int mouseY)
+        {
+            const float MapCenterOffsetX = 500;
+            const float MapCenterOffsetY = 750;
+            const float GameWorldScaleFactor = 500f / 256f; // Each 256 pixels corresponds to 500 meters
+
+            float worldX = ((mouseX + mapPanel.ViewWindow.X) / mapPanel.Zoom) - (mapPanel.Image.Width / 2);
+            worldX *= GameWorldScaleFactor;
+            worldX += MapCenterOffsetX;
+
+            float worldY = (-(mouseY + mapPanel.ViewWindow.Y) / mapPanel.Zoom) + (mapPanel.Image.Height / 2);
+            worldY *= GameWorldScaleFactor;
+            worldY += MapCenterOffsetY;
+
+            return new PointF(worldX, worldY);
         }
 
         private string GetGameUserDataDirectory()
@@ -120,14 +106,38 @@ namespace WHampson.PigeonLocator
                 + @"\Rockstar Games\GTA IV";
         }
 
-        private void ShowErrorDialog(string title, string msg)
+        private void ShowFileInfoDialog()
         {
-            MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            string fileInfo = string.Format(
+                "Mission Name: {0}\n" +
+                "File Size: {1}\n" +
+                "File Version: {2}",
+                Savegame.LastMissionName,
+                Savegame.FileSize,
+                Savegame.FileVersion);
+            ShowInfoMsgDialog("File Information", fileInfo);
         }
 
-        private void ShowInfoDialog(string title, string msg)
+        private void ShowAboutDialog()
+        {
+            string desc = "Maps-out all remaining flying rats in a GTA IV savegame.";
+            string aboutString = string.Format(
+                "{0}\nVersion: {1}\n\n{2}\n\n{3}",
+                PigeonLocator.GetProgramName(),
+                PigeonLocator.GetProgramVersion(),
+                desc,
+                PigeonLocator.GetCopyright());
+            ShowInfoMsgDialog("About", aboutString);
+        }
+
+        private void ShowInfoMsgDialog(string title, string msg)
         {
             MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ShowErrorMsgDialog(string title, string msg)
+        {
+            MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void FileOpenMenuItem_OnClick(object sender, EventArgs e)
@@ -149,15 +159,7 @@ namespace WHampson.PigeonLocator
                 return;
             }
 
-            string fileInfo = string.Format(
-                "Mission Name: {0}\n" +
-                "File Size: {1}\n" +
-                "File Version: {2}",
-                Savegame.LastMissionName,
-                Savegame.FileSize,
-                Savegame.FileVersion);
-
-            ShowInfoDialog("File Information", fileInfo);
+            ShowFileInfoDialog();
         }
 
         private void FileExitMenuItem_OnClick(object sender, EventArgs e)
@@ -167,22 +169,44 @@ namespace WHampson.PigeonLocator
 
         private void HelpAboutMenuItem_OnClick(object sender, EventArgs e)
         {
-            string aboutString = string.Format(
-                "{0}\nVersion: {1}\n\n{2}",
-                PigeonLocator.GetProgramName(),
-                PigeonLocator.GetProgramVersion(),
-                PigeonLocator.GetCopyright());
-            ShowInfoDialog("About", aboutString);
+            ShowAboutDialog();
         }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
+        private void TrackOar_OnScroll(object sender, EventArgs e)
         {
-            DoScroll();
+            mapPanel.Zoom = trackBar.Value / ZoomControlScaleFactor;
         }
 
-        private void DoScroll()
+        private void MapPanel_OnZoom(object sender, ImagePanel.ZoomEventArgs e)
         {
-            imagePanel1.Zoom = trackBar1.Value * 0.01f;
+            int val = (int) (e.Value * ZoomControlScaleFactor);
+            if (val > trackBar.Maximum) {
+                val = trackBar.Maximum;
+            } else if (val < trackBar.Minimum) {
+                val = trackBar.Minimum;
+            }
+
+            trackBar.Value = val;
         }
+
+        private void MapPanel_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            PointF gameCoords = GetGameWorldCoords(e.X, e.Y);
+            xLabel.Text = string.Format("X: {0:0.000}", gameCoords.X);
+            yLabel.Text = string.Format("Y: {0:0.000}", gameCoords.Y);
+
+            //if (Math.Abs(gameCoords.X - 1160) <= 10 && Math.Abs(gameCoords.Y + 570) <= 10) {
+            //    if (!isLocationInfoShowing) {
+            //        locationInfoToolTip.Show("Located underneath the bridge on the northernmost girder.\r\n" +
+            //            "Stand on top of a car to see it.",
+            //            this, e.X, e.Y, short.MaxValue - 1);
+            //        isLocationInfoShowing = true;
+            //    }
+            //} else if (isLocationInfoShowing) {
+            //    locationInfoToolTip.Hide(this);
+            //    isLocationInfoShowing = false;
+            //}
+        }
+
     }
 }

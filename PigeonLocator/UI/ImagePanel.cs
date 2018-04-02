@@ -22,12 +22,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 
@@ -41,11 +36,17 @@ namespace WHampson.PigeonLocator
     /// </remarks>
     public partial class ImagePanel : UserControl
     {
+        public delegate void ZoomEventHandler(object sender, ZoomEventArgs e);
+
+        public event ZoomEventHandler ZoomEvent;
+
         private Bitmap image;
         private float zoom;
         private float minZoom;
         private float maxZoom;
         private Size canvasSize;
+        private int viewRectX;
+        private int viewRectY;
         private int viewRectWidth;
         private int viewRectHeight;
         private bool controlPressed;
@@ -60,6 +61,8 @@ namespace WHampson.PigeonLocator
             canvasSize = new Size(60, 40);
             InterpolationMode = InterpolationMode.Default;
 
+            viewRectX = 0;
+            viewRectY = 0;
             viewRectWidth = 0;
             viewRectHeight = 0;
             controlPressed = false;
@@ -79,9 +82,6 @@ namespace WHampson.PigeonLocator
             KeyDown += new KeyEventHandler(ImagePanel_OnKeyDown);
             KeyUp += new KeyEventHandler(ImagePanel_OnKeyUp);
         }
-
-        public delegate void ZoomEventHandler(object sender, ZoomEventArgs e);
-        public event ZoomEventHandler ZoomEvent;
 
         protected virtual void OnZoomEvent(ZoomEventArgs e)
         {
@@ -123,8 +123,8 @@ namespace WHampson.PigeonLocator
 
                 UpdateScrollbarVisibility();
                 UpdateScrollbarValues();
-                hScrollBar.Value = hScrollBar.Maximum / 2;
-                vScrollBar.Value = vScrollBar.Maximum / 2;
+                //hScrollBar.Value = (int) (viewRectX * zoom);
+                //vScrollBar.Value = (int) (viewRectY * zoom);
                 Invalidate();
             }
         }
@@ -165,6 +165,21 @@ namespace WHampson.PigeonLocator
         {
             get;
             set;
+        }
+
+        public override Cursor Cursor
+        {        
+            get { return base.Cursor; }
+            set {
+                base.Cursor = value;
+                vScrollBar.Cursor = Cursors.Default;
+                hScrollBar.Cursor = Cursors.Default;
+            }
+        }
+
+        public Rectangle ViewWindow
+        {
+            get { return new Rectangle(viewRectX, viewRectY, viewRectWidth, viewRectHeight); }
         }
 
         private void UpdateScrollbarValues()
@@ -272,9 +287,19 @@ namespace WHampson.PigeonLocator
             OnZoomEvent(new ZoomEventArgs(val));
         }
 
+        private void HScrollBar_OnValueChanged(object sender, EventArgs e)
+        {
+            viewRectX = hScrollBar.Value;
+        }
+
         private void HScrollBar_OnScroll(object sender, ScrollEventArgs e)
         {
             Invalidate();
+        }
+
+        private void VScrollBar_OnValueChanged(object sender, EventArgs e)
+        {
+            viewRectY = vScrollBar.Value;
         }
 
         private void VScrollBar_OnScroll(object sender, ScrollEventArgs e)
@@ -328,17 +353,17 @@ namespace WHampson.PigeonLocator
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e);
-
-            if (image == null) {
-                return;
-            }
-
             Rectangle srcRect;
             Rectangle destRect;
             Point pt;
             Matrix mtx;
             Graphics g;
+
+            base.OnPaint(e);
+
+            if (image == null) {
+                return;
+            }
 
             pt = new Point((int) (hScrollBar.Value / zoom), (int) (vScrollBar.Value / zoom));
 

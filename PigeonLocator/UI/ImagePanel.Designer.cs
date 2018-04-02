@@ -39,6 +39,7 @@
             this.hScrollBar.Size = new System.Drawing.Size(80, 17);
             this.hScrollBar.TabIndex = 0;
             this.hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HScrollBar_OnScroll);
+            this.hScrollBar.ValueChanged += new System.EventHandler(this.HScrollBar_OnValueChanged);
             // 
             // vScrollBar
             // 
@@ -48,6 +49,7 @@
             this.vScrollBar.Size = new System.Drawing.Size(17, 80);
             this.vScrollBar.TabIndex = 1;
             this.vScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VScrollBar_OnScroll);
+            this.vScrollBar.ValueChanged += new System.EventHandler(this.VScrollBar_OnValueChanged);
             // 
             // ImagePanel
             // 
@@ -56,7 +58,7 @@
             this.Controls.Add(this.vScrollBar);
             this.Controls.Add(this.hScrollBar);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "ImagePanel";
             this.ResumeLayout(false);
 

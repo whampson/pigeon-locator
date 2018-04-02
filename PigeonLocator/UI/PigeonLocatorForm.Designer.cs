@@ -61,11 +61,13 @@ namespace WHampson.PigeonLocator
             this.helpAboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.imagePanel1 = new WHampson.PigeonLocator.ImagePanel();
+            this.trackBar = new System.Windows.Forms.TrackBar();
+            this.mapPanel = new WHampson.PigeonLocator.ImagePanel();
+            this.xLabel = new System.Windows.Forms.Label();
+            this.yLabel = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -159,44 +161,71 @@ namespace WHampson.PigeonLocator
             this.statusLabel.Size = new System.Drawing.Size(109, 32);
             this.statusLabel.Text = "<status>";
             // 
-            // trackBar1
+            // trackBar
             // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.LargeChange = 20;
-            this.trackBar1.Location = new System.Drawing.Point(992, 759);
-            this.trackBar1.Maximum = 200;
-            this.trackBar1.Minimum = 20;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(250, 90);
-            this.trackBar1.SmallChange = 10;
-            this.trackBar1.TabIndex = 5;
-            this.trackBar1.TabStop = false;
-            this.trackBar1.TickFrequency = 20;
-            this.trackBar1.Value = 20;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.trackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBar.LargeChange = 20;
+            this.trackBar.Location = new System.Drawing.Point(992, 759);
+            this.trackBar.Maximum = 200;
+            this.trackBar.Minimum = 20;
+            this.trackBar.Name = "trackBar";
+            this.trackBar.Size = new System.Drawing.Size(250, 90);
+            this.trackBar.SmallChange = 10;
+            this.trackBar.TabIndex = 5;
+            this.trackBar.TabStop = false;
+            this.trackBar.TickFrequency = 20;
+            this.trackBar.Value = 20;
+            this.trackBar.Scroll += new System.EventHandler(this.TrackOar_OnScroll);
             // 
-            // imagePanel1
+            // mapPanel
             // 
-            this.imagePanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.mapPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.imagePanel1.CanvasSize = new System.Drawing.Size(60, 40);
-            this.imagePanel1.Image = null;
-            this.imagePanel1.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
-            this.imagePanel1.Location = new System.Drawing.Point(0, 43);
-            this.imagePanel1.Margin = new System.Windows.Forms.Padding(6);
-            this.imagePanel1.Name = "imagePanel1";
-            this.imagePanel1.Size = new System.Drawing.Size(1254, 710);
-            this.imagePanel1.TabIndex = 6;
-            this.imagePanel1.Zoom = 1F;
+            this.mapPanel.CanvasSize = new System.Drawing.Size(3072, 2304);
+            this.mapPanel.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.mapPanel.Image = global::WHampson.PigeonLocator.Properties.Resources.GTAIV_Map_3072x2304;
+            this.mapPanel.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
+            this.mapPanel.Location = new System.Drawing.Point(0, 43);
+            this.mapPanel.Margin = new System.Windows.Forms.Padding(6);
+            this.mapPanel.MaximumZoom = 2F;
+            this.mapPanel.MinimumZoom = 0.2F;
+            this.mapPanel.Name = "mapPanel";
+            this.mapPanel.Size = new System.Drawing.Size(1254, 710);
+            this.mapPanel.TabIndex = 6;
+            this.mapPanel.Zoom = 0.2F;
+            this.mapPanel.ZoomEvent += new WHampson.PigeonLocator.ImagePanel.ZoomEventHandler(this.MapPanel_OnZoom);
+            this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MapPanel_OnMouseMove);
+            // 
+            // xLabel
+            // 
+            this.xLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.xLabel.AutoSize = true;
+            this.xLabel.Location = new System.Drawing.Point(12, 759);
+            this.xLabel.Name = "xLabel";
+            this.xLabel.Size = new System.Drawing.Size(113, 25);
+            this.xLabel.TabIndex = 7;
+            this.xLabel.Text = "X: <x_val>";
+            // 
+            // yLabel
+            // 
+            this.yLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.yLabel.AutoSize = true;
+            this.yLabel.Location = new System.Drawing.Point(12, 784);
+            this.yLabel.Name = "yLabel";
+            this.yLabel.Size = new System.Drawing.Size(114, 25);
+            this.yLabel.TabIndex = 8;
+            this.yLabel.Text = "Y: <y_val>";
             // 
             // PigeonLocatorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1254, 889);
-            this.Controls.Add(this.imagePanel1);
-            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.yLabel);
+            this.Controls.Add(this.xLabel);
+            this.Controls.Add(this.mapPanel);
+            this.Controls.Add(this.trackBar);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.DoubleBuffered = true;
@@ -208,7 +237,7 @@ namespace WHampson.PigeonLocator
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -227,7 +256,9 @@ namespace WHampson.PigeonLocator
         private System.Windows.Forms.ToolStripMenuItem helpAboutMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
-        private System.Windows.Forms.TrackBar trackBar1;
-        private ImagePanel imagePanel1;
+        private System.Windows.Forms.TrackBar trackBar;
+        private ImagePanel mapPanel;
+        private System.Windows.Forms.Label xLabel;
+        private System.Windows.Forms.Label yLabel;
     }
 }
