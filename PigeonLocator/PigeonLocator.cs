@@ -41,33 +41,29 @@ namespace WHampson.PigeonLocator
         {
             Assembly asm = Assembly.GetExecutingAssembly();
             if (asm == null) {
-                return "";
+                return "null";
             }
 
-            AssemblyTitleAttribute attr = (AssemblyTitleAttribute) Attribute.GetCustomAttribute(asm, typeof(AssemblyTitleAttribute), false);
+            AssemblyTitleAttribute attr = (AssemblyTitleAttribute)
+                Attribute.GetCustomAttribute(asm, typeof(AssemblyTitleAttribute), false);
             if (attr == null) {
-                return "";
+                return "null";
             }
 
             return attr.Title;
         }
 
-        internal static string GetProgramVersion()
+        internal static FileVersionInfo GetProgramVersion()
         {
             Assembly asm = Assembly.GetExecutingAssembly();
             if (asm == null) {
-                return "";
+                return null;
             }
 
-            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(asm.Location);
-            if (versionInfo == null) {
-                return "";
-            }
-
-            return versionInfo.ProductVersion;
+            return FileVersionInfo.GetVersionInfo(asm.Location);
         }
 
-        internal static string GetCopyright()
+        internal static string GetCopyrightString()
         {
             return "Copyright (C) 2018 W. Hampson";
         }
