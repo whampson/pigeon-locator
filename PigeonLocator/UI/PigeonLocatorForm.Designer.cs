@@ -63,8 +63,8 @@ namespace WHampson.PigeonLocator
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.trackBar = new System.Windows.Forms.TrackBar();
             this.mapPanel = new WHampson.PigeonLocator.ImagePanel();
-            this.xLabel = new System.Windows.Forms.Label();
-            this.yLabel = new System.Windows.Forms.Label();
+            this.cursorXLabel = new System.Windows.Forms.Label();
+            this.cursorYLabel = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
@@ -199,31 +199,31 @@ namespace WHampson.PigeonLocator
             // 
             // xLabel
             // 
-            this.xLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.xLabel.AutoSize = true;
-            this.xLabel.Location = new System.Drawing.Point(12, 759);
-            this.xLabel.Name = "xLabel";
-            this.xLabel.Size = new System.Drawing.Size(113, 25);
-            this.xLabel.TabIndex = 7;
-            this.xLabel.Text = "X: <x_val>";
+            this.cursorXLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cursorXLabel.AutoSize = true;
+            this.cursorXLabel.Location = new System.Drawing.Point(12, 759);
+            this.cursorXLabel.Name = "xLabel";
+            this.cursorXLabel.Size = new System.Drawing.Size(113, 25);
+            this.cursorXLabel.TabIndex = 7;
+            this.cursorXLabel.Text = "X: <x_val>";
             // 
             // yLabel
             // 
-            this.yLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.yLabel.AutoSize = true;
-            this.yLabel.Location = new System.Drawing.Point(12, 784);
-            this.yLabel.Name = "yLabel";
-            this.yLabel.Size = new System.Drawing.Size(114, 25);
-            this.yLabel.TabIndex = 8;
-            this.yLabel.Text = "Y: <y_val>";
+            this.cursorYLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cursorYLabel.AutoSize = true;
+            this.cursorYLabel.Location = new System.Drawing.Point(12, 784);
+            this.cursorYLabel.Name = "yLabel";
+            this.cursorYLabel.Size = new System.Drawing.Size(114, 25);
+            this.cursorYLabel.TabIndex = 8;
+            this.cursorYLabel.Text = "Y: <y_val>";
             // 
             // PigeonLocatorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1254, 889);
-            this.Controls.Add(this.yLabel);
-            this.Controls.Add(this.xLabel);
+            this.Controls.Add(this.cursorYLabel);
+            this.Controls.Add(this.cursorXLabel);
             this.Controls.Add(this.mapPanel);
             this.Controls.Add(this.trackBar);
             this.Controls.Add(this.statusStrip);
@@ -258,7 +258,7 @@ namespace WHampson.PigeonLocator
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private System.Windows.Forms.TrackBar trackBar;
         private ImagePanel mapPanel;
-        private System.Windows.Forms.Label xLabel;
-        private System.Windows.Forms.Label yLabel;
+        private System.Windows.Forms.Label cursorXLabel;
+        private System.Windows.Forms.Label cursorYLabel;
     }
 }

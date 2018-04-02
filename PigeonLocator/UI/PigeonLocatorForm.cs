@@ -25,25 +25,34 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using WHampson.PigeonLocator.Properties;
 
 namespace WHampson.PigeonLocator
 {
     public partial class PigeonLocatorForm : Form
     {
+        private const int PigeonCount = 200;
         private const float ZoomControlScaleFactor = 100.0f;
+        private const float GameWorldScaleFactor = 500f / 256f; // Each 256 pixels corresponds to 500 meters
+        private const int MapCenterOffsetX = 500;
+        private const int MapCenterOffsetY = 750;
 
         private IvSavegame _savegame;
-        private PointF _mapCoords;
+        private PointF _cursorCoords;
         private ToolTip locationInfoToolTip;
         private bool isLocationInfoShowing;
+        private Vect3d[] pigeonCoords;
 
         public PigeonLocatorForm()
         {
             _savegame = null;
-            _mapCoords = new PointF(0, 0);
+            _cursorCoords = new PointF(0, 0);
+            BlipDimension = 20;
             locationInfoToolTip = new ToolTip();
             isLocationInfoShowing = false;
+            pigeonCoords = new Vect3d[0];
 
             InitializeComponent();
         }
@@ -57,15 +66,21 @@ namespace WHampson.PigeonLocator
             }
         }
 
-        private PointF MapCoords
+        private PointF MapCursorCoords
         {
-            get { return _mapCoords; }
+            get { return _cursorCoords; }
             set {
-                _mapCoords = value;
+                _cursorCoords = value;
 
-                xLabel.Text = string.Format("X: {0:0.000}", value.X);
-                yLabel.Text = string.Format("Y: {0:0.000}", value.Y);
+                cursorXLabel.Text = string.Format("X: {0:0.000}", value.X);
+                cursorYLabel.Text = string.Format("Y: {0:0.000}", value.Y);
             }
+        }
+
+        private int BlipDimension
+        {
+            get;
+            set;
         }
 
         private string Status
@@ -78,24 +93,26 @@ namespace WHampson.PigeonLocator
         {
             try {
                 Savegame = IvSavegame.Load(path);
-                Status = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
             } catch (FileNotFoundException ex) {
                 string title = "File Not Found";
                 string fmt = "The following file could not be found: {0}";
                 ShowErrorMsgDialog(title, string.Format(fmt, path));
+                return;
             } catch (InvalidDataException ex) {
                 string title = "Invalid File Format";
                 string msg = "Not a valid GTA IV savedata file!";
                 ShowErrorMsgDialog(title, msg);
+                return;
             }
+
+            pigeonCoords = Savegame.GetRemainingPigeonLocations();
+            Status = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
+
+            RedrawPigeonBlips();
         }
 
         private PointF GetGameWorldCoords(int mouseX, int mouseY)
         {
-            const float MapCenterOffsetX = 500;
-            const float MapCenterOffsetY = 750;
-            const float GameWorldScaleFactor = 500f / 256f; // Each 256 pixels corresponds to 500 meters
-
             float worldX = ((mouseX + mapPanel.ViewRectangle.X) / mapPanel.Zoom) - (mapPanel.Image.Width / 2);
             worldX *= GameWorldScaleFactor;
             worldX += MapCenterOffsetX;
@@ -105,6 +122,63 @@ namespace WHampson.PigeonLocator
             worldY += MapCenterOffsetY;
 
             return new PointF(worldX, worldY);
+        }
+
+        private Point GetMapImagePixel(float worldX, float worldY)
+        {
+            int mapX = (int) ((worldX - MapCenterOffsetX) / GameWorldScaleFactor);
+            mapX += (mapPanel.Image.Width / 2);
+            int mapY = (int) -((worldY - MapCenterOffsetY) / GameWorldScaleFactor);
+            mapY += (mapPanel.Image.Height / 2);
+
+            return new Point(mapX, mapY);
+        }
+
+        private void RedrawPigeonBlips()
+        {
+            mapPanel.Image = Resources.GTAIV_Map_3072x2304;
+            Graphics g = Graphics.FromImage(mapPanel.Image);
+
+            foreach (Vect3d loc in pigeonCoords) {
+                PlotPigeonBlip(g, loc.X, loc.Y);
+            }
+
+            mapPanel.Invalidate();
+        }
+
+        private void PlotPigeonBlip(Graphics g, float worldX, float worldY)
+        {
+            Point mapPixel = GetMapImagePixel(worldX, worldY);
+            g.FillRectangle(
+                Brushes.Red,
+                mapPixel.X - (BlipDimension / 2),
+                mapPixel.Y - (BlipDimension / 2),
+                BlipDimension,
+                BlipDimension);
+        }
+
+        private PointF[] GetNearestPigeons(float worldX, float worldY, float thresh)
+        {
+            return pigeonCoords
+                .Select(vect => new PointF(vect.X, vect.Y))
+                .Where(p => Math.Abs(p.X - worldX) <= thresh && Math.Abs(p.Y - worldY) <= thresh)
+                .ToArray();
+        }
+
+        private void ShowLocationToolTip(int windowX, int windowY)
+        {
+            PointF[] nearest = GetNearestPigeons(MapCursorCoords.X, MapCursorCoords.Y, BlipDimension);
+
+            //float x = nearest[0].X;
+            //float y = nearest[0].Y;
+
+            if (nearest.Length != 0 && !isLocationInfoShowing) {
+                locationInfoToolTip.Show("A pigeon!", this, windowX, windowY, short.MaxValue - 1);
+                isLocationInfoShowing = true;
+            } else if (isLocationInfoShowing) {
+                locationInfoToolTip.Hide(this);
+                isLocationInfoShowing = false;
+            }
         }
 
         private string GetGameUserDataDirectory()
@@ -119,11 +193,14 @@ namespace WHampson.PigeonLocator
                 "Mission Name: {0}\n" +
                 "Timestamp: {1}\n" +
                 "File Size: {2} bytes\n" +
-                "File Version: {3}",
+                "File Version: {3}\n\n" +
+                "Pigeons Killed: {4}/{5}",
                 Savegame.LastMissionName,
                 Savegame.Timestamp.ToString("MMM d, yyyy HH:mm:ss"),
                 Savegame.FileSize,
-                Savegame.FileVersion);
+                Savegame.FileVersion,
+                PigeonCount - pigeonCoords.Length,
+                PigeonCount);
             ShowInfoMsgDialog("File Information", fileInfo);
         }
 
@@ -203,23 +280,14 @@ namespace WHampson.PigeonLocator
             }
 
             trackBar.Value = val;
+            //RedrawPigeonBlips();
         }
 
         private void MapPanel_OnMouseMove(object sender, MouseEventArgs e)
         {
-            MapCoords = GetGameWorldCoords(e.X, e.Y);
+            MapCursorCoords = GetGameWorldCoords(e.X, e.Y);
 
-            //if (Math.Abs(gameCoords.X - 1160) <= 10 && Math.Abs(gameCoords.Y + 570) <= 10) {
-            //    if (!isLocationInfoShowing) {
-            //        locationInfoToolTip.Show("Located underneath the bridge on the northernmost girder.\r\n" +
-            //            "Stand on top of a car to see it.",
-            //            this, e.X, e.Y, short.MaxValue - 1);
-            //        isLocationInfoShowing = true;
-            //    }
-            //} else if (isLocationInfoShowing) {
-            //    locationInfoToolTip.Hide(this);
-            //    isLocationInfoShowing = false;
-            //}
+            ShowLocationToolTip(e.X, e.Y);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -229,7 +297,7 @@ namespace WHampson.PigeonLocator
             // Update UI elements
             Savegame = null;
             Status = "No file loaded.";
-            MapCoords = new PointF(0, 0);
+            MapCursorCoords = new PointF(0, 0);
 
             mapPanel.ViewPosition = new PointF(0, 0.667f);
             mapPanel.Focus();
