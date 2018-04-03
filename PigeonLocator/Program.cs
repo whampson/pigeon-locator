@@ -23,54 +23,24 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace WHampson.PigeonLocator
 {
-    internal static class PigeonLocator
+    internal static class Program
     {
         [STAThread]
-        internal static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            InitializeUhandledExceptionHandler();
-
+            FatalExceptionHandler.Initialize();
             Application.EnableVisualStyles();
             Application.Run(new PigeonLocatorForm());
         }
 
-        internal static void InitializeUhandledExceptionHandler()
-        {
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-            Application.ThreadException
-                += new ThreadExceptionEventHandler(UI_OnUnhandledException);
-            AppDomain.CurrentDomain.UnhandledException
-                += new UnhandledExceptionEventHandler(App_OnUnhandledException);
-        }
-
-        internal static void UI_OnUnhandledException(object sender, ThreadExceptionEventArgs e)
-        {
-            DisplayUnhandledException(e.Exception);
-            Environment.Exit(1);
-        }
-
-        internal static void App_OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            DisplayUnhandledException((Exception) e.ExceptionObject);
-            Environment.Exit(1);
-        }
-
-        internal static void DisplayUnhandledException(Exception e)
-        {
-            Console.WriteLine("[UNHANDLED EXCEPTON]: {0}", e);
-
-            string msg = "A fatal exception has occurred and the program must be terminated.\n\n" +
-                e.GetType().FullName + ": " + e.Message;
-            MessageBox.Show(msg, "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        internal static string GetProgramName()
+        public static string GetProgramName()
         {
             Assembly asm = Assembly.GetExecutingAssembly();
             if (asm == null) {
@@ -86,7 +56,22 @@ namespace WHampson.PigeonLocator
             return attr.Title;
         }
 
-        internal static FileVersionInfo GetProgramVersion()
+        public static string GetExeName()
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+            if (asm == null) {
+                return "null";
+            }
+
+            string path = asm.Location;
+            if (string.IsNullOrWhiteSpace(path)) {
+                return "null";
+            }
+
+            return Path.GetFileNameWithoutExtension(path);
+        }
+
+        public static FileVersionInfo GetProgramVersion()
         {
             Assembly asm = Assembly.GetExecutingAssembly();
             if (asm == null) {
@@ -96,7 +81,7 @@ namespace WHampson.PigeonLocator
             return FileVersionInfo.GetVersionInfo(asm.Location);
         }
 
-        internal static string GetCopyrightString()
+        public static string GetCopyrightString()
         {
             return "Copyright (C) 2018 W. Hampson";
         }
