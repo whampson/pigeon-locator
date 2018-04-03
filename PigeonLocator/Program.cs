@@ -85,5 +85,28 @@ namespace WHampson.PigeonLocator
         {
             return "Copyright (C) 2018 W. Hampson";
         }
+
+        public static void LogException(LogLevel l, Exception ex)
+        {
+            TextWriter w;
+            switch (l) {
+                case LogLevel.Error:
+                    w = Console.Error;
+                    break;
+                default:
+                    w = Console.Out;
+                    break;
+            }
+
+            w.WriteLine("[{0}]: {1}: {2}",
+                l.ToString(), ex.GetType().FullName, ex.Message);
+        }
+    }
+
+    internal enum LogLevel
+    {
+        Info,
+        Warning,
+        Error
     }
 }
