@@ -33,32 +33,36 @@ namespace WHampson.PigeonLocator
 {
     internal partial class PigeonLocatorForm : Form
     {
-        private const int PigeonCount = 200;
         private const float ZoomControlScaleFactor = 100.0f;
-        private const float GameWorldScaleFactor = 500f / 256f; // Each 256 pixels corresponds to 500 meters
+        private const float GameWorldScaleFactor = 500f / 256f;
         private const int MapCenterOffsetX = 500;
         private const int MapCenterOffsetY = 750;
 
         private IvSavegame _savegame;
-        private PointF _cursorCoords;
-        private ToolTip locationInfoToolTip;
-        private bool isToolTipShowing;
-        private Point toolTipCoords;
-        private Vect3d[] pigeonCoords;
+        private Vect3d[] _remainingPigeons;
+        private PointF _mapCoordinates;
+        private bool _toolTipVisible;
+        private bool suppressZoomTrackBarUpdate;
+        private bool suppressMapZoomUpdate;
 
         public PigeonLocatorForm()
         {
-            _savegame = null;
-            _cursorCoords = new PointF();
-            BlipDimension = 25;
-            locationInfoToolTip = new ToolTip();
-            isToolTipShowing = false;
-            toolTipCoords = new Point();
-            pigeonCoords = new Vect3d[0];
+            suppressZoomTrackBarUpdate = false;
+            suppressMapZoomUpdate = false;
 
             InitializeComponent();
+
+            BlipDimension = 25;
+            ToolTipText = "";
         }
 
+        /// <summary>
+        /// Gets or sets the currently-loaded GTA IV savegame.
+        /// </summary>
+        /// <remarks>
+        /// Enables the File > File Information menu item if the
+        /// the value is not null.
+        /// </remarks>
         private IvSavegame Savegame
         {
             get { return _savegame; }
@@ -68,65 +72,175 @@ namespace WHampson.PigeonLocator
             }
         }
 
-        private PointF MapCoords
+        /// <summary>
+        /// Gets or sets the array of coordinates for remaining pigeons.
+        /// </summary>
+        /// <remarks>
+        /// Also sets the text of the 'Collected' label.
+        /// </remarks>
+        private Vect3d[] RemainingPigeons
         {
-            get { return _cursorCoords; }
+            get { return _remainingPigeons ?? new Vect3d[0]; }
             set {
-                _cursorCoords = value;
+                _remainingPigeons = value;
+
+                string labelText = "";
+                if (_savegame != null) {
+                    labelText = string.Format("{0}/{1} Collected",
+                        Pigeons.NumPigeons - _remainingPigeons.Length,
+                        Pigeons.NumPigeons);
+                }
+                pigeonCountLabel.Text = labelText;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the current map coordinates.
+        /// </summary>
+        /// <remarks>
+        /// Also sets the text of the 'X' and 'Y' labels.
+        /// </remarks>
+        private PointF MapCoordinates
+        {
+            get { return _mapCoordinates; }
+            set {
+                _mapCoordinates = value;
 
                 mapXLabel.Text = string.Format("X: {0:0.000}", value.X);
                 mapYLabel.Text = string.Format("Y: {0:0.000}", value.Y);
             }
         }
 
-        //private float MapZoom
-        //{
+        private float MapZoom
+        {
+            get { return mapPanel.Zoom; }
+            set {
+                // Adjust map zoom level
+                if (!suppressMapZoomUpdate) {
+                    mapPanel.Zoom = value;
+                }
 
-        //}
+                // Adjust zoom trackbar position
+                if (!suppressZoomTrackBarUpdate) {
+                    int trackBarVal = (int) (value * ZoomControlScaleFactor);
+                    if (trackBarVal > zoomTrackBar.Maximum) {
+                        trackBarVal = zoomTrackBar.Maximum;
+                    } else if (trackBarVal < zoomTrackBar.Minimum) {
+                        trackBarVal = zoomTrackBar.Minimum;
+                    }
+                    zoomTrackBar.Value = trackBarVal;
+                }
 
+                // Set zoom label text
+                zoomLabel.Text = string.Format("{0:0%}", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the status text.
+        /// </summary>
         private string StatusText
         {
             get { return statusLabel.Text; }
             set { statusLabel.Text = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the dimension of the blip square in pixels.
+        /// </summary>
         private int BlipDimension
         {
             get;
             set;
         }
 
-        private bool ToolTipsEnabled
+        /// <summary>
+        /// Gets or sets whether to display pigeon location tool tips.
+        /// </summary>
+        private bool ToolTipEnabled
         {
             get { return viewLocationToolTipsMenuItem.Checked; }
+            set { viewLocationToolTipsMenuItem.Checked = value; }
         }
 
+        /// <summary>
+        /// Gets or sets whether a pigeon location tool tip is currently displaying.
+        /// </summary>
+        private bool ToolTipVisible
+        {
+            get { return _toolTipVisible; }
+            set {
+                _toolTipVisible = value;
+
+                string text = ToolTipText;
+                int x = ToolTipLocation.X;
+                int y = ToolTipLocation.Y;
+                int duration = short.MaxValue - 1;
+
+                if (_toolTipVisible) {
+                    locationInfoToolTip.Show(text, this, x, y, duration);
+                } else {
+                    locationInfoToolTip.Hide(this);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the pigeon location tool tip text.
+        /// </summary>
+        private string ToolTipText
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the pigeon location tool tip location.
+        /// </summary>
+        private Point ToolTipLocation
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Loads a GTA IV savegame from a file, then updates the
+        /// pigeon map if the file is valid.
+        /// If the file is not valid, an error message is shown.
+        /// </summary>
+        /// <param name="path">
+        /// The path to the file to load.
+        /// </param>
         private void LoadFile(string path)
         {
             try {
                 Savegame = IvSavegame.Load(path);
             } catch (FileNotFoundException ex) {
+                Console.WriteLine("{0}: {1}", ex.GetType().AssemblyQualifiedName, ex.Message);
                 string title = "File Not Found";
                 string fmt = "The following file could not be found: {0}";
                 ShowErrorMsgDialog(title, string.Format(fmt, path));
                 return;
             } catch (InvalidDataException ex) {
+                Console.WriteLine("{0}: {1}", ex.GetType().Name, ex.Message);
                 string title = "Invalid File Format";
                 string msg = "Not a valid GTA IV savedata file!";
                 ShowErrorMsgDialog(title, msg);
                 return;
             }
 
-            pigeonCoords = Savegame.GetRemainingPigeonLocations();
+            RemainingPigeons = Savegame.GetRemainingPigeonLocations();
             StatusText = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
-
-            foreach (Vect3d loc in pigeonCoords) {
-                Console.WriteLine(loc);
-            }
 
             RedrawPigeonBlips();
         }
 
+        /// <summary>
+        /// Translates a mouse location on the UI to game world coordinates.
+        /// </summary>
+        /// <param name="mouseX">The mouse x-coordinate.</param>
+        /// <param name="mouseY">The mouse y-coordinate</param>
+        /// <returns>The game world coordinates.</returns>
         private PointF GetGameWorldCoords(int mouseX, int mouseY)
         {
             float worldX = ((mouseX + mapPanel.ViewRectangle.X) / mapPanel.Zoom) - (mapPanel.Image.Width / 2);
@@ -140,6 +254,12 @@ namespace WHampson.PigeonLocator
             return new PointF(worldX, worldY);
         }
 
+        /// <summary>
+        /// Translates a game world location to the location of a pixel on the map image.
+        /// </summary>
+        /// <param name="worldX">The game world x-coordinate.</param>
+        /// <param name="worldY">The game world y-coordinate.</param>
+        /// <returns>The map image pixel coordinate.</returns>
         private Point GetMapImagePixel(float worldX, float worldY)
         {
             int mapX = (int) ((worldX - MapCenterOffsetX) / GameWorldScaleFactor);
@@ -150,6 +270,16 @@ namespace WHampson.PigeonLocator
             return new Point(mapX, mapY);
         }
 
+        /// <summary>
+        /// Checks whether a given point falls within the boundaries of a square.
+        /// </summary>
+        /// <param name="p">The point to check.</param>
+        /// <param name="squareCenter">The center of the square.</param>
+        /// <param name="squareDim">The side length of the square.</param>
+        /// <returns>
+        /// True if <paramref name="p"/> falls within the square,
+        /// False otherwise.
+        /// </returns>
         private bool IsPointInSquare(PointF p, PointF squareCenter, float squareDim)
         {
             float xDelta = Math.Abs(p.X - squareCenter.X);
@@ -159,30 +289,39 @@ namespace WHampson.PigeonLocator
                 && yDelta <= squareDim / 2;
         }
 
+        /// <summary>
+        /// Resets the map, then redraws all remaining pigeon blips.
+        /// </summary>
         private void RedrawPigeonBlips()
         {
+            // Refresh map
             mapPanel.Image = Resources.GTAIV_Map_3072x2304;
-            Bitmap blipImage = Resources.GTAIV_Pigeon_240x240;
-            Graphics g = Graphics.FromImage(mapPanel.Image);
 
-            foreach (Vect3d loc in pigeonCoords) {
-                PlotPigeonBlip(g, blipImage, loc.X, loc.Y);
+            // Get blip image
+            Bitmap blipImage = Resources.GTAIV_Pigeon_240x240;
+            Graphics mapGraphics = Graphics.FromImage(mapPanel.Image);
+
+            // Draw blips on map
+            foreach (Vect3d loc in RemainingPigeons) {
+                DrawBlip(mapGraphics, blipImage, loc.X, loc.Y);
             }
 
+            // Re-paint map
             mapPanel.Invalidate();
         }
 
-        private void PlotPigeonBlip(Graphics g, Bitmap blipImg, float worldX, float worldY)
+        /// <summary>
+        /// Draws a blip on the map.
+        /// </summary>
+        /// <param name="mapGraphics">The map's <see cref="Graphics"/> object.</param>
+        /// <param name="blipImg">The blip sprite.</param>
+        /// <param name="worldX">Game world x-coordinate.</param>
+        /// <param name="worldY">Game world y-coordinate.</param>
+        private void DrawBlip(Graphics mapGraphics, Bitmap blipImg, float worldX, float worldY)
         {
             Point mapPixel = GetMapImagePixel(worldX, worldY);
-            //g.FillRectangle(
-            //    Brushes.Red,
-            //    mapPixel.X - (BlipDimension / 2),
-            //    mapPixel.Y - (BlipDimension / 2),
-            //    BlipDimension,
-            //    BlipDimension);
 
-            g.DrawImage(
+            mapGraphics.DrawImage(
                 blipImg,
                 mapPixel.X - (BlipDimension / 2),
                 mapPixel.Y - (BlipDimension / 2),
@@ -190,48 +329,49 @@ namespace WHampson.PigeonLocator
                 BlipDimension);
         }
 
+        /// <summary>
+        /// Gets all nearest pigeons 
+        /// </summary>
+        /// <param name="loc"></param>
+        /// <param name="squareDim"></param>
+        /// <returns></returns>
         private Vect3d[] GetNearestPigeons(PointF loc, float squareDim)
         {
-            return pigeonCoords
+            return RemainingPigeons
                 .Where(vect => IsPointInSquare(new PointF(vect.X, vect.Y), loc, squareDim))
                 .ToArray();
         }
 
-        private void ShowLocationToolTip(int windowX, int windowY, string text)
-        {
-            locationInfoToolTip.Show(text, this, windowX, windowY, short.MaxValue - 1);
-            isToolTipShowing = true;
-        }
-
-        private void HideLocationToolTip()
-        {
-            locationInfoToolTip.Hide(this);
-            isToolTipShowing = false;
-        }
-
+        /// <summary>
+        /// Gets the path to the GTA IV user data directory.
+        /// </summary>
+        /// <returns></returns>
         private string GetGameUserDataDirectory()
         {
             return Environment.GetEnvironmentVariable("LocalAppData")
                 + @"\Rockstar Games\GTA IV";
         }
 
+        /// <summary>
+        /// Displays a dialog containing savegame metadata.
+        /// </summary>
         private void ShowFileInfoDialog()
         {
             string fileInfo = string.Format(
                 "Mission Name: {0}\n" +
                 "Timestamp: {1}\n" +
                 "File Size: {2} bytes\n" +
-                "File Version: {3}\n\n" +
-                "Pigeons Killed: {4}/{5}",
+                "File Version: {3}",
                 Savegame.LastMissionName,
                 Savegame.Timestamp.ToString("MMM d, yyyy HH:mm:ss"),
                 Savegame.FileSize,
-                Savegame.FileVersion,
-                PigeonCount - pigeonCoords.Length,
-                PigeonCount);
+                Savegame.FileVersion);
             ShowInfoMsgDialog("File Information", fileInfo);
         }
 
+        /// <summary>
+        /// Displays program 'About' dialog.
+        /// </summary>
         private void ShowAboutDialog()
         {
             string desc = "Maps-out all remaining flying rats in a GTA IV savegame.";
@@ -251,11 +391,21 @@ namespace WHampson.PigeonLocator
             ShowInfoMsgDialog("About", aboutString);
         }
 
+        /// <summary>
+        /// Displays an informational message box with 'OK' button and blue 'i' icon.
+        /// </summary>
+        /// <param name="title">The message box title.</param>
+        /// <param name="msg">The message box message.</param>
         private void ShowInfoMsgDialog(string title, string msg)
         {
             MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        /// <summary>
+        /// Displays an error message box with 'OK' button and red 'x' icon.
+        /// </summary>
+        /// <param name="title">The message box title.</param>
+        /// <param name="msg">The message box message.</param>
         private void ShowErrorMsgDialog(string title, string msg)
         {
             MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -293,67 +443,61 @@ namespace WHampson.PigeonLocator
             ShowAboutDialog();
         }
 
-        private void ZoomTrackBar_OnScroll(object sender, EventArgs e)
-        {
-            mapPanel.Zoom = zoomTrackBar.Value / ZoomControlScaleFactor;
-            zoomLabel.Text = string.Format("{0:0%}", mapPanel.Zoom);
-        }
-
         private void ZoomTrackBar_OnMouseUp(object sender, MouseEventArgs e)
         {
             mapPanel.Focus();
         }
 
+        private void ZoomTrackBar_OnScroll(object sender, EventArgs e)
+        {
+            suppressZoomTrackBarUpdate = true;
+            MapZoom = zoomTrackBar.Value / ZoomControlScaleFactor;
+            suppressZoomTrackBarUpdate = false;
+        }
+
         private void MapPanel_OnZoom(object sender, ImagePanel.ZoomEventArgs e)
         {
-            int val = (int) (e.NewValue * ZoomControlScaleFactor);
-            if (val > zoomTrackBar.Maximum) {
-                val = zoomTrackBar.Maximum;
-            } else if (val < zoomTrackBar.Minimum) {
-                val = zoomTrackBar.Minimum;
-            }
-
-            zoomTrackBar.Value = val;
-            zoomLabel.Text = string.Format("{0:0%}", e.NewValue);
-            //RedrawPigeonBlips();
+            suppressMapZoomUpdate = true;
+            MapZoom = e.NewValue;
+            suppressMapZoomUpdate = false;
         }
 
         private void MapPanel_OnMouseMove(object sender, MouseEventArgs e)
         {
-            MapCoords = GetGameWorldCoords(e.X, e.Y);
+            MapCoordinates = GetGameWorldCoords(e.X, e.Y);
 
             toolTipTimer.Stop();
 
-            if (IsPointInSquare(new PointF(e.X, e.Y), toolTipCoords, BlipDimension)) {
-                if (isToolTipShowing) {
+            if (IsPointInSquare(new PointF(e.X, e.Y), ToolTipLocation, BlipDimension)) {
+                if (ToolTipVisible) {
                     return;
                 }
-            } else if (isToolTipShowing) {
-                HideLocationToolTip();
+            } else if (ToolTipVisible) {
+                ToolTipVisible = false;
             }
 
-            toolTipCoords = new Point(e.X, e.Y);
+            ToolTipLocation = new Point(e.X, e.Y);
             toolTipTimer.Start();
         }
 
         private void ToolTipTimer_OnTick(object sender, EventArgs e)
         {
-            if (!ToolTipsEnabled) {
-                if (isToolTipShowing) {
-                    HideLocationToolTip();
+            if (!ToolTipEnabled) {
+                if (ToolTipVisible) {
+                    ToolTipVisible = false;
                 }
                 return;
             }
 
-            Vect3d[] nearest = GetNearestPigeons(MapCoords, BlipDimension * 2);
+            Vect3d[] nearest = GetNearestPigeons(MapCoordinates, BlipDimension * 2);
             if (nearest.Length == 0) {
-                if (isToolTipShowing) {
-                    HideLocationToolTip();
+                if (ToolTipVisible) {
+                    ToolTipVisible = false;
                 }
                 return;
             }
 
-            if (isToolTipShowing) {
+            if (ToolTipVisible) {
                 return;
             }
 
@@ -378,7 +522,8 @@ namespace WHampson.PigeonLocator
                 }
             }
 
-            ShowLocationToolTip(toolTipCoords.X, toolTipCoords.Y, desc);
+            ToolTipText = desc;
+            ToolTipVisible = true;
         }
 
         private void OnDragEnter(object sender, DragEventArgs e)
@@ -404,8 +549,9 @@ namespace WHampson.PigeonLocator
             // Update UI elements
             Savegame = null;
             StatusText = "No file loaded.";
-            MapCoords = new PointF(0, 0);
-            zoomLabel.Text = string.Format("{0:0%}", mapPanel.Zoom);
+            MapCoordinates = new PointF();
+            RemainingPigeons = new Vect3d[0];
+            MapZoom = mapPanel.Zoom;
 
             mapPanel.ViewPosition = new PointF(0, 2f / 3f);
             mapPanel.Focus();
