@@ -22,10 +22,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -44,16 +42,18 @@ namespace WHampson.PigeonLocator
         private IvSavegame _savegame;
         private PointF _cursorCoords;
         private ToolTip locationInfoToolTip;
-        private bool isLocationInfoShowing;
+        private bool isToolTipShowing;
+        private Point toolTipCoords;
         private Vect3d[] pigeonCoords;
 
         public PigeonLocatorForm()
         {
             _savegame = null;
-            _cursorCoords = new PointF(0, 0);
-            BlipDimension = 20;
+            _cursorCoords = new PointF();
+            BlipDimension = 25;
             locationInfoToolTip = new ToolTip();
-            isLocationInfoShowing = false;
+            isToolTipShowing = false;
+            toolTipCoords = new Point();
             pigeonCoords = new Vect3d[0];
 
             InitializeComponent();
@@ -68,14 +68,14 @@ namespace WHampson.PigeonLocator
             }
         }
 
-        private PointF MapCursorCoords
+        private PointF MapCoords
         {
             get { return _cursorCoords; }
             set {
                 _cursorCoords = value;
 
-                cursorXLabel.Text = string.Format("X: {0:0.000}", value.X);
-                cursorYLabel.Text = string.Format("Y: {0:0.000}", value.Y);
+                mapXLabel.Text = string.Format("X: {0:0.000}", value.X);
+                mapYLabel.Text = string.Format("Y: {0:0.000}", value.Y);
             }
         }
 
@@ -89,6 +89,11 @@ namespace WHampson.PigeonLocator
         {
             get { return statusLabel.Text; }
             set { statusLabel.Text = value; }
+        }
+
+        private bool ToolTipsEnabled
+        {
+            get { return viewLocationToolTipsMenuItem.Checked; }
         }
 
         private void LoadFile(string path)
@@ -109,6 +114,10 @@ namespace WHampson.PigeonLocator
 
             pigeonCoords = Savegame.GetRemainingPigeonLocations();
             Status = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
+
+            foreach (Vect3d loc in pigeonCoords) {
+                Console.WriteLine(loc);
+            }
 
             RedrawPigeonBlips();
         }
@@ -134,6 +143,15 @@ namespace WHampson.PigeonLocator
             mapY += (mapPanel.Image.Height / 2);
 
             return new Point(mapX, mapY);
+        }
+
+        private bool IsPointInSquare(PointF p, PointF squareCenter, float squareDim)
+        {
+            float xDelta = Math.Abs(p.X - squareCenter.X);
+            float yDelta = Math.Abs(p.Y - squareCenter.Y);
+
+            return xDelta <= squareDim / 2
+                && yDelta <= squareDim / 2;
         }
 
         private void RedrawPigeonBlips()
@@ -167,30 +185,23 @@ namespace WHampson.PigeonLocator
                 BlipDimension);
         }
 
-        private PointF[] GetNearestPigeons(float worldX, float worldY, float thresh)
+        private Vect3d[] GetNearestPigeons(PointF loc, float squareDim)
         {
             return pigeonCoords
-                .Select(vect => new PointF(vect.X, vect.Y))
-                .Where(p => Math.Abs(p.X - worldX) <= thresh && Math.Abs(p.Y - worldY) <= thresh)
+                .Where(vect => IsPointInSquare(new PointF(vect.X, vect.Y), loc, squareDim))
                 .ToArray();
         }
 
-        private void ShowLocationToolTip(int windowX, int windowY)
+        private void ShowLocationToolTip(int windowX, int windowY, string text)
         {
-            PointF[] nearest = GetNearestPigeons(MapCursorCoords.X, MapCursorCoords.Y, BlipDimension);
+            locationInfoToolTip.Show(text, this, windowX, windowY, short.MaxValue - 1);
+            isToolTipShowing = true;
+        }
 
-            //float x = nearest[0].X;
-            //float y = nearest[0].Y;
-
-            if (nearest.Length == 0) {
-                if (isLocationInfoShowing) {
-                    locationInfoToolTip.Hide(this);
-                    isLocationInfoShowing = false;
-                }
-            } else if (!isLocationInfoShowing) {
-                locationInfoToolTip.Show("A pigeon!", this, windowX, windowY, short.MaxValue - 1);
-                isLocationInfoShowing = true;
-            }
+        private void HideLocationToolTip()
+        {
+            locationInfoToolTip.Hide(this);
+            isToolTipShowing = false;
         }
 
         private string GetGameUserDataDirectory()
@@ -277,29 +288,85 @@ namespace WHampson.PigeonLocator
             ShowAboutDialog();
         }
 
-        private void TrackOar_OnScroll(object sender, EventArgs e)
+        private void ZoomTrackBar_OnScroll(object sender, EventArgs e)
         {
-            mapPanel.Zoom = trackBar.Value / ZoomControlScaleFactor;
+            mapPanel.Zoom = zoomTrackBar.Value / ZoomControlScaleFactor;
         }
 
         private void MapPanel_OnZoom(object sender, ImagePanel.ZoomEventArgs e)
         {
             int val = (int) (e.NewValue * ZoomControlScaleFactor);
-            if (val > trackBar.Maximum) {
-                val = trackBar.Maximum;
-            } else if (val < trackBar.Minimum) {
-                val = trackBar.Minimum;
+            if (val > zoomTrackBar.Maximum) {
+                val = zoomTrackBar.Maximum;
+            } else if (val < zoomTrackBar.Minimum) {
+                val = zoomTrackBar.Minimum;
             }
 
-            trackBar.Value = val;
+            zoomTrackBar.Value = val;
             //RedrawPigeonBlips();
         }
 
         private void MapPanel_OnMouseMove(object sender, MouseEventArgs e)
         {
-            MapCursorCoords = GetGameWorldCoords(e.X, e.Y);
+            MapCoords = GetGameWorldCoords(e.X, e.Y);
 
-            ShowLocationToolTip(e.X, e.Y);
+            toolTipTimer.Stop();
+
+            if (IsPointInSquare(new PointF(e.X, e.Y), toolTipCoords, BlipDimension)) {
+                if (isToolTipShowing) {
+                    return;
+                }
+            } else if (isToolTipShowing) {
+                HideLocationToolTip();
+            }
+
+            toolTipCoords = new Point(e.X, e.Y);
+            toolTipTimer.Start();
+        }
+
+        private void ToolTipTimer_OnTick(object sender, EventArgs e)
+        {
+            if (!ToolTipsEnabled) {
+                if (isToolTipShowing) {
+                    HideLocationToolTip();
+                }
+                return;
+            }
+
+            Vect3d[] nearest = GetNearestPigeons(MapCoords, BlipDimension * 2);
+            if (nearest.Length == 0) {
+                if (isToolTipShowing) {
+                    HideLocationToolTip();
+                }
+                return;
+            }
+
+            if (isToolTipShowing) {
+                return;
+            }
+
+            string desc = "";
+            for (int i = 0; i < nearest.Length; i++) {
+                // Append index (if necessary)
+                if (nearest.Length > 1) {
+                    desc += (i + 1) + ") ";
+                }
+
+                // Append description
+                bool hasDesc = Pigeons.Descriptions.TryGetValue(nearest[i], out string s);
+                if (hasDesc) {
+                    desc += s;
+                } else {
+                    desc += "(no information available)";
+                }
+
+                // Add a blank line (if necessary)
+                if (nearest.Length > 1 && i != nearest.Length - 1) {
+                    desc += "\n\n";
+                }
+            }
+
+            ShowLocationToolTip(toolTipCoords.X, toolTipCoords.Y, desc);
         }
 
         private void OnDragEnter(object sender, DragEventArgs e)
@@ -325,15 +392,10 @@ namespace WHampson.PigeonLocator
             // Update UI elements
             Savegame = null;
             Status = "No file loaded.";
-            MapCursorCoords = new PointF(0, 0);
+            MapCoords = new PointF(0, 0);
 
             mapPanel.ViewPosition = new PointF(0, 2f / 3f);
             mapPanel.Focus();
-        }
-
-        private void collectedPigeonsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

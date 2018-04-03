@@ -50,6 +50,7 @@ namespace WHampson.PigeonLocator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PigeonLocatorForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,24 +59,25 @@ namespace WHampson.PigeonLocator
             this.fileInformationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.fileExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editBlipPropertiesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewRemainingPigeonsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewCollectedPigeonsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewMenuSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.viewLocationToolTipsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.trackBar = new System.Windows.Forms.TrackBar();
-            this.cursorXLabel = new System.Windows.Forms.Label();
-            this.cursorYLabel = new System.Windows.Forms.Label();
+            this.zoomTrackBar = new System.Windows.Forms.TrackBar();
+            this.mapXLabel = new System.Windows.Forms.Label();
+            this.mapYLabel = new System.Windows.Forms.Label();
+            this.toolTipTimer = new System.Windows.Forms.Timer(this.components);
             this.mapPanel = new WHampson.PigeonLocator.ImagePanel();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.blipPropertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.remainingPigeonsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.collectedPigeonsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showTooltipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zoomTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -88,7 +90,7 @@ namespace WHampson.PigeonLocator
             this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1254, 40);
+            this.menuStrip.Size = new System.Drawing.Size(1254, 42);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -137,19 +139,80 @@ namespace WHampson.PigeonLocator
             this.fileExitMenuItem.Text = "E&xit";
             this.fileExitMenuItem.Click += new System.EventHandler(this.FileExitMenuItem_OnClick);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editBlipPropertiesMenuItem});
+            this.editToolStripMenuItem.Enabled = false;
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(67, 38);
+            this.editToolStripMenuItem.Text = "&Edit";
+            // 
+            // editBlipPropertiesMenuItem
+            // 
+            this.editBlipPropertiesMenuItem.Name = "editBlipPropertiesMenuItem";
+            this.editBlipPropertiesMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.editBlipPropertiesMenuItem.Text = "Blip &Properties...";
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewRemainingPigeonsMenuItem,
+            this.viewCollectedPigeonsMenuItem,
+            this.viewMenuSeparator1,
+            this.viewLocationToolTipsMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(78, 38);
+            this.viewToolStripMenuItem.Text = "&View";
+            // 
+            // viewRemainingPigeonsMenuItem
+            // 
+            this.viewRemainingPigeonsMenuItem.Checked = true;
+            this.viewRemainingPigeonsMenuItem.CheckOnClick = true;
+            this.viewRemainingPigeonsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.viewRemainingPigeonsMenuItem.Enabled = false;
+            this.viewRemainingPigeonsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.viewRemainingPigeonsMenuItem.Name = "viewRemainingPigeonsMenuItem";
+            this.viewRemainingPigeonsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.viewRemainingPigeonsMenuItem.Text = "Pigeons &Remaining";
+            // 
+            // viewCollectedPigeonsMenuItem
+            // 
+            this.viewCollectedPigeonsMenuItem.CheckOnClick = true;
+            this.viewCollectedPigeonsMenuItem.Enabled = false;
+            this.viewCollectedPigeonsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.viewCollectedPigeonsMenuItem.Name = "viewCollectedPigeonsMenuItem";
+            this.viewCollectedPigeonsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.viewCollectedPigeonsMenuItem.Text = "Pigeons &Collected";
+            // 
+            // viewMenuSeparator1
+            // 
+            this.viewMenuSeparator1.Name = "viewMenuSeparator1";
+            this.viewMenuSeparator1.Size = new System.Drawing.Size(321, 6);
+            // 
+            // viewLocationToolTipsMenuItem
+            // 
+            this.viewLocationToolTipsMenuItem.Checked = true;
+            this.viewLocationToolTipsMenuItem.CheckOnClick = true;
+            this.viewLocationToolTipsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.viewLocationToolTipsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.viewLocationToolTipsMenuItem.Name = "viewLocationToolTipsMenuItem";
+            this.viewLocationToolTipsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.viewLocationToolTipsMenuItem.Text = "&Location Tooltips";
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpAboutMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 36);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 38);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
             // helpAboutMenuItem
             // 
             this.helpAboutMenuItem.Name = "helpAboutMenuItem";
             this.helpAboutMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.helpAboutMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.helpAboutMenuItem.Size = new System.Drawing.Size(219, 38);
             this.helpAboutMenuItem.Text = "&About";
             this.helpAboutMenuItem.Click += new System.EventHandler(this.HelpAboutMenuItem_OnClick);
             // 
@@ -173,39 +236,45 @@ namespace WHampson.PigeonLocator
             // 
             // trackBar
             // 
-            this.trackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar.LargeChange = 20;
-            this.trackBar.Location = new System.Drawing.Point(992, 759);
-            this.trackBar.Maximum = 200;
-            this.trackBar.Minimum = 20;
-            this.trackBar.Name = "trackBar";
-            this.trackBar.Size = new System.Drawing.Size(250, 90);
-            this.trackBar.SmallChange = 10;
-            this.trackBar.TabIndex = 5;
-            this.trackBar.TabStop = false;
-            this.trackBar.TickFrequency = 20;
-            this.trackBar.Value = 20;
-            this.trackBar.Scroll += new System.EventHandler(this.TrackOar_OnScroll);
+            this.zoomTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.zoomTrackBar.LargeChange = 20;
+            this.zoomTrackBar.Location = new System.Drawing.Point(992, 759);
+            this.zoomTrackBar.Maximum = 200;
+            this.zoomTrackBar.Minimum = 20;
+            this.zoomTrackBar.Name = "trackBar";
+            this.zoomTrackBar.Size = new System.Drawing.Size(250, 90);
+            this.zoomTrackBar.SmallChange = 10;
+            this.zoomTrackBar.TabIndex = 5;
+            this.zoomTrackBar.TabStop = false;
+            this.zoomTrackBar.TickFrequency = 20;
+            this.zoomTrackBar.Value = 20;
+            this.zoomTrackBar.Scroll += new System.EventHandler(this.ZoomTrackBar_OnScroll);
             // 
-            // cursorXLabel
+            // mapXLabel
             // 
-            this.cursorXLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cursorXLabel.AutoSize = true;
-            this.cursorXLabel.Location = new System.Drawing.Point(12, 759);
-            this.cursorXLabel.Name = "cursorXLabel";
-            this.cursorXLabel.Size = new System.Drawing.Size(113, 25);
-            this.cursorXLabel.TabIndex = 7;
-            this.cursorXLabel.Text = "X: <x_val>";
+            this.mapXLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.mapXLabel.AutoSize = true;
+            this.mapXLabel.Location = new System.Drawing.Point(12, 759);
+            this.mapXLabel.Name = "mapXLabel";
+            this.mapXLabel.Size = new System.Drawing.Size(113, 25);
+            this.mapXLabel.TabIndex = 7;
+            this.mapXLabel.Text = "X: <x_val>";
             // 
-            // cursorYLabel
+            // mapYLabel
             // 
-            this.cursorYLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cursorYLabel.AutoSize = true;
-            this.cursorYLabel.Location = new System.Drawing.Point(12, 784);
-            this.cursorYLabel.Name = "cursorYLabel";
-            this.cursorYLabel.Size = new System.Drawing.Size(114, 25);
-            this.cursorYLabel.TabIndex = 8;
-            this.cursorYLabel.Text = "Y: <y_val>";
+            this.mapYLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.mapYLabel.AutoSize = true;
+            this.mapYLabel.Location = new System.Drawing.Point(12, 784);
+            this.mapYLabel.Name = "mapYLabel";
+            this.mapYLabel.Size = new System.Drawing.Size(114, 25);
+            this.mapYLabel.TabIndex = 8;
+            this.mapYLabel.Text = "Y: <y_val>";
+            // 
+            // toolTipTimer
+            // 
+            this.toolTipTimer.Enabled = true;
+            this.toolTipTimer.Interval = 500;
+            this.toolTipTimer.Tick += new System.EventHandler(this.ToolTipTimer_OnTick);
             // 
             // mapPanel
             // 
@@ -228,67 +297,6 @@ namespace WHampson.PigeonLocator
             this.mapPanel.ZoomEvent += new WHampson.PigeonLocator.ImagePanel.ZoomEventHandler(this.MapPanel_OnZoom);
             this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MapPanel_OnMouseMove);
             // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.remainingPigeonsToolStripMenuItem,
-            this.collectedPigeonsToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.showTooltipsToolStripMenuItem});
-            this.viewToolStripMenuItem.Enabled = false;
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(78, 36);
-            this.viewToolStripMenuItem.Text = "&View";
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.blipPropertiesToolStripMenuItem});
-            this.editToolStripMenuItem.Enabled = false;
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(67, 36);
-            this.editToolStripMenuItem.Text = "&Edit";
-            // 
-            // blipPropertiesToolStripMenuItem
-            // 
-            this.blipPropertiesToolStripMenuItem.Name = "blipPropertiesToolStripMenuItem";
-            this.blipPropertiesToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
-            this.blipPropertiesToolStripMenuItem.Text = "Blip &Properties...";
-            // 
-            // remainingPigeonsToolStripMenuItem
-            // 
-            this.remainingPigeonsToolStripMenuItem.Checked = true;
-            this.remainingPigeonsToolStripMenuItem.CheckOnClick = true;
-            this.remainingPigeonsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.remainingPigeonsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.remainingPigeonsToolStripMenuItem.Name = "remainingPigeonsToolStripMenuItem";
-            this.remainingPigeonsToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
-            this.remainingPigeonsToolStripMenuItem.Text = "Pigeons &Remaining";
-            // 
-            // collectedPigeonsToolStripMenuItem
-            // 
-            this.collectedPigeonsToolStripMenuItem.CheckOnClick = true;
-            this.collectedPigeonsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.collectedPigeonsToolStripMenuItem.Name = "collectedPigeonsToolStripMenuItem";
-            this.collectedPigeonsToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
-            this.collectedPigeonsToolStripMenuItem.Text = "Pigeons &Collected";
-            this.collectedPigeonsToolStripMenuItem.Click += new System.EventHandler(this.collectedPigeonsToolStripMenuItem_Click);
-            // 
-            // showTooltipsToolStripMenuItem
-            // 
-            this.showTooltipsToolStripMenuItem.Checked = true;
-            this.showTooltipsToolStripMenuItem.CheckOnClick = true;
-            this.showTooltipsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showTooltipsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.showTooltipsToolStripMenuItem.Name = "showTooltipsToolStripMenuItem";
-            this.showTooltipsToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
-            this.showTooltipsToolStripMenuItem.Text = "&Location Tooltips";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(373, 6);
-            // 
             // PigeonLocatorForm
             // 
             this.AllowDrop = true;
@@ -297,9 +305,9 @@ namespace WHampson.PigeonLocator
             this.ClientSize = new System.Drawing.Size(1254, 889);
             this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.mapPanel);
-            this.Controls.Add(this.cursorYLabel);
-            this.Controls.Add(this.cursorXLabel);
-            this.Controls.Add(this.trackBar);
+            this.Controls.Add(this.mapYLabel);
+            this.Controls.Add(this.mapXLabel);
+            this.Controls.Add(this.zoomTrackBar);
             this.Controls.Add(this.statusStrip);
             this.DoubleBuffered = true;
             this.Icon = global::WHampson.PigeonLocator.Properties.Resources.GTAIV_PigeonIcon_240x240;
@@ -313,7 +321,7 @@ namespace WHampson.PigeonLocator
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zoomTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -332,16 +340,17 @@ namespace WHampson.PigeonLocator
         private System.Windows.Forms.ToolStripMenuItem helpAboutMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
-        private System.Windows.Forms.TrackBar trackBar;
+        private System.Windows.Forms.TrackBar zoomTrackBar;
         private ImagePanel mapPanel;
-        private System.Windows.Forms.Label cursorXLabel;
-        private System.Windows.Forms.Label cursorYLabel;
+        private System.Windows.Forms.Label mapXLabel;
+        private System.Windows.Forms.Label mapYLabel;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem blipPropertiesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editBlipPropertiesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem remainingPigeonsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem collectedPigeonsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showTooltipsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem viewRemainingPigeonsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewCollectedPigeonsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewLocationToolTipsMenuItem;
+        private System.Windows.Forms.ToolStripSeparator viewMenuSeparator1;
+        private System.Windows.Forms.Timer toolTipTimer;
     }
 }
