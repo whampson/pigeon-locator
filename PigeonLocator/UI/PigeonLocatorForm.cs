@@ -216,13 +216,13 @@ namespace WHampson.PigeonLocator
             try {
                 Savegame = IvSavegame.Load(path);
             } catch (FileNotFoundException ex) {
-                Console.WriteLine("{0}: {1}", ex.GetType().FullName, ex.Message);
+                Program.LogException(LogLevel.Info, ex);
                 string title = "File Not Found";
                 string fmt = "The following file could not be found: {0}";
                 ShowErrorMsgDialog(title, string.Format(fmt, path));
                 return;
             } catch (InvalidDataException ex) {
-                Console.WriteLine("{0}: {1}", ex.GetType().FullName, ex.Message);
+                Program.LogException(LogLevel.Info, ex);
                 string title = "Invalid File Format";
                 string msg = "Not a valid GTA IV savedata file!";
                 ShowErrorMsgDialog(title, msg);
