@@ -182,12 +182,14 @@ namespace WHampson.PigeonLocator
             //float x = nearest[0].X;
             //float y = nearest[0].Y;
 
-            if (nearest.Length != 0 && !isLocationInfoShowing) {
+            if (nearest.Length == 0) {
+                if (isLocationInfoShowing) {
+                    locationInfoToolTip.Hide(this);
+                    isLocationInfoShowing = false;
+                }
+            } else if (!isLocationInfoShowing) {
                 locationInfoToolTip.Show("A pigeon!", this, windowX, windowY, short.MaxValue - 1);
                 isLocationInfoShowing = true;
-            } else if (isLocationInfoShowing) {
-                locationInfoToolTip.Hide(this);
-                isLocationInfoShowing = false;
             }
         }
 
