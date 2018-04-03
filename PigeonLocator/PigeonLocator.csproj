@@ -66,9 +66,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="FatalExceptionHandler.cs" />
     <Compile Include="IvSavegame.cs" />
     <Compile Include="ObjectUtilities.cs" />
-    <Compile Include="PigeonLocator.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="IvStructures.cs" />
     <Compile Include="Pigeons.cs" />
     <Compile Include="UI\ImagePanel.cs">
