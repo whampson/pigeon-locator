@@ -24,6 +24,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace WHampson.PigeonLocator
@@ -33,8 +34,40 @@ namespace WHampson.PigeonLocator
         [STAThread]
         internal static void Main(string[] args)
         {
+            InitializeUhandledExceptionHandler();
+
             Application.EnableVisualStyles();
             Application.Run(new PigeonLocatorForm());
+        }
+
+        internal static void InitializeUhandledExceptionHandler()
+        {
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.ThreadException
+                += new ThreadExceptionEventHandler(UI_OnUnhandledException);
+            AppDomain.CurrentDomain.UnhandledException
+                += new UnhandledExceptionEventHandler(App_OnUnhandledException);
+        }
+
+        internal static void UI_OnUnhandledException(object sender, ThreadExceptionEventArgs e)
+        {
+            DisplayUnhandledException(e.Exception);
+            Environment.Exit(1);
+        }
+
+        internal static void App_OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            DisplayUnhandledException((Exception) e.ExceptionObject);
+            Environment.Exit(1);
+        }
+
+        internal static void DisplayUnhandledException(Exception e)
+        {
+            Console.WriteLine("[UNHANDLED EXCEPTON]: {0}", e);
+
+            string msg = "A fatal exception has occurred and the program must be terminated.\n\n" +
+                e.GetType().FullName + ": " + e.Message;
+            MessageBox.Show(msg, "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         internal static string GetProgramName()
