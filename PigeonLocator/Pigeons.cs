@@ -27,6 +27,8 @@ namespace WHampson.PigeonLocator
 {
     internal static class Pigeons
     {
+        public const int NumPigeons = 200;
+
         public static readonly Dictionary<Vect3d, string>
             Descriptions = new Dictionary<Vect3d, string>()
             {
