@@ -79,16 +79,21 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        //private float MapZoom
+        //{
+
+        //}
+
+        private string StatusText
+        {
+            get { return statusLabel.Text; }
+            set { statusLabel.Text = value; }
+        }
+
         private int BlipDimension
         {
             get;
             set;
-        }
-
-        private string Status
-        {
-            get { return statusLabel.Text; }
-            set { statusLabel.Text = value; }
         }
 
         private bool ToolTipsEnabled
@@ -113,7 +118,7 @@ namespace WHampson.PigeonLocator
             }
 
             pigeonCoords = Savegame.GetRemainingPigeonLocations();
-            Status = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
+            StatusText = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
 
             foreach (Vect3d loc in pigeonCoords) {
                 Console.WriteLine(loc);
@@ -291,6 +296,12 @@ namespace WHampson.PigeonLocator
         private void ZoomTrackBar_OnScroll(object sender, EventArgs e)
         {
             mapPanel.Zoom = zoomTrackBar.Value / ZoomControlScaleFactor;
+            zoomLabel.Text = string.Format("{0:0%}", mapPanel.Zoom);
+        }
+
+        private void ZoomTrackBar_OnMouseUp(object sender, MouseEventArgs e)
+        {
+            mapPanel.Focus();
         }
 
         private void MapPanel_OnZoom(object sender, ImagePanel.ZoomEventArgs e)
@@ -303,6 +314,7 @@ namespace WHampson.PigeonLocator
             }
 
             zoomTrackBar.Value = val;
+            zoomLabel.Text = string.Format("{0:0%}", e.NewValue);
             //RedrawPigeonBlips();
         }
 
@@ -391,8 +403,9 @@ namespace WHampson.PigeonLocator
 
             // Update UI elements
             Savegame = null;
-            Status = "No file loaded.";
+            StatusText = "No file loaded.";
             MapCoords = new PointF(0, 0);
+            zoomLabel.Text = string.Format("{0:0%}", mapPanel.Zoom);
 
             mapPanel.ViewPosition = new PointF(0, 2f / 3f);
             mapPanel.Focus();
