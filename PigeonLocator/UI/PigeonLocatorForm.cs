@@ -33,7 +33,7 @@ using WHampson.PigeonLocator.Properties;
 
 namespace WHampson.PigeonLocator
 {
-    public partial class PigeonLocatorForm : Form
+    internal partial class PigeonLocatorForm : Form
     {
         private const int PigeonCount = 200;
         private const float ZoomControlScaleFactor = 100.0f;

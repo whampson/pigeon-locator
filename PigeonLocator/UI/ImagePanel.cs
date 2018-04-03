@@ -34,7 +34,7 @@ namespace WHampson.PigeonLocator
     /// <remarks>
     /// Adapted from https://www.codeproject.com/Articles/26532/A-Zoomable-and-Scrollable-PictureBox.
     /// </remarks>
-    public partial class ImagePanel : UserControl
+    internal partial class ImagePanel : UserControl
     {
         /// <summary>
         /// Represents the method that handles the Zoom event of an <see cref="ImagePanel"/>.
