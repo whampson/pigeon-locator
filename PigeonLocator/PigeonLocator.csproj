@@ -69,6 +69,7 @@
     <Compile Include="ObjectUtilities.cs" />
     <Compile Include="PigeonLocator.cs" />
     <Compile Include="IvStructures.cs" />
+    <Compile Include="Pigeons.cs" />
     <Compile Include="UI\ImagePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
