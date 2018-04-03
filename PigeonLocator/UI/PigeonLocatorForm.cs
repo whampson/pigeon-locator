@@ -375,19 +375,19 @@ namespace WHampson.PigeonLocator
         private void ShowAboutDialog()
         {
             string desc = "Maps-out all remaining flying rats in a GTA IV savegame.";
-            FileVersionInfo vers = PigeonLocator.GetProgramVersion();
+            FileVersionInfo vers = Program.GetProgramVersion();
 
             string aboutString = string.Format(
                 "{0}\n" +
                 "Version: {1}\n\n" +
                 "{2}\n\n" +
                 "{3}",
-                PigeonLocator.GetProgramName(),
+                Program.GetProgramName(),
                 (vers == null)
                     ? "null"
                     : string.Format("{0} (build {1})", vers.ProductVersion, vers.FilePrivatePart),
                 desc,
-                PigeonLocator.GetCopyrightString());
+                Program.GetCopyrightString());
             ShowInfoMsgDialog("About", aboutString);
         }
 
