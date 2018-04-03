@@ -554,17 +554,27 @@ namespace WHampson.PigeonLocator
             MapZoom = mapPanel.Zoom;
 
             #if DEBUG
-            debugToolStripMenuItem.Enabled = true;
-            debugToolStripMenuItem.Visible = true;
+            debugMenuStripItem.Enabled = true;
+            debugMenuStripItem.Visible = true;
             #endif
 
             mapPanel.ViewPosition = new PointF(0, 2f / 3f);
             mapPanel.Focus();
         }
 
-        private void DebugThrowExceptionMenuItem_Click(object sender, EventArgs e)
+        private void DebugExceptionsThrowExceptionMenuItem_OnClick(object sender, EventArgs e)
         {
+            #if DEBUG
             throw new Exception("Test exception.");
+            #endif
+        }
+
+        private void DebugExceptionsCauseIndexOutOfRangeExceptionMenuItem_OnClick(object sender, EventArgs e)
+        {
+            #if DEBUG
+            byte[] b = new byte[4];
+            b[4] = 0xFE;
+            #endif
         }
     }
 }
