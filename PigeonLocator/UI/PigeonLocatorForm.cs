@@ -330,5 +330,10 @@ namespace WHampson.PigeonLocator
             mapPanel.ViewPosition = new PointF(0, 2f / 3f);
             mapPanel.Focus();
         }
+
+        private void collectedPigeonsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
