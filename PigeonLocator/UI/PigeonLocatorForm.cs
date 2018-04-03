@@ -216,13 +216,13 @@ namespace WHampson.PigeonLocator
             try {
                 Savegame = IvSavegame.Load(path);
             } catch (FileNotFoundException ex) {
-                Console.WriteLine("{0}: {1}", ex.GetType().AssemblyQualifiedName, ex.Message);
+                Console.WriteLine("{0}: {1}", ex.GetType().FullName, ex.Message);
                 string title = "File Not Found";
                 string fmt = "The following file could not be found: {0}";
                 ShowErrorMsgDialog(title, string.Format(fmt, path));
                 return;
             } catch (InvalidDataException ex) {
-                Console.WriteLine("{0}: {1}", ex.GetType().Name, ex.Message);
+                Console.WriteLine("{0}: {1}", ex.GetType().FullName, ex.Message);
                 string title = "Invalid File Format";
                 string msg = "Not a valid GTA IV savedata file!";
                 ShowErrorMsgDialog(title, msg);
@@ -553,8 +553,18 @@ namespace WHampson.PigeonLocator
             RemainingPigeons = new Vect3d[0];
             MapZoom = mapPanel.Zoom;
 
+            #if DEBUG
+            debugToolStripMenuItem.Enabled = true;
+            debugToolStripMenuItem.Visible = true;
+            #endif
+
             mapPanel.ViewPosition = new PointF(0, 2f / 3f);
             mapPanel.Focus();
+        }
+
+        private void DebugThrowExceptionMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new Exception("Test exception.");
         }
     }
 }
