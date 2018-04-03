@@ -21,6 +21,7 @@
  */
 #endregion
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace WHampson.PigeonLocator
@@ -29,8 +30,10 @@ namespace WHampson.PigeonLocator
     /// Represents a vector in 3-space.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal unsafe struct Vect3d
+    internal unsafe struct Vect3d : IEquatable<Vect3d>
     {
+        private const int DecimalPlaces = 4;
+
         public Vect3d(float x, float y, float z)
         {
             X = x;
@@ -56,6 +59,52 @@ namespace WHampson.PigeonLocator
         public override string ToString()
         {
             return string.Format("<{0}, {1}, {2}>", X, Y, Z);
+        }
+
+        public override int GetHashCode()
+        {
+            float xRound = (float) Math.Round(X, DecimalPlaces);
+            float yRound = (float) Math.Round(Y, DecimalPlaces);
+            float zRound = (float) Math.Round(Z, DecimalPlaces);
+
+            int hash = 13;
+            hash = (hash * 17) + xRound.GetHashCode();
+            hash = (hash * 17) + yRound.GetHashCode();
+            hash = (hash * 17) + zRound.GetHashCode();
+
+            return hash;
+        }
+
+        public bool Equals(Vect3d p)
+        {
+            float compareDelta = 1f / (float) Math.Pow(10, DecimalPlaces);
+
+            float xDelta = Math.Abs(X - p.X);
+            float yDelta = Math.Abs(Y - p.Y);
+            float zDelta = Math.Abs(Z - p.Z);
+
+            return xDelta <= compareDelta
+                && yDelta <= compareDelta
+                && zDelta <= compareDelta;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Vect3d)) {
+                return false;
+            }
+
+            return Equals((Vect3d) obj);
+        }
+
+        public static bool operator ==(Vect3d a, Vect3d b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Vect3d a, Vect3d b)
+        {
+            return !a.Equals(b);
         }
     }
 
