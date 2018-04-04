@@ -49,8 +49,6 @@ namespace WHampson.PigeonLocator
             string trace = e.ToString();
             DateTime timestamp = DateTime.Now;
 
-            MessageBox.Show(Program.GetExeName());
-
             // Write trace to console
             Console.Error.WriteLine("[FATAL EXCEPTION]: {0}", trace);
 
