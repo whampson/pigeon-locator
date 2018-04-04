@@ -355,7 +355,7 @@ namespace WHampson.PigeonLocator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mapPanel.CanvasSize = new System.Drawing.Size(3072, 2304);
             this.mapPanel.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.mapPanel.Image = global::WHampson.PigeonLocator.Properties.Resources.GTAIV_Map_3072x2304;
+            this.mapPanel.Image = global::WHampson.PigeonLocator.Properties.Resources.Map_Blue_3072x2304;
             this.mapPanel.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
             this.mapPanel.Location = new System.Drawing.Point(0, 0);
             this.mapPanel.Margin = new System.Windows.Forms.Padding(6);
@@ -383,7 +383,7 @@ namespace WHampson.PigeonLocator
             this.Controls.Add(this.zoomTrackBar);
             this.Controls.Add(this.statusStrip);
             this.DoubleBuffered = true;
-            this.Icon = global::WHampson.PigeonLocator.Properties.Resources.GTAIV_Pigeon_Bordered_Icon_240x240;
+            this.Icon = global::WHampson.PigeonLocator.Properties.Resources.Pigeon_Bordered_Icon_240x240;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "PigeonLocatorForm";

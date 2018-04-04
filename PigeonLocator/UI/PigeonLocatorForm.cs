@@ -306,10 +306,10 @@ namespace WHampson.PigeonLocator
         private void RedrawPigeonBlips()
         {
             // Refresh map
-            mapPanel.Image = Resources.GTAIV_Map_3072x2304;
+            mapPanel.Image = Resources.Map_Blue_3072x2304;
 
             // Get blip image
-            Bitmap blipImage = Resources.GTAIV_Pigeon_Bordered_240x240;
+            Bitmap blipImage = Resources.Pigeon_Bordered_240x240;
             Graphics mapGraphics = Graphics.FromImage(mapPanel.Image);
 
             // Draw blips on map
