@@ -49,11 +49,9 @@ namespace WHampson.PigeonLocator
         {
             suppressZoomTrackBarUpdate = false;
             suppressMapZoomUpdate = false;
+            BlipDimension = 25;
 
             InitializeComponent();
-
-            BlipDimension = 25;
-            ToolTipText = "";
         }
 
         public PigeonLocatorForm(string path)
@@ -219,6 +217,13 @@ namespace WHampson.PigeonLocator
         /// </param>
         private void LoadFile(string path)
         {
+            if (Directory.Exists(path)) {
+                string title = "Not A File";
+                string fmt = "{0} is a directory.";
+                ShowErrorMsgDialog(title, string.Format(fmt, path));
+                return;
+            }
+
             try {
                 Savegame = IvSavegame.Load(path);
             } catch (FileNotFoundException ex) {
@@ -534,7 +539,11 @@ namespace WHampson.PigeonLocator
 
         private void OnDragEnter(object sender, DragEventArgs e)
         {
-            e.Effect = DragDropEffects.Copy;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                e.Effect = DragDropEffects.Copy;
+            } else {
+                e.Effect = DragDropEffects.None;
+            }
         }
 
         private void OnDragDrop(object sender, DragEventArgs e)
@@ -552,19 +561,28 @@ namespace WHampson.PigeonLocator
         {
             base.OnLoad(e);
 
-            // Update UI elements
-            Savegame = null;
-            StatusText = "No file loaded.";
-            MapCoordinates = new PointF();
-            RemainingPigeons = new Vect3d[0];
-            MapZoom = mapPanel.Zoom;
-
             #if DEBUG
             debugMenuStripItem.Enabled = true;
             debugMenuStripItem.Visible = true;
             #endif
 
-            mapPanel.ViewPosition = new PointF(0, 2f / 3f);
+            // If no file was loaded at startup, ensure UI components reflect
+            // that nothing was loaded
+            if (Savegame == null) {
+                Savegame = null;
+                StatusText = "No file loaded.";
+                RemainingPigeons = new Vect3d[0];
+            }
+
+            // Initialize other components controlled by properties
+            MapCoordinates = new PointF();
+            ToolTipText = "";
+            MapZoom = mapPanel.Zoom;
+
+            // Center the map in the view window (approximate)
+            mapPanel.ViewPosition = new PointF(0, 4f / 7f);
+
+            // Ensure zoom and pan with mouse and keys works out-of-the-box
             mapPanel.Focus();
         }
 

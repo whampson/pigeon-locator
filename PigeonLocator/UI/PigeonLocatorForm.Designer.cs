@@ -99,7 +99,7 @@ namespace WHampson.PigeonLocator
             this.debugMenuStripItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1254, 42);
+            this.menuStrip.Size = new System.Drawing.Size(1254, 40);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -112,7 +112,7 @@ namespace WHampson.PigeonLocator
             this.fileMenuSeparator2,
             this.fileExitMenuItem});
             this.fileMenuStripItem.Name = "fileMenuStripItem";
-            this.fileMenuStripItem.Size = new System.Drawing.Size(64, 38);
+            this.fileMenuStripItem.Size = new System.Drawing.Size(64, 36);
             this.fileMenuStripItem.Text = "&File";
             // 
             // fileOpenMenuItem
@@ -155,7 +155,7 @@ namespace WHampson.PigeonLocator
             this.editBlipPropertiesMenuItem});
             this.editMenuStripItem.Enabled = false;
             this.editMenuStripItem.Name = "editMenuStripItem";
-            this.editMenuStripItem.Size = new System.Drawing.Size(67, 38);
+            this.editMenuStripItem.Size = new System.Drawing.Size(67, 36);
             this.editMenuStripItem.Text = "&Edit";
             this.editMenuStripItem.Visible = false;
             // 
@@ -173,7 +173,7 @@ namespace WHampson.PigeonLocator
             this.viewMenuSeparator1,
             this.viewLocationToolTipsMenuItem});
             this.viewMenuStripItem.Name = "viewMenuStripItem";
-            this.viewMenuStripItem.Size = new System.Drawing.Size(78, 38);
+            this.viewMenuStripItem.Size = new System.Drawing.Size(78, 36);
             this.viewMenuStripItem.Text = "&View";
             // 
             // viewRemainingPigeonsMenuItem
@@ -219,7 +219,7 @@ namespace WHampson.PigeonLocator
             this.helpMenuStripItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpAboutMenuItem});
             this.helpMenuStripItem.Name = "helpMenuStripItem";
-            this.helpMenuStripItem.Size = new System.Drawing.Size(77, 38);
+            this.helpMenuStripItem.Size = new System.Drawing.Size(77, 36);
             this.helpMenuStripItem.Text = "&Help";
             // 
             // helpAboutMenuItem
@@ -236,7 +236,7 @@ namespace WHampson.PigeonLocator
             this.debugExceptionsMenuItem});
             this.debugMenuStripItem.Enabled = false;
             this.debugMenuStripItem.Name = "debugMenuStripItem";
-            this.debugMenuStripItem.Size = new System.Drawing.Size(99, 38);
+            this.debugMenuStripItem.Size = new System.Drawing.Size(99, 36);
             this.debugMenuStripItem.Text = "Debug";
             this.debugMenuStripItem.Visible = false;
             // 
@@ -246,7 +246,7 @@ namespace WHampson.PigeonLocator
             this.debugExceptionsThrowExceptionMenuItem,
             this.debugExceptionsCauseIndexOutOfRangeExceptionMenuItem});
             this.debugExceptionsMenuItem.Name = "debugExceptionsMenuItem";
-            this.debugExceptionsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.debugExceptionsMenuItem.Size = new System.Drawing.Size(227, 38);
             this.debugExceptionsMenuItem.Text = "Exceptions";
             // 
             // debugExceptionsThrowExceptionMenuItem
@@ -299,7 +299,7 @@ namespace WHampson.PigeonLocator
             // 
             this.zoomTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.zoomTrackBar.LargeChange = 20;
-            this.zoomTrackBar.Location = new System.Drawing.Point(992, 759);
+            this.zoomTrackBar.Location = new System.Drawing.Point(992, 747);
             this.zoomTrackBar.Maximum = 200;
             this.zoomTrackBar.Minimum = 20;
             this.zoomTrackBar.Name = "zoomTrackBar";
@@ -362,7 +362,7 @@ namespace WHampson.PigeonLocator
             this.mapPanel.MaximumZoom = 2F;
             this.mapPanel.MinimumZoom = 0.2F;
             this.mapPanel.Name = "mapPanel";
-            this.mapPanel.Size = new System.Drawing.Size(1254, 750);
+            this.mapPanel.Size = new System.Drawing.Size(1254, 738);
             this.mapPanel.TabIndex = 6;
             this.mapPanel.ViewPosition = ((System.Drawing.PointF)(resources.GetObject("mapPanel.ViewPosition")));
             this.mapPanel.Zoom = 0.2F;
