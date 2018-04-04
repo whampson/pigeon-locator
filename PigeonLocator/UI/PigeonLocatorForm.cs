@@ -49,7 +49,7 @@ namespace WHampson.PigeonLocator
         {
             suppressZoomTrackBarUpdate = false;
             suppressMapZoomUpdate = false;
-            BlipDimension = 25;
+            BlipDimension = 35;
 
             InitializeComponent();
         }
@@ -309,7 +309,7 @@ namespace WHampson.PigeonLocator
             mapPanel.Image = Resources.GTAIV_Map_3072x2304;
 
             // Get blip image
-            Bitmap blipImage = Resources.GTAIV_Pigeon_240x240;
+            Bitmap blipImage = Resources.GTAIV_Pigeon_Bordered_240x240;
             Graphics mapGraphics = Graphics.FromImage(mapPanel.Image);
 
             // Draw blips on map

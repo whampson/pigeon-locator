@@ -383,7 +383,7 @@ namespace WHampson.PigeonLocator
             this.Controls.Add(this.zoomTrackBar);
             this.Controls.Add(this.statusStrip);
             this.DoubleBuffered = true;
-            this.Icon = global::WHampson.PigeonLocator.Properties.Resources.GTAIV_PigeonIcon_240x240;
+            this.Icon = global::WHampson.PigeonLocator.Properties.Resources.GTAIV_Pigeon_Bordered_Icon_240x240;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "PigeonLocatorForm";
