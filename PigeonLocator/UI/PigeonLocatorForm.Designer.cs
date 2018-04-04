@@ -53,25 +53,27 @@ namespace WHampson.PigeonLocator
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PigeonLocatorForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.fileMenuStripItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.fileOpenMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileOpenRecentMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noRecentItemsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileMenuSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.fileInformationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.fileExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editMenuStripItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.editBlipPropertiesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewMenuStripItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.viewRemainingPigeonsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewCollectedPigeonsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenuSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.viewLocationToolTipsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpMenuStripItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpAboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugMenuStripItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugExceptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugExceptionsThrowExceptionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugExceptionsCauseIndexOutOfRangeExceptionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.exceptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.throwExceptionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.causeIndexOutOfRangeExceptionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStripPaddingLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -92,28 +94,29 @@ namespace WHampson.PigeonLocator
             // 
             this.menuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileMenuStripItem,
-            this.editMenuStripItem,
-            this.viewMenuStripItem,
-            this.helpMenuStripItem,
-            this.debugMenuStripItem});
+            this.fileMenu,
+            this.editMenu,
+            this.viewMenu,
+            this.helpMenu,
+            this.debugMenu});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1254, 40);
+            this.menuStrip.Size = new System.Drawing.Size(1254, 42);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
             // 
-            // fileMenuStripItem
+            // fileMenu
             // 
-            this.fileMenuStripItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileOpenMenuItem,
+            this.fileOpenRecentMenuItem,
             this.fileMenuSeparator1,
             this.fileInformationMenuItem,
             this.fileMenuSeparator2,
-            this.fileExitMenuItem});
-            this.fileMenuStripItem.Name = "fileMenuStripItem";
-            this.fileMenuStripItem.Size = new System.Drawing.Size(64, 36);
-            this.fileMenuStripItem.Text = "&File";
+            this.exitMenuItem});
+            this.fileMenu.Name = "fileMenu";
+            this.fileMenu.Size = new System.Drawing.Size(64, 38);
+            this.fileMenu.Text = "&File";
             // 
             // fileOpenMenuItem
             // 
@@ -122,6 +125,21 @@ namespace WHampson.PigeonLocator
             this.fileOpenMenuItem.Size = new System.Drawing.Size(341, 38);
             this.fileOpenMenuItem.Text = "&Open...";
             this.fileOpenMenuItem.Click += new System.EventHandler(this.FileOpenMenuItem_OnClick);
+            // 
+            // fileOpenRecentMenuItem
+            // 
+            this.fileOpenRecentMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.noRecentItemsMenuItem});
+            this.fileOpenRecentMenuItem.Name = "fileOpenRecentMenuItem";
+            this.fileOpenRecentMenuItem.Size = new System.Drawing.Size(341, 38);
+            this.fileOpenRecentMenuItem.Text = "Open Recent";
+            // 
+            // noRecentItemsMenuItem
+            // 
+            this.noRecentItemsMenuItem.Enabled = false;
+            this.noRecentItemsMenuItem.Name = "noRecentItemsMenuItem";
+            this.noRecentItemsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.noRecentItemsMenuItem.Text = "(no recent items)";
             // 
             // fileMenuSeparator1
             // 
@@ -141,40 +159,40 @@ namespace WHampson.PigeonLocator
             this.fileMenuSeparator2.Name = "fileMenuSeparator2";
             this.fileMenuSeparator2.Size = new System.Drawing.Size(338, 6);
             // 
-            // fileExitMenuItem
+            // exitMenuItem
             // 
-            this.fileExitMenuItem.Name = "fileExitMenuItem";
-            this.fileExitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.fileExitMenuItem.Size = new System.Drawing.Size(341, 38);
-            this.fileExitMenuItem.Text = "E&xit";
-            this.fileExitMenuItem.Click += new System.EventHandler(this.FileExitMenuItem_OnClick);
+            this.exitMenuItem.Name = "exitMenuItem";
+            this.exitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitMenuItem.Size = new System.Drawing.Size(341, 38);
+            this.exitMenuItem.Text = "E&xit";
+            this.exitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_OnClick);
             // 
-            // editMenuStripItem
+            // editMenu
             // 
-            this.editMenuStripItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editBlipPropertiesMenuItem});
-            this.editMenuStripItem.Enabled = false;
-            this.editMenuStripItem.Name = "editMenuStripItem";
-            this.editMenuStripItem.Size = new System.Drawing.Size(67, 36);
-            this.editMenuStripItem.Text = "&Edit";
-            this.editMenuStripItem.Visible = false;
+            this.editMenu.Enabled = false;
+            this.editMenu.Name = "editMenu";
+            this.editMenu.Size = new System.Drawing.Size(67, 38);
+            this.editMenu.Text = "&Edit";
+            this.editMenu.Visible = false;
             // 
             // editBlipPropertiesMenuItem
             // 
             this.editBlipPropertiesMenuItem.Name = "editBlipPropertiesMenuItem";
-            this.editBlipPropertiesMenuItem.Size = new System.Drawing.Size(283, 38);
+            this.editBlipPropertiesMenuItem.Size = new System.Drawing.Size(324, 38);
             this.editBlipPropertiesMenuItem.Text = "Blip &Properties...";
             // 
-            // viewMenuStripItem
+            // viewMenu
             // 
-            this.viewMenuStripItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewRemainingPigeonsMenuItem,
             this.viewCollectedPigeonsMenuItem,
             this.viewMenuSeparator1,
             this.viewLocationToolTipsMenuItem});
-            this.viewMenuStripItem.Name = "viewMenuStripItem";
-            this.viewMenuStripItem.Size = new System.Drawing.Size(78, 36);
-            this.viewMenuStripItem.Text = "&View";
+            this.viewMenu.Name = "viewMenu";
+            this.viewMenu.Size = new System.Drawing.Size(78, 38);
+            this.viewMenu.Text = "&View";
             // 
             // viewRemainingPigeonsMenuItem
             // 
@@ -184,7 +202,7 @@ namespace WHampson.PigeonLocator
             this.viewRemainingPigeonsMenuItem.Enabled = false;
             this.viewRemainingPigeonsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.viewRemainingPigeonsMenuItem.Name = "viewRemainingPigeonsMenuItem";
-            this.viewRemainingPigeonsMenuItem.Size = new System.Drawing.Size(318, 38);
+            this.viewRemainingPigeonsMenuItem.Size = new System.Drawing.Size(324, 38);
             this.viewRemainingPigeonsMenuItem.Text = "Pigeons &Remaining";
             this.viewRemainingPigeonsMenuItem.Visible = false;
             // 
@@ -194,14 +212,14 @@ namespace WHampson.PigeonLocator
             this.viewCollectedPigeonsMenuItem.Enabled = false;
             this.viewCollectedPigeonsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.viewCollectedPigeonsMenuItem.Name = "viewCollectedPigeonsMenuItem";
-            this.viewCollectedPigeonsMenuItem.Size = new System.Drawing.Size(318, 38);
+            this.viewCollectedPigeonsMenuItem.Size = new System.Drawing.Size(324, 38);
             this.viewCollectedPigeonsMenuItem.Text = "Pigeons &Collected";
             this.viewCollectedPigeonsMenuItem.Visible = false;
             // 
             // viewMenuSeparator1
             // 
             this.viewMenuSeparator1.Name = "viewMenuSeparator1";
-            this.viewMenuSeparator1.Size = new System.Drawing.Size(315, 6);
+            this.viewMenuSeparator1.Size = new System.Drawing.Size(321, 6);
             this.viewMenuSeparator1.Visible = false;
             // 
             // viewLocationToolTipsMenuItem
@@ -211,57 +229,57 @@ namespace WHampson.PigeonLocator
             this.viewLocationToolTipsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.viewLocationToolTipsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.viewLocationToolTipsMenuItem.Name = "viewLocationToolTipsMenuItem";
-            this.viewLocationToolTipsMenuItem.Size = new System.Drawing.Size(318, 38);
-            this.viewLocationToolTipsMenuItem.Text = "&Location Tooltips";
+            this.viewLocationToolTipsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.viewLocationToolTipsMenuItem.Text = "Location &Tooltips";
             // 
-            // helpMenuStripItem
+            // helpMenu
             // 
-            this.helpMenuStripItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.helpAboutMenuItem});
-            this.helpMenuStripItem.Name = "helpMenuStripItem";
-            this.helpMenuStripItem.Size = new System.Drawing.Size(77, 36);
-            this.helpMenuStripItem.Text = "&Help";
+            this.helpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutMenuItem});
+            this.helpMenu.Name = "helpMenu";
+            this.helpMenu.Size = new System.Drawing.Size(77, 38);
+            this.helpMenu.Text = "&Help";
             // 
-            // helpAboutMenuItem
+            // aboutMenuItem
             // 
-            this.helpAboutMenuItem.Name = "helpAboutMenuItem";
-            this.helpAboutMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.helpAboutMenuItem.Size = new System.Drawing.Size(219, 38);
-            this.helpAboutMenuItem.Text = "&About";
-            this.helpAboutMenuItem.Click += new System.EventHandler(this.HelpAboutMenuItem_OnClick);
+            this.aboutMenuItem.Name = "aboutMenuItem";
+            this.aboutMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.aboutMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.aboutMenuItem.Text = "&About";
+            this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_OnClick);
             // 
-            // debugMenuStripItem
+            // debugMenu
             // 
-            this.debugMenuStripItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.debugExceptionsMenuItem});
-            this.debugMenuStripItem.Enabled = false;
-            this.debugMenuStripItem.Name = "debugMenuStripItem";
-            this.debugMenuStripItem.Size = new System.Drawing.Size(99, 36);
-            this.debugMenuStripItem.Text = "Debug";
-            this.debugMenuStripItem.Visible = false;
+            this.debugMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exceptionsMenuItem});
+            this.debugMenu.Enabled = false;
+            this.debugMenu.Name = "debugMenu";
+            this.debugMenu.Size = new System.Drawing.Size(99, 38);
+            this.debugMenu.Text = "Debug";
+            this.debugMenu.Visible = false;
             // 
-            // debugExceptionsMenuItem
+            // exceptionsMenuItem
             // 
-            this.debugExceptionsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.debugExceptionsThrowExceptionMenuItem,
-            this.debugExceptionsCauseIndexOutOfRangeExceptionMenuItem});
-            this.debugExceptionsMenuItem.Name = "debugExceptionsMenuItem";
-            this.debugExceptionsMenuItem.Size = new System.Drawing.Size(227, 38);
-            this.debugExceptionsMenuItem.Text = "Exceptions";
+            this.exceptionsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.throwExceptionMenuItem,
+            this.causeIndexOutOfRangeExceptionMenuItem});
+            this.exceptionsMenuItem.Name = "exceptionsMenuItem";
+            this.exceptionsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.exceptionsMenuItem.Text = "Exceptions";
             // 
-            // debugExceptionsThrowExceptionMenuItem
+            // throwExceptionMenuItem
             // 
-            this.debugExceptionsThrowExceptionMenuItem.Name = "debugExceptionsThrowExceptionMenuItem";
-            this.debugExceptionsThrowExceptionMenuItem.Size = new System.Drawing.Size(479, 38);
-            this.debugExceptionsThrowExceptionMenuItem.Text = "Throw Test Exception";
-            this.debugExceptionsThrowExceptionMenuItem.Click += new System.EventHandler(this.DebugExceptionsThrowExceptionMenuItem_OnClick);
+            this.throwExceptionMenuItem.Name = "throwExceptionMenuItem";
+            this.throwExceptionMenuItem.Size = new System.Drawing.Size(479, 38);
+            this.throwExceptionMenuItem.Text = "Throw Test Exception";
+            this.throwExceptionMenuItem.Click += new System.EventHandler(this.ThrowExceptionMenuItem_OnClick);
             // 
-            // debugExceptionsCauseIndexOutOfRangeExceptionMenuItem
+            // causeIndexOutOfRangeExceptionMenuItem
             // 
-            this.debugExceptionsCauseIndexOutOfRangeExceptionMenuItem.Name = "debugExceptionsCauseIndexOutOfRangeExceptionMenuItem";
-            this.debugExceptionsCauseIndexOutOfRangeExceptionMenuItem.Size = new System.Drawing.Size(479, 38);
-            this.debugExceptionsCauseIndexOutOfRangeExceptionMenuItem.Text = "Cause IndexOutOfRangeException";
-            this.debugExceptionsCauseIndexOutOfRangeExceptionMenuItem.Click += new System.EventHandler(this.DebugExceptionsCauseIndexOutOfRangeExceptionMenuItem_OnClick);
+            this.causeIndexOutOfRangeExceptionMenuItem.Name = "causeIndexOutOfRangeExceptionMenuItem";
+            this.causeIndexOutOfRangeExceptionMenuItem.Size = new System.Drawing.Size(479, 38);
+            this.causeIndexOutOfRangeExceptionMenuItem.Text = "Cause IndexOutOfRangeException";
+            this.causeIndexOutOfRangeExceptionMenuItem.Click += new System.EventHandler(this.CauseIndexOutOfRangeExceptionMenuItem_OnClick);
             // 
             // statusStrip
             // 
@@ -403,35 +421,37 @@ namespace WHampson.PigeonLocator
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip;
-        private System.Windows.Forms.ToolStripMenuItem fileMenuStripItem;
+        private System.Windows.Forms.ToolStripMenuItem fileMenu;
         private System.Windows.Forms.ToolStripMenuItem fileOpenMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fileOpenRecentMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem noRecentItemsMenuItem;
         private System.Windows.Forms.ToolStripSeparator fileMenuSeparator1;
         private System.Windows.Forms.ToolStripMenuItem fileInformationMenuItem;
         private System.Windows.Forms.ToolStripSeparator fileMenuSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem fileExitMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpMenuStripItem;
-        private System.Windows.Forms.ToolStripMenuItem helpAboutMenuItem;
-        private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
-        private System.Windows.Forms.TrackBar zoomTrackBar;
-        private ImagePanel mapPanel;
-        private System.Windows.Forms.Label mapXLabel;
-        private System.Windows.Forms.Label mapYLabel;
-        private System.Windows.Forms.ToolStripMenuItem editMenuStripItem;
+        private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editMenu;
         private System.Windows.Forms.ToolStripMenuItem editBlipPropertiesMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewMenuStripItem;
+        private System.Windows.Forms.ToolStripMenuItem viewMenu;
         private System.Windows.Forms.ToolStripMenuItem viewRemainingPigeonsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewCollectedPigeonsMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewLocationToolTipsMenuItem;
         private System.Windows.Forms.ToolStripSeparator viewMenuSeparator1;
-        private System.Windows.Forms.Timer toolTipTimer;
+        private System.Windows.Forms.ToolStripMenuItem viewLocationToolTipsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpMenu;
+        private System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem debugMenu;
+        private System.Windows.Forms.ToolStripMenuItem exceptionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem throwExceptionMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem causeIndexOutOfRangeExceptionMenuItem;
+        private ImagePanel mapPanel;
+        private System.Windows.Forms.TrackBar zoomTrackBar;
         private System.Windows.Forms.Label zoomLabel;
+        private System.Windows.Forms.Label mapXLabel;
+        private System.Windows.Forms.Label mapYLabel;
+        private System.Windows.Forms.ToolTip locationInfoToolTip;
+        private System.Windows.Forms.Timer toolTipTimer;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private System.Windows.Forms.ToolStripStatusLabel statusStripPaddingLabel;
         private System.Windows.Forms.ToolStripStatusLabel pigeonCountLabel;
-        private System.Windows.Forms.ToolTip locationInfoToolTip;
-        private System.Windows.Forms.ToolStripMenuItem debugMenuStripItem;
-        private System.Windows.Forms.ToolStripMenuItem debugExceptionsMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem debugExceptionsThrowExceptionMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem debugExceptionsCauseIndexOutOfRangeExceptionMenuItem;
     }
 }

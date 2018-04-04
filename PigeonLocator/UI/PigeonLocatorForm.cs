@@ -444,14 +444,29 @@ namespace WHampson.PigeonLocator
             ShowFileInfoDialog();
         }
 
-        private void FileExitMenuItem_OnClick(object sender, EventArgs e)
+        private void ExitMenuItem_OnClick(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void HelpAboutMenuItem_OnClick(object sender, EventArgs e)
+        private void AboutMenuItem_OnClick(object sender, EventArgs e)
         {
             ShowAboutDialog();
+        }
+
+        private void ThrowExceptionMenuItem_OnClick(object sender, EventArgs e)
+        {
+            #if DEBUG
+            throw new Exception("Test exception.");
+            #endif
+        }
+
+        private void CauseIndexOutOfRangeExceptionMenuItem_OnClick(object sender, EventArgs e)
+        {
+            #if DEBUG
+            byte[] b = new byte[4];
+            b[4] = 0xFE;
+            #endif
         }
 
         private void ZoomTrackBar_OnMouseUp(object sender, MouseEventArgs e)
@@ -562,8 +577,8 @@ namespace WHampson.PigeonLocator
             base.OnLoad(e);
 
             #if DEBUG
-            debugMenuStripItem.Enabled = true;
-            debugMenuStripItem.Visible = true;
+            debugMenu.Enabled = true;
+            debugMenu.Visible = true;
             #endif
 
             // If no file was loaded at startup, ensure UI components reflect
@@ -584,21 +599,6 @@ namespace WHampson.PigeonLocator
 
             // Ensure zoom and pan with mouse and keys works out-of-the-box
             mapPanel.Focus();
-        }
-
-        private void DebugExceptionsThrowExceptionMenuItem_OnClick(object sender, EventArgs e)
-        {
-            #if DEBUG
-            throw new Exception("Test exception.");
-            #endif
-        }
-
-        private void DebugExceptionsCauseIndexOutOfRangeExceptionMenuItem_OnClick(object sender, EventArgs e)
-        {
-            #if DEBUG
-            byte[] b = new byte[4];
-            b[4] = 0xFE;
-            #endif
         }
     }
 }
