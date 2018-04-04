@@ -37,7 +37,12 @@ namespace WHampson.PigeonLocator
         {
             FatalExceptionHandler.Initialize();
             Application.EnableVisualStyles();
-            Application.Run(new PigeonLocatorForm());
+
+            if (args.Length > 0) {
+                Application.Run(new PigeonLocatorForm(args[0]));
+            } else {
+                Application.Run(new PigeonLocatorForm());
+            }
         }
 
         public static string GetProgramName()

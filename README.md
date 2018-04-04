@@ -11,7 +11,7 @@ Shows a map of remaining collectibles in a GTA IV game.
 <img src="https://i.imgur.com/SdPySbW.png" width="50%" height="50%" />
 
 ## Todo
-- [ ] Drag'n'drop a file onto program icon to open the program and load file
+- [x] Drag'n'drop a file onto program icon to open the program and load file
 - [ ] Show collected pigeons
 - [ ] Allow blip size and color customization
 - [ ] Retain blip size while zooming

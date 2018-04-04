@@ -56,6 +56,12 @@ namespace WHampson.PigeonLocator
             ToolTipText = "";
         }
 
+        public PigeonLocatorForm(string path)
+            : this()
+        {
+            LoadFile(path);
+        }
+
         /// <summary>
         /// Gets or sets the currently-loaded GTA IV savegame.
         /// </summary>
