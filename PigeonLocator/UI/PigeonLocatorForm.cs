@@ -37,6 +37,7 @@ namespace WHampson.PigeonLocator
         private const float GameWorldScaleFactor = 500f / 256f;
         private const int MapCenterOffsetX = 500;
         private const int MapCenterOffsetY = 750;
+        private const int MaximumRecentFiles = 9;
 
         private IvSavegame _savegame;
         private Vect3d[] _remainingPigeons;
@@ -44,11 +45,13 @@ namespace WHampson.PigeonLocator
         private bool _toolTipVisible;
         private bool suppressZoomTrackBarUpdate;
         private bool suppressMapZoomUpdate;
+        private FixedLengthUniqueQueue<string> recentFilesQueue;
 
         public PigeonLocatorForm()
         {
             suppressZoomTrackBarUpdate = false;
             suppressMapZoomUpdate = false;
+            recentFilesQueue = new FixedLengthUniqueQueue<string>(MaximumRecentFiles);
             BlipDimension = 35;
 
             InitializeComponent();
@@ -243,7 +246,29 @@ namespace WHampson.PigeonLocator
             RemainingPigeons = Savegame.GetRemainingPigeonLocations();
             StatusText = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
 
+            AddRecentFilePath(path);
             RedrawPigeonBlips();
+        }
+
+        private void AddRecentFilePath(string path)
+        {
+            recentFilesQueue.Enqueue(path);
+
+            fileOpenRecentMenuItem.DropDownItems.Clear();
+            int i = 1;
+            foreach (string recentFile in recentFilesQueue.Reverse()) {
+                ToolStripMenuItem recentFileItem = new ToolStripMenuItem();
+                recentFileItem.Text = string.Format("{0}: {1}", i++, recentFile);
+                recentFileItem.Tag = recentFile;
+                recentFileItem.Click += OpenRecentMenuItem_OnClick;
+                fileOpenRecentMenuItem.DropDownItems.Add(recentFileItem);
+            }
+        }
+
+        private void OpenRecentMenuItem_OnClick(object sender, EventArgs e)
+        {
+            string path = (string) ((ToolStripMenuItem) sender).Tag;
+            LoadFile(path);
         }
 
         /// <summary>
