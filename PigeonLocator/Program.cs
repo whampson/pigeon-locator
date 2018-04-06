@@ -45,7 +45,17 @@ namespace WHampson.PigeonLocator
             }
         }
 
-        public static string GetProgramName()
+        public static string GetAssemblyName()
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+            if (asm == null) {
+                return "null";
+            }
+
+            return asm.GetName().Name;
+        }
+
+        public static string GetAssemblyTitle()
         {
             Assembly asm = Assembly.GetExecutingAssembly();
             if (asm == null) {
