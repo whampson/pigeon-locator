@@ -68,6 +68,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="FatalExceptionHandler.cs" />
     <Compile Include="FixedLengthUniqueQueue.cs" />
+    <Compile Include="IniFile.cs" />
     <Compile Include="IvSavegame.cs" />
     <Compile Include="ObjectUtilities.cs" />
     <Compile Include="Program.cs" />
