@@ -418,7 +418,7 @@ namespace WHampson.PigeonLocator
                 "Version: {1}\n\n" +
                 "{2}\n\n" +
                 "{3}",
-                Program.GetProgramName(),
+                Program.GetAssemblyTitle(),
                 (vers == null)
                     ? "null"
                     : string.Format("{0} (build {1})", vers.ProductVersion, vers.FilePrivatePart),
