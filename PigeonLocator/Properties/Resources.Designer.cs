@@ -73,9 +73,19 @@ namespace WHampson.PigeonLocator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Pigeon_Bordered_240x240 {
+        internal static System.Drawing.Bitmap Pigeon_256x256 {
             get {
-                object obj = ResourceManager.GetObject("Pigeon_Bordered_240x240", resourceCulture);
+                object obj = ResourceManager.GetObject("Pigeon_256x256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Pigeon_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("Pigeon_64x64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +93,9 @@ namespace WHampson.PigeonLocator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Pigeon_Bordered_Icon_240x240 {
+        internal static System.Drawing.Icon PigeonIcon {
             get {
-                object obj = ResourceManager.GetObject("Pigeon_Bordered_Icon_240x240", resourceCulture);
+                object obj = ResourceManager.GetObject("PigeonIcon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
