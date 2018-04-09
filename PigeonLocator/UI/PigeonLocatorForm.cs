@@ -55,6 +55,7 @@ namespace WHampson.PigeonLocator
             BlipDimension = 35;
 
             InitializeComponent();
+            LoadRecentFiles();
         }
 
         public PigeonLocatorForm(string path)
@@ -118,6 +119,10 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        /// <summary>
+        /// Zooms the map in or out and adjusts the zoom-related UI elements
+        /// to reflect the change.
+        /// </summary>
         private float MapZoom
         {
             get { return mapPanel.Zoom; }
@@ -250,11 +255,28 @@ namespace WHampson.PigeonLocator
             RedrawPigeonBlips();
         }
 
+        /// <summary>
+        /// Adds a new path to the queue of recently-opened files,
+        /// then refreshes the "File > Open Recent" menu, and lastly
+        /// updates the config file with the list of recently-opened files.
+        /// </summary>
+        /// <param name="path"></param>
         private void AddRecentFilePath(string path)
         {
             recentFilesQueue.Enqueue(path);
 
+            ReloadRecentFilesMenu();
+            SaveRecentFiles();
+        }
+
+        /// <summary>
+        /// Populates the "File > Open Recent" menu with paths from the
+        /// recently-opened files queue.
+        /// </summary>
+        private void ReloadRecentFilesMenu()
+        {
             fileOpenRecentMenuItem.DropDownItems.Clear();
+
             int i = 1;
             foreach (string recentFile in recentFilesQueue.Reverse()) {
                 ToolStripMenuItem recentFileItem = new ToolStripMenuItem();
@@ -262,6 +284,38 @@ namespace WHampson.PigeonLocator
                 recentFileItem.Tag = recentFile;
                 recentFileItem.Click += OpenRecentMenuItem_OnClick;
                 fileOpenRecentMenuItem.DropDownItems.Add(recentFileItem);
+            }
+
+            if (i == 1) {
+                fileOpenRecentMenuItem.DropDownItems.Add(noRecentItemsMenuItem);
+            }
+        }
+
+        /// <summary>
+        /// Loads all recently-opened file paths from the config file on disk.
+        /// </summary>
+        private void LoadRecentFiles()
+        {
+            for (int i = 0; i < MaximumRecentFiles; i++) {
+                string key = Program.ConfigRecentFileKey + i;
+                string val = Program.GetConfig().Read(key);
+                if (!string.IsNullOrWhiteSpace(val)) {
+                    recentFilesQueue.Enqueue(val);
+                }
+            }
+
+            ReloadRecentFilesMenu();
+        }
+
+        /// <summary>
+        /// Writes all recently-opened file paths to the config file on disk.
+        /// </summary>
+        private void SaveRecentFiles()
+        {
+            for (int i = 0; i < MaximumRecentFiles; i++) {
+                string key = Program.ConfigRecentFileKey + i;
+                string val = recentFilesQueue.ElementAtOrDefault(i);
+                Program.GetConfig().Write(key, val);
             }
         }
 
