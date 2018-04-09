@@ -24,12 +24,12 @@
 using System;
 using System.Reflection;
 
-namespace WHampson.PigeonLocator
+namespace WHampson.PigeonLocator.Extensions
 {
     /// <summary>
-    /// Helper class for retrieving information about objects.
+    /// Extensions to the <see cref="object"/> type.
     /// </summary>
-    internal static class ObjectUtilities
+    internal static class ObjectExtensions
     {
         /// <summary>
         /// Creates a string representation of an object containing the names
@@ -50,7 +50,7 @@ namespace WHampson.PigeonLocator
         /// A string representation of the object if not null.
         /// <c>null</c> if the given object is null.
         /// </returns>
-        public static string GenerateToString(object obj, string[] propertyNames)
+        public static string GenerateToString(this object obj, string[] propertyNames)
         {
             if (obj == null) {
                 return null;
@@ -59,7 +59,7 @@ namespace WHampson.PigeonLocator
             string body = "";
             for (int i = 0; i < propertyNames.Length; i++) {
                 string propName = propertyNames[i];
-                object propVal = GetPropertyValueByName(obj, propName);
+                object propVal = obj.GetPropertyValueByName(propName);
                 body += string.Format("{0} = {1}; ", propName, propVal);
             }
             body = body.Trim();
@@ -81,7 +81,7 @@ namespace WHampson.PigeonLocator
         /// <c>null</c> if the object is null or does not contain a property with
         /// a matching property name.
         /// </returns>
-        public static object GetPropertyValueByName(object obj, string propertyName)
+        public static object GetPropertyValueByName(this object obj, string propertyName)
         {
             if (obj == null || propertyName == null) {
                 return null;
