@@ -31,6 +31,8 @@ namespace WHampson.PigeonLocator
 {
     internal static class Program
     {
+        public const string ConfigRecentFileKey = "recentFile";
+
         [STAThread]
         public static void Main(string[] args)
         {
@@ -98,6 +100,11 @@ namespace WHampson.PigeonLocator
         public static string GetCopyrightString()
         {
             return "Copyright (C) 2018 W. Hampson";
+        }
+
+        public static IniFile GetConfig()
+        {
+            return new IniFile(GetAssemblyName() + ".ini");
         }
 
         public static void LogException(LogLevel l, Exception ex)
