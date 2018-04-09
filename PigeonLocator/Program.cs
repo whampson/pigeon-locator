@@ -87,7 +87,7 @@ namespace WHampson.PigeonLocator
             return Path.GetFileNameWithoutExtension(path);
         }
 
-        public static FileVersionInfo GetProgramVersion()
+        public static FileVersionInfo GetVersion()
         {
             Assembly asm = Assembly.GetExecutingAssembly();
             if (asm == null) {

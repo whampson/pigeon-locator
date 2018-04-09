@@ -58,7 +58,7 @@ namespace WHampson.PigeonLocator
 
             using (StreamWriter w = new StreamWriter(dumpFileName)) {
                 string header = string.Format("{0} Crash Dump", Program.GetAssemblyTitle());
-                FileVersionInfo vers = Program.GetProgramVersion();
+                FileVersionInfo vers = Program.GetVersion();
                 w.WriteLine(header);
                 w.WriteLine(new string('-', header.Length));
                 w.WriteLine("Version: {0}", vers.ProductVersion);

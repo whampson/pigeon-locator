@@ -465,7 +465,7 @@ namespace WHampson.PigeonLocator
         private void ShowAboutDialog()
         {
             string desc = "Maps-out all remaining flying rats in a GTA IV savegame.";
-            FileVersionInfo vers = Program.GetProgramVersion();
+            FileVersionInfo vers = Program.GetVersion();
 
             string aboutString = string.Format(
                 "{0}\n" +
