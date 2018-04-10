@@ -32,6 +32,7 @@ namespace WHampson.PigeonLocator
     internal static class Program
     {
         public const string ConfigRecentFileKey = "recentFile";
+        public const string ConfigBlipSize = "blipSize";
 
         [STAThread]
         public static void Main(string[] args)
