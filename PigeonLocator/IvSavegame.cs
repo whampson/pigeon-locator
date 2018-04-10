@@ -24,10 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
+using WHampson.PigeonLocator.Extensions;
 
 namespace WHampson.PigeonLocator
 {
@@ -282,7 +280,7 @@ namespace WHampson.PigeonLocator
                 nameof(GlobalVarsSize)
             };
 
-            return ObjectUtilities.GenerateToString(this, properties);
+            return this.GenerateToString(properties);
         }
 
         /// <summary>
