@@ -62,18 +62,25 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\Pigeon_Bordered_240x240.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Pigeon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Extensions\BitmapExtensions.cs" />
     <Compile Include="FatalExceptionHandler.cs" />
     <Compile Include="FixedLengthUniqueQueue.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="IvSavegame.cs" />
-    <Compile Include="ObjectUtilities.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="IvStructures.cs" />
     <Compile Include="Pigeons.cs" />
+    <Compile Include="UI\BlipPropertiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\BlipPropertiesForm.Designer.cs">
+      <DependentUpon>BlipPropertiesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\ImagePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -105,14 +112,18 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\BlipPropertiesForm.resx">
+      <DependentUpon>BlipPropertiesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\PigeonLocatorForm.resx">
       <DependentUpon>PigeonLocatorForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Map_Blue_3072x2304.jpg" />
-    <Content Include="Resources\Pigeon_Bordered_240x240.ico" />
-    <Content Include="Resources\Pigeon_Bordered_240x240.png" />
+    <Content Include="Resources\Pigeon.ico" />
+    <Content Include="Resources\Pigeon_256x256.png" />
+    <Content Include="Resources\Pigeon_64x64.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
