@@ -27,6 +27,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using WHampson.PigeonLocator.Extensions;
 using WHampson.PigeonLocator.Properties;
 
 namespace WHampson.PigeonLocator
@@ -38,11 +39,15 @@ namespace WHampson.PigeonLocator
         private const int MapCenterOffsetX = 500;
         private const int MapCenterOffsetY = 750;
         private const int MaximumRecentFiles = 9;
+        private const int DefaultBlipSize = 2;
+
+        private readonly int[] BlipSizes = { 24, 32, 40, 48, 56, 64 };
 
         private IvSavegame _savegame;
         private Vect3d[] _remainingPigeons;
         private PointF _mapCoordinates;
         private bool _toolTipVisible;
+        private int _blipSizeIndex;
         private bool suppressZoomTrackBarUpdate;
         private bool suppressMapZoomUpdate;
         private FixedLengthUniqueQueue<string> recentFilesQueue;
@@ -52,10 +57,9 @@ namespace WHampson.PigeonLocator
             suppressZoomTrackBarUpdate = false;
             suppressMapZoomUpdate = false;
             recentFilesQueue = new FixedLengthUniqueQueue<string>(MaximumRecentFiles);
-            BlipDimension = 35;
 
             InitializeComponent();
-            LoadRecentFiles();
+            LoadConfig();
         }
 
         public PigeonLocatorForm(string path)
@@ -158,12 +162,46 @@ namespace WHampson.PigeonLocator
         }
 
         /// <summary>
-        /// Gets or sets the dimension of the blip square in pixels.
+        /// Gets or sets the index corresponding to the blip size.
         /// </summary>
-        private int BlipDimension
+        /// <remarks>
+        /// When this value is set, the blips are redrawn with the new
+        /// size. Additionally the 'Increase/Decrease Blip Size' menu items
+        /// are enabled or disabled if necessary to prevent this value from
+        /// exceeding its limits.
+        /// </remarks>
+        private int BlipSizeIndex
         {
-            get;
-            set;
+            get { return _blipSizeIndex; }
+            set {
+                if (value < 0) {
+                    value = 0;
+                } else if (value >= BlipSizes.Length) {
+                    value = BlipSizes.Length - 1;
+                }
+
+                if (value == 0) {
+                    decreaseBlipSizeMenuItem.Enabled = false;
+                    increaseBlipSizeMenuItem.Enabled = true;
+                } else if (value == BlipSizes.Length - 1) {
+                    decreaseBlipSizeMenuItem.Enabled = true;
+                    increaseBlipSizeMenuItem.Enabled = false;
+                } else {
+                    decreaseBlipSizeMenuItem.Enabled = true;
+                    increaseBlipSizeMenuItem.Enabled = true;
+                }
+
+                _blipSizeIndex = value;
+                RedrawPigeonBlips();
+            }
+        }
+
+        /// <summary>
+        /// Gets the dimension of the blip square in pixels.
+        /// </summary>
+        private int BlipSize
+        {
+            get { return BlipSizes[BlipSizeIndex]; }
         }
 
         /// <summary>
@@ -213,6 +251,24 @@ namespace WHampson.PigeonLocator
         {
             get;
             set;
+        }
+
+        public void LoadConfig()
+        {
+            IniFile cfg = Program.GetConfig();
+
+            // TODO:
+            //  - load tooltip visiblity
+            //  - load blip visibility
+            //  - load blip colors
+
+            string blipSizeStr = cfg.Read(Program.ConfigBlipSize);
+            if (!int.TryParse(blipSizeStr, out int blipSize)) {
+                blipSize = DefaultBlipSize;
+            }
+            BlipSizeIndex = blipSize;
+
+            LoadRecentFiles();
         }
 
         /// <summary>
@@ -319,12 +375,6 @@ namespace WHampson.PigeonLocator
             }
         }
 
-        private void OpenRecentMenuItem_OnClick(object sender, EventArgs e)
-        {
-            string path = (string) ((ToolStripMenuItem) sender).Tag;
-            LoadFile(path);
-        }
-
         /// <summary>
         /// Translates a mouse location on the UI to game world coordinates.
         /// </summary>
@@ -388,8 +438,10 @@ namespace WHampson.PigeonLocator
             mapPanel.Image = Resources.Map_Blue_3072x2304;
 
             // Get blip image
-            Bitmap blipImage = Resources.Pigeon_Bordered_240x240;
+            Bitmap blipImage = Resources.Pigeon_64x64;
             Graphics mapGraphics = Graphics.FromImage(mapPanel.Image);
+
+            //blipImage.FloodFill(new Point(40, 40), Color.FromArgb(192,  Color.Orange));
 
             // Draw blips on map
             foreach (Vect3d loc in RemainingPigeons) {
@@ -413,10 +465,10 @@ namespace WHampson.PigeonLocator
 
             mapGraphics.DrawImage(
                 blipImg,
-                mapPixel.X - (BlipDimension / 2),
-                mapPixel.Y - (BlipDimension / 2),
-                BlipDimension,
-                BlipDimension);
+                mapPixel.X - (BlipSize / 2),
+                mapPixel.Y - (BlipSize / 2),
+                BlipSize,
+                BlipSize);
         }
 
         /// <summary>
@@ -514,6 +566,12 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        private void OpenRecentMenuItem_OnClick(object sender, EventArgs e)
+        {
+            string path = (string) ((ToolStripMenuItem) sender).Tag;
+            LoadFile(path);
+        }
+
         private void FileInformationMenuItem_OnClick(object sender, EventArgs e)
         {
             if (Savegame == null) {
@@ -526,6 +584,24 @@ namespace WHampson.PigeonLocator
         private void ExitMenuItem_OnClick(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void EditBlipPropertiesMenuItem_OnClick(object sender, EventArgs e)
+        {
+            BlipPropertiesForm blipProperties = new BlipPropertiesForm();
+            blipProperties.ShowDialog();
+        }
+
+        private void IncreaseBlipSizeMenuItem_OnClick(object sender, EventArgs e)
+        {
+            BlipSizeIndex += 1;
+            Program.GetConfig().Write(Program.ConfigBlipSize, BlipSizeIndex.ToString());
+        }
+
+        private void DecreaseBlipSizeMenuItem_OnClick(object sender, EventArgs e)
+        {
+            BlipSizeIndex -= 1;
+            Program.GetConfig().Write(Program.ConfigBlipSize, BlipSizeIndex.ToString());
         }
 
         private void AboutMenuItem_OnClick(object sender, EventArgs e)
@@ -573,7 +649,7 @@ namespace WHampson.PigeonLocator
 
             toolTipTimer.Stop();
 
-            if (IsPointInSquare(new PointF(e.X, e.Y), ToolTipLocation, BlipDimension)) {
+            if (IsPointInSquare(new PointF(e.X, e.Y), ToolTipLocation, BlipSize)) {
                 if (ToolTipVisible) {
                     return;
                 }
@@ -594,7 +670,7 @@ namespace WHampson.PigeonLocator
                 return;
             }
 
-            Vect3d[] nearest = GetNearestPigeons(MapCoordinates, BlipDimension * 2);
+            Vect3d[] nearest = GetNearestPigeons(MapCoordinates, BlipSize * 2);
             if (nearest.Length == 0) {
                 if (ToolTipVisible) {
                     ToolTipVisible = false;

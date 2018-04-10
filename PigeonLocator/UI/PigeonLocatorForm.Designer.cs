@@ -68,6 +68,9 @@ namespace WHampson.PigeonLocator
             this.viewCollectedPigeonsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenuSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.viewLocationToolTipsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.increaseBlipSizeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.decreaseBlipSizeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,7 +141,7 @@ namespace WHampson.PigeonLocator
             // 
             this.noRecentItemsMenuItem.Enabled = false;
             this.noRecentItemsMenuItem.Name = "noRecentItemsMenuItem";
-            this.noRecentItemsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.noRecentItemsMenuItem.Size = new System.Drawing.Size(295, 38);
             this.noRecentItemsMenuItem.Text = "(no recent items)";
             // 
             // fileMenuSeparator1
@@ -180,8 +183,9 @@ namespace WHampson.PigeonLocator
             // editBlipPropertiesMenuItem
             // 
             this.editBlipPropertiesMenuItem.Name = "editBlipPropertiesMenuItem";
-            this.editBlipPropertiesMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.editBlipPropertiesMenuItem.Size = new System.Drawing.Size(283, 38);
             this.editBlipPropertiesMenuItem.Text = "Blip &Properties...";
+            this.editBlipPropertiesMenuItem.Click += new System.EventHandler(this.EditBlipPropertiesMenuItem_OnClick);
             // 
             // viewMenu
             // 
@@ -189,7 +193,10 @@ namespace WHampson.PigeonLocator
             this.viewRemainingPigeonsMenuItem,
             this.viewCollectedPigeonsMenuItem,
             this.viewMenuSeparator1,
-            this.viewLocationToolTipsMenuItem});
+            this.viewLocationToolTipsMenuItem,
+            this.viewMenuSeparator2,
+            this.increaseBlipSizeMenuItem,
+            this.decreaseBlipSizeMenuItem});
             this.viewMenu.Name = "viewMenu";
             this.viewMenu.Size = new System.Drawing.Size(78, 38);
             this.viewMenu.Text = "&View";
@@ -202,7 +209,7 @@ namespace WHampson.PigeonLocator
             this.viewRemainingPigeonsMenuItem.Enabled = false;
             this.viewRemainingPigeonsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.viewRemainingPigeonsMenuItem.Name = "viewRemainingPigeonsMenuItem";
-            this.viewRemainingPigeonsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.viewRemainingPigeonsMenuItem.Size = new System.Drawing.Size(438, 38);
             this.viewRemainingPigeonsMenuItem.Text = "Pigeons &Remaining";
             this.viewRemainingPigeonsMenuItem.Visible = false;
             // 
@@ -212,14 +219,14 @@ namespace WHampson.PigeonLocator
             this.viewCollectedPigeonsMenuItem.Enabled = false;
             this.viewCollectedPigeonsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.viewCollectedPigeonsMenuItem.Name = "viewCollectedPigeonsMenuItem";
-            this.viewCollectedPigeonsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.viewCollectedPigeonsMenuItem.Size = new System.Drawing.Size(438, 38);
             this.viewCollectedPigeonsMenuItem.Text = "Pigeons &Collected";
             this.viewCollectedPigeonsMenuItem.Visible = false;
             // 
             // viewMenuSeparator1
             // 
             this.viewMenuSeparator1.Name = "viewMenuSeparator1";
-            this.viewMenuSeparator1.Size = new System.Drawing.Size(321, 6);
+            this.viewMenuSeparator1.Size = new System.Drawing.Size(435, 6);
             this.viewMenuSeparator1.Visible = false;
             // 
             // viewLocationToolTipsMenuItem
@@ -229,8 +236,29 @@ namespace WHampson.PigeonLocator
             this.viewLocationToolTipsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.viewLocationToolTipsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.viewLocationToolTipsMenuItem.Name = "viewLocationToolTipsMenuItem";
-            this.viewLocationToolTipsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.viewLocationToolTipsMenuItem.Size = new System.Drawing.Size(438, 38);
             this.viewLocationToolTipsMenuItem.Text = "Location &Tooltips";
+            // 
+            // viewMenuSeparator2
+            // 
+            this.viewMenuSeparator2.Name = "viewMenuSeparator2";
+            this.viewMenuSeparator2.Size = new System.Drawing.Size(435, 6);
+            // 
+            // increaseBlipSizeMenuItem
+            // 
+            this.increaseBlipSizeMenuItem.Name = "increaseBlipSizeMenuItem";
+            this.increaseBlipSizeMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
+            this.increaseBlipSizeMenuItem.Size = new System.Drawing.Size(438, 38);
+            this.increaseBlipSizeMenuItem.Text = "&Increase Blip Size";
+            this.increaseBlipSizeMenuItem.Click += new System.EventHandler(this.IncreaseBlipSizeMenuItem_OnClick);
+            // 
+            // decreaseBlipSizeMenuItem
+            // 
+            this.decreaseBlipSizeMenuItem.Name = "decreaseBlipSizeMenuItem";
+            this.decreaseBlipSizeMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
+            this.decreaseBlipSizeMenuItem.Size = new System.Drawing.Size(438, 38);
+            this.decreaseBlipSizeMenuItem.Text = "&Decrease Blip Size";
+            this.decreaseBlipSizeMenuItem.Click += new System.EventHandler(this.DecreaseBlipSizeMenuItem_OnClick);
             // 
             // helpMenu
             // 
@@ -244,7 +272,7 @@ namespace WHampson.PigeonLocator
             // 
             this.aboutMenuItem.Name = "aboutMenuItem";
             this.aboutMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.aboutMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.aboutMenuItem.Size = new System.Drawing.Size(219, 38);
             this.aboutMenuItem.Text = "&About";
             this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_OnClick);
             // 
@@ -264,7 +292,7 @@ namespace WHampson.PigeonLocator
             this.throwExceptionMenuItem,
             this.causeIndexOutOfRangeExceptionMenuItem});
             this.exceptionsMenuItem.Name = "exceptionsMenuItem";
-            this.exceptionsMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.exceptionsMenuItem.Size = new System.Drawing.Size(227, 38);
             this.exceptionsMenuItem.Text = "Exceptions";
             // 
             // throwExceptionMenuItem
@@ -401,7 +429,7 @@ namespace WHampson.PigeonLocator
             this.Controls.Add(this.zoomTrackBar);
             this.Controls.Add(this.statusStrip);
             this.DoubleBuffered = true;
-            this.Icon = global::WHampson.PigeonLocator.Properties.Resources.Pigeon_Bordered_Icon_240x240;
+            this.Icon = global::WHampson.PigeonLocator.Properties.Resources.PigeonIcon;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "PigeonLocatorForm";
@@ -436,6 +464,9 @@ namespace WHampson.PigeonLocator
         private System.Windows.Forms.ToolStripMenuItem viewCollectedPigeonsMenuItem;
         private System.Windows.Forms.ToolStripSeparator viewMenuSeparator1;
         private System.Windows.Forms.ToolStripMenuItem viewLocationToolTipsMenuItem;
+        private System.Windows.Forms.ToolStripSeparator viewMenuSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem increaseBlipSizeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem decreaseBlipSizeMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpMenu;
         private System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
         private System.Windows.Forms.ToolStripMenuItem debugMenu;
