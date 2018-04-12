@@ -121,13 +121,7 @@
   <data name="Map_Blue_3072x2304" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Map_Blue_3072x2304.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="PigeonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\pigeon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Pigeon_256x256" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\pigeon_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Pigeon_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\pigeon_64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\Pigeon_64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
