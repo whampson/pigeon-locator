@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using WHampson.PigeonLocator.Extensions;
+using WHampson.PigeonLocator.IvGameData;
 using WHampson.PigeonLocator.Properties;
 
 namespace WHampson.PigeonLocator
@@ -586,12 +587,6 @@ namespace WHampson.PigeonLocator
             Close();
         }
 
-        private void EditBlipPropertiesMenuItem_OnClick(object sender, EventArgs e)
-        {
-            BlipPropertiesForm blipProperties = new BlipPropertiesForm();
-            blipProperties.ShowDialog();
-        }
-
         private void IncreaseBlipSizeMenuItem_OnClick(object sender, EventArgs e)
         {
             BlipSizeIndex += 1;
@@ -682,6 +677,10 @@ namespace WHampson.PigeonLocator
                 return;
             }
 
+            foreach (Vect3d loc in nearest) {
+                Console.WriteLine(loc);
+            }
+
             string desc = "";
             for (int i = 0; i < nearest.Length; i++) {
                 // Append index (if necessary)
@@ -690,7 +689,7 @@ namespace WHampson.PigeonLocator
                 }
 
                 // Append description
-                bool hasDesc = Pigeons.Descriptions.TryGetValue(nearest[i], out string s);
+                bool hasDesc = Pigeons.LocationInfo.TryGetValue(nearest[i], out string s);
                 if (hasDesc) {
                     desc += s;
                 } else {

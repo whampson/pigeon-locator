@@ -24,16 +24,23 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WHampson.PigeonLocator
+namespace WHampson.PigeonLocator.IvGameData
 {
     /// <summary>
     /// Represents a vector in 3-space.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal unsafe struct Vect3d : IEquatable<Vect3d>
+    internal struct Vect3d : IEquatable<Vect3d>
     {
         private const int DecimalPlaces = 4;
 
+        /// <summary>
+        /// Creates a new <see cref="Vect3d"/> with the specified
+        /// x, y, and z coordinates.
+        /// </summary>
+        /// <param name="x">The x component of the vector.</param>
+        /// <param name="y">The y component of the vector.</param>
+        /// <param name="z">The z component of the vector.</param>
         public Vect3d(float x, float y, float z)
         {
             X = x;
@@ -106,74 +113,5 @@ namespace WHampson.PigeonLocator
         {
             return !a.Equals(b);
         }
-    }
-
-    /// <summary>
-    /// GTA IV savegame file header.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal unsafe struct FileHeader
-    {
-        public uint FileVersion;
-        public uint FileSize;
-        public uint GlobalVarsSize;
-        public fixed byte Signature[4];
-        public fixed char LastMissionName[128];
-    }
-
-    /// <summary>
-    /// GTA IV savegame data block header.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal unsafe struct BlockHeader
-    {
-        public fixed byte Signature[5];
-        public uint BlockSize;
-    }
-
-    /// <summary>
-    /// A collectible object in the game world.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal unsafe struct Pickup
-    {
-        public uint _Unknown00;
-        public uint Index;
-        public uint _Unknown08;
-        public uint _Unknown0C;
-        public uint Value;
-        public uint _Unknown14;
-        public uint _Unknown18;
-        public uint _Unknown1C;
-        public uint _Unknown20;
-        public Vect3d Location;
-        public uint _Unknown30;
-        public uint _Unknown34;
-        public float _Unknown38;
-        public uint _Unknown3C;
-        public float _Unknown40;
-        public uint _Unknown44;
-        public ObjectId Object;
-        public short ReferenceNumber;
-        public PickupId Type;
-        public byte AvailabilityFlags;
-        public short _Unknown4C;
-        public uint _Unknown50;
-    }
-
-    /// <summary>
-    /// IDs for each <see cref="Pickup"/> type.
-    /// </summary>
-    internal enum PickupId : byte
-    {
-        Pigeon = 3
-    }
-
-    /// <summary>
-    /// IDs for each game object.
-    /// </summary>
-    internal enum ObjectId : short
-    {
-        Pigeon = 0x08DC
     }
 }

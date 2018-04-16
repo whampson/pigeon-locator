@@ -22,6 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
+using WHampson.PigeonLocator.IvGameData;
 
 namespace WHampson.PigeonLocator
 {

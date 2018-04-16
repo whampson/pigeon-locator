@@ -61,8 +61,6 @@ namespace WHampson.PigeonLocator
             this.fileInformationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.editBlipPropertiesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.viewRemainingPigeonsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewCollectedPigeonsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,7 +96,6 @@ namespace WHampson.PigeonLocator
             this.menuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenu,
-            this.editMenu,
             this.viewMenu,
             this.helpMenu,
             this.debugMenu});
@@ -169,23 +166,6 @@ namespace WHampson.PigeonLocator
             this.exitMenuItem.Size = new System.Drawing.Size(341, 38);
             this.exitMenuItem.Text = "E&xit";
             this.exitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_OnClick);
-            // 
-            // editMenu
-            // 
-            this.editMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editBlipPropertiesMenuItem});
-            this.editMenu.Enabled = false;
-            this.editMenu.Name = "editMenu";
-            this.editMenu.Size = new System.Drawing.Size(67, 38);
-            this.editMenu.Text = "&Edit";
-            this.editMenu.Visible = false;
-            // 
-            // editBlipPropertiesMenuItem
-            // 
-            this.editBlipPropertiesMenuItem.Name = "editBlipPropertiesMenuItem";
-            this.editBlipPropertiesMenuItem.Size = new System.Drawing.Size(283, 38);
-            this.editBlipPropertiesMenuItem.Text = "Blip &Properties...";
-            this.editBlipPropertiesMenuItem.Click += new System.EventHandler(this.EditBlipPropertiesMenuItem_OnClick);
             // 
             // viewMenu
             // 
@@ -429,7 +409,7 @@ namespace WHampson.PigeonLocator
             this.Controls.Add(this.zoomTrackBar);
             this.Controls.Add(this.statusStrip);
             this.DoubleBuffered = true;
-            this.Icon = global::WHampson.PigeonLocator.Properties.Resources.PigeonIcon;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "PigeonLocatorForm";
@@ -457,8 +437,6 @@ namespace WHampson.PigeonLocator
         private System.Windows.Forms.ToolStripMenuItem fileInformationMenuItem;
         private System.Windows.Forms.ToolStripSeparator fileMenuSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editMenu;
-        private System.Windows.Forms.ToolStripMenuItem editBlipPropertiesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewMenu;
         private System.Windows.Forms.ToolStripMenuItem viewRemainingPigeonsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewCollectedPigeonsMenuItem;

@@ -27,7 +27,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using WHampson.PigeonLocator.Extensions;
 
-namespace WHampson.PigeonLocator
+namespace WHampson.PigeonLocator.IvGameData
 {
     /// <summary>
     /// Represents a GTA IV savedata file.
@@ -168,7 +168,6 @@ namespace WHampson.PigeonLocator
             get;
         }
 
-
         /// <summary>
         /// Returns an array of map coordinates for each remaining pigeon.
         /// </summary>
@@ -298,6 +297,29 @@ namespace WHampson.PigeonLocator
         private static IntPtr AdvancePointer(IntPtr ptr, int offset)
         {
             return new IntPtr(ptr.ToInt64() + offset);
+        }
+
+        /// <summary>
+        /// GTA IV savegame file header.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private struct FileHeader
+        {
+            public uint FileVersion;
+            public uint FileSize;
+            public uint GlobalVarsSize;
+            public fixed byte Signature[4];
+            public fixed char LastMissionName[128];
+        }
+
+        /// <summary>
+        /// GTA IV savegame data block header.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private struct BlockHeader
+        {
+            public fixed byte Signature[5];
+            public uint BlockSize;
         }
     }
 }
