@@ -65,7 +65,7 @@
     <ApplicationIcon>Resources\Pigeon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\BitmapExtensions.cs" />
     <Compile Include="FatalExceptionHandler.cs" />
     <Compile Include="FixedLengthUniqueQueue.cs" />
