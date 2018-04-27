@@ -368,6 +368,146 @@ namespace WHampson.PigeonLocator
                     "the Huntington St train station's first level,\n" +
                     "directly behind the bank of three ticket-\n" +
                     "dispensing machines." },
+
+                // Bohan/Dukes/Broker 51
+                { new Vect3d(0f, 0f, 0f),
+                    "Algonquin Bridge\n" +
+                    "On a road railing near the bridge's south\n" +
+                    "side center support beams." },
+
+                // Bohan/Dukes/Broker 52
+                { new Vect3d(0f, 0f, 1f),
+                    "BOABO\n" +
+                    "In a small, dead-end alley accessible from\n" +
+                    "the sidewalk by Brucie's apartment. On the\n" +
+                    "first-level fire escape railing." },
+
+                // Bohan/Dukes/Broker 53
+                { new Vect3d(0f, 0f, 2f),
+                    "Schottler\n" +
+                    "Under the expressway in a tunnel. It's perched\n" +
+                    "atop an entryway girder inside the tunnel." },
+
+                // Bohan/Dukes/Broker 54
+                { new Vect3d(0f, 0f, 3f),
+                    "Schottler\n" +
+                    "On a project home's stoop railing." },
+
+                // Bohan/Dukes/Broker 55
+                { new Vect3d(0f, 0f, 4f),
+                    "Beechwood City\n" +
+                    "On a street-facing apartment's first-level\n" +
+                    "fire escape. It's next to the open-door\n" +
+                    "apartment on the end that allows roof access." },
+
+                // Bohan/Dukes/Broker 56
+                { new Vect3d(0f, 0f, 5f),
+                    "Beechwood City\n" +
+                    "Just below the broken railing on the Broker-\n" +
+                    "Dukes Expressway. It's on a slab of concrete\n" +
+                    "amongst a small roadside construction project." },
+
+                // Bohan/Dukes/Broker 57
+                { new Vect3d(0f, 0f, 6f),
+                    "Downtown\n" +
+                    "Atop a bus information shelter's roof." },
+
+                // Bohan/Dukes/Broker 58
+                { new Vect3d(0f, 0f, 7f),
+                    "South Slopes\n" +
+                    "On the sidewalk steps' rail between the\n" +
+                    "Jerk 'N' Gizzard Jamaican Restaurant and the\n" +
+                    "Schottler train station." },
+
+                // Bohan/Dukes/Broker 59
+                { new Vect3d(0f, 0f, 8f),
+                    "East Hook\n" +
+                    "On top of the Broker Navy Yard entryway arch's\n" +
+                    "west support column. Shoot it from the short\n" +
+                    "rooftop behind Roman's car service building, or\n" +
+                    "from an upper level on the crane in the shipyard." },
+
+                // Bohan/Dukes/Broker 60
+                { new Vect3d(0f, 0f, 9f),
+                    "East Hook\n" +
+                    "On top of an air-conditioning unit on the west\n" +
+                    "side of the Woodfellas lumber yard building." },
+
+                // Bohan/Dukes/Broker 61
+                { new Vect3d(0f, 0f, 10f),
+                    "Outlook\n" +
+                    "On the gazebo railing in the park." },
+
+                // Bohan/Dukes/Broker 62
+                { new Vect3d(0f, 0f, 11f),
+                    "South Slopes\n" +
+                    "On top of a garage with rooftop railings in a\n" +
+                    "back alley. Toss a grenade or Molotov onto the\n" +
+                    "rooftop, or climb onto the roof using the dumpster\n" +
+                    "below the fire escape." },
+                
+                // Bohan/Dukes/Broker 63
+                { new Vect3d(0f, 2f, 0f),
+                    "Hove Beach\n" +
+                    "On top of the Perestroika theater marquee." },
+                
+                // Bohan/Dukes/Broker 64
+                { new Vect3d(0f, 3f, 0f),
+                    "Firefly Projects\n" +
+                    "On a sidewalk brick wall, near the broken\n" +
+                    "section under the tracks and expressway." },
+                
+                // Bohan/Dukes/Broker 65
+                { new Vect3d(0f, 4f, 0f),
+                    "Hove Beach\n" +
+                    "On a pier post under the Broker Bridge." },
+                
+                // Bohan/Dukes/Broker 66
+                { new Vect3d(0f, 5f, 0f),
+                    "Hove Beach\n" +
+                    "On top of a door that faces the small\n" +
+                    "courtyard park in an alley." },
+                
+                // Bohan/Dukes/Broker 67
+                { new Vect3d(0f, 6f, 0f),
+                    "Firefly Projects\n" +
+                    "On the center median on the expressway." },
+                
+                // Bohan/Dukes/Broker 68
+                { new Vect3d(0f, 7f, 0f),
+                    "Firefly Island\n" +
+                    "On top of the \"Welcome to Fantastic Firefly Island\"\n" +
+                    "signpost on the gazebo pier." },
+
+                // Bohan/Dukes/Broker 69
+                { new Vect3d(0f, 8f, 0f),
+                    "Firefly Island\n" +
+                    "On the lowest support strut directly below the\n" +
+                    "Liberty Eye abandoned ferris wheel's center." },
+
+                // Bohan/Dukes/Broker 70
+                { new Vect3d(0f, 9f, 0f),
+                    "Hove Beach\n" +
+                    "On the tiptop of the abandoned Screamer\n" +
+                    "rollercoaster's north side rail. Shoot it from\n" +
+                    "Crockett Ave or the raised train tracks." },
+
+                // Bohan/Dukes/Broker 71
+                { new Vect3d(0f, 19f, 0f),
+                    "Firefly Projects\n" +
+                    "On top of the sidewalk fence in the large apartment\n" +
+                    "complex's southwest corner." },
+
+                // Bohan/Dukes/Broker 72
+                { new Vect3d(0f, 34f, 0f),
+                    "Firefly Island\n" +
+                    "Under a large pier on the shoreline, next to a\n" +
+                    "support column." },
+
+                // Bohan/Dukes/Broker 73
+                { new Vect3d(0f, 36f, 0f),
+                    "Beachgate\n" +
+                    "On a house's back porch rail." },
             };
     }
 }
