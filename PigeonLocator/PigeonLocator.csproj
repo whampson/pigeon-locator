@@ -65,6 +65,8 @@
     <ApplicationIcon>Resources\Pigeon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameData\Pigeons.Bohan.cs" />
+    <Compile Include="GameData\Pigeons.DukesBroker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\BitmapExtensions.cs" />
     <Compile Include="FatalExceptionHandler.cs" />

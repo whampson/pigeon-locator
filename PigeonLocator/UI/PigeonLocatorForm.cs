@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using WHampson.PigeonLocator.Extensions;
+using WHampson.PigeonLocator.GameData;
 using WHampson.PigeonLocator.IvGameData;
 using WHampson.PigeonLocator.Properties;
 
@@ -689,7 +690,7 @@ namespace WHampson.PigeonLocator
                 }
 
                 // Append description
-                bool hasDesc = Pigeons.LocationInfo.TryGetValue(nearest[i], out string s);
+                bool hasDesc = Pigeons.AllPigeons.TryGetValue(nearest[i], out string s);
                 if (hasDesc) {
                     desc += s;
                 } else {
