@@ -31,12 +31,14 @@ namespace WHampson.PigeonLocator.GameData
     {
         public const int NumPigeons = 200;
 
-        public static readonly Dictionary<Vect3d, string>
-            AllPigeons = new Dictionary<Vect3d, string>()
+        public static Dictionary<Vect3d, string> GetAllPigeons()
+        {
+            return new Dictionary<Vect3d, string>()
                 .Union(AlderneyPigeons)
                 .Union(AlgonquinPigeons)
                 .Union(BohanPigeons)
                 .Union(DukesBrokerPigeons)
                 .ToDictionary(k => k.Key, v => v.Value);
+        }
     }
 }

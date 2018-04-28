@@ -690,7 +690,7 @@ namespace WHampson.PigeonLocator
                 }
 
                 // Append description
-                bool hasDesc = Pigeons.AllPigeons.TryGetValue(nearest[i], out string s);
+                bool hasDesc = Pigeons.GetAllPigeons().TryGetValue(nearest[i], out string s);
                 if (hasDesc) {
                     desc += s;
                 } else {
