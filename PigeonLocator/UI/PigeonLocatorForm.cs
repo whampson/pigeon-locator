@@ -42,6 +42,8 @@ namespace WHampson.PigeonLocator
         private const int MapCenterOffsetY = 750;
         private const int MaximumRecentFiles = 9;
         private const int DefaultBlipSize = 2;
+        private const bool DefaultShowExterminated = false;
+        private const bool DefaultShowRemaining = true;
 
         private readonly int[] BlipSizes = { 24, 32, 40, 48, 56, 64 };
 
@@ -105,6 +107,16 @@ namespace WHampson.PigeonLocator
                         Pigeons.NumPigeons);
                 }
                 pigeonCountLabel.Text = labelText;
+            }
+        }
+
+        private Vect3d[] CollectedPigeons
+        {
+            get {
+                if (Savegame == null) {
+                    return new Vect3d[0];
+                }
+                return Pigeons.GetAllPigeons().Keys.Except(RemainingPigeons).ToArray();
             }
         }
 
@@ -259,16 +271,23 @@ namespace WHampson.PigeonLocator
         {
             IniFile cfg = Program.GetConfig();
 
-            // TODO:
-            //  - load tooltip visiblity
-            //  - load blip visibility
-            //  - load blip colors
-
             string blipSizeStr = cfg.Read(Program.ConfigBlipSize);
             if (!int.TryParse(blipSizeStr, out int blipSize)) {
                 blipSize = DefaultBlipSize;
             }
             BlipSizeIndex = blipSize;
+
+            string showExterminatedStr = cfg.Read(Program.ConfigShowExterminated);
+            if (!bool.TryParse(showExterminatedStr, out bool showExterminated)) {
+                showExterminated = DefaultShowExterminated;
+            }
+            viewCollectedPigeonsMenuItem.Checked = showExterminated;
+
+            string showRemainingStr = cfg.Read(Program.ConfigShowRemaining);
+            if (!bool.TryParse(showRemainingStr, out bool showRemaining)) {
+                showRemaining = DefaultShowRemaining;
+            }
+            viewRemainingPigeonsMenuItem.Checked = showRemaining;
 
             LoadRecentFiles();
         }
@@ -443,11 +462,19 @@ namespace WHampson.PigeonLocator
             Bitmap blipImage = Resources.Pigeon_64x64;
             Graphics mapGraphics = Graphics.FromImage(mapPanel.Image);
 
-            //blipImage.FloodFill(new Point(40, 40), Color.FromArgb(192,  Color.Orange));
-
             // Draw blips on map
-            foreach (Vect3d loc in RemainingPigeons) {
-                DrawBlip(mapGraphics, blipImage, loc.X, loc.Y);
+            if (viewRemainingPigeonsMenuItem.Checked) {
+                blipImage.FloodFill(new Point(40, 40), Color.FromArgb(224, 224, 224, 224));
+                foreach (Vect3d loc in RemainingPigeons) {
+                    DrawBlip(mapGraphics, blipImage, loc.X, loc.Y);
+                }
+            }
+
+            if (viewCollectedPigeonsMenuItem.Checked) {
+                blipImage.FloodFill(new Point(40, 40), Color.FromArgb(192, 255, 192, 192));
+                foreach (Vect3d loc in CollectedPigeons) {
+                    DrawBlip(mapGraphics, blipImage, loc.X, loc.Y);
+                }
             }
 
             // Re-paint map
@@ -482,7 +509,8 @@ namespace WHampson.PigeonLocator
         private Vect3d[] GetNearestPigeons(PointF loc, float squareDim)
         {
             return RemainingPigeons
-                .Where(vect => IsPointInSquare(new PointF(vect.X, vect.Y), loc, squareDim))
+                .Where(vect => IsPointInSquare(new PointF(vect.X, vect.Y), loc, squareDim) && viewRemainingPigeonsMenuItem.Checked)
+                .Union(CollectedPigeons.Where(vect => IsPointInSquare(new PointF(vect.X, vect.Y), loc, squareDim) && viewCollectedPigeonsMenuItem.Checked))
                 .ToArray();
         }
 
@@ -592,6 +620,18 @@ namespace WHampson.PigeonLocator
             Close();
         }
 
+        private void ViewRemainingPigeonsMenuItem_OnClick(object sender, EventArgs e)
+        {
+            RedrawPigeonBlips();
+            Program.GetConfig().Write(Program.ConfigShowRemaining, viewRemainingPigeonsMenuItem.Checked.ToString());
+        }
+
+        private void ViewCollectedPigeonsMenuItem_OnClick(object sender, EventArgs e)
+        {
+            RedrawPigeonBlips();
+            Program.GetConfig().Write(Program.ConfigShowExterminated, viewCollectedPigeonsMenuItem.Checked.ToString());
+        }
+
         private void IncreaseBlipSizeMenuItem_OnClick(object sender, EventArgs e)
         {
             BlipSizeIndex += 1;
@@ -682,10 +722,6 @@ namespace WHampson.PigeonLocator
                 return;
             }
 
-            foreach (Vect3d loc in nearest) {
-                Console.WriteLine(loc);
-            }
-
             string desc = "";
             for (int i = 0; i < nearest.Length; i++) {
                 // Append index (if necessary)
@@ -693,8 +729,13 @@ namespace WHampson.PigeonLocator
                     desc += (i + 1) + ") ";
                 }
 
+
                 // Append description
                 bool hasDesc = Pigeons.GetAllPigeons().TryGetValue(nearest[i], out string s);
+                bool isCollected = CollectedPigeons.Contains(nearest[i]);
+                if (isCollected) {
+                    s = "(exterminated)\n" + s;
+                }
                 if (hasDesc) {
                     desc += s;
                 } else {

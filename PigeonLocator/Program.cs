@@ -33,6 +33,8 @@ namespace WHampson.PigeonLocator
     {
         public const string ConfigRecentFileKey = "recentFile";
         public const string ConfigBlipSize = "blipSize";
+        public const string ConfigShowExterminated = "showExterminated";
+        public const string ConfigShowRemaining = "showRemaining";
 
         [STAThread]
         public static void Main(string[] args)
