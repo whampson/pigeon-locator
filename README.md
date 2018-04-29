@@ -1,17 +1,23 @@
 # GTA IV Pigeon Locator
-Shows a map of remaining collectibles in a GTA IV game.
+Shows a map of remaining pigeons in a GTA IV game.
 
 ## Features
-- Plots all remaining collectibles on a map of Liberty City.
+- Plots all remaining pigeons on a map of Liberty City.
 - Map can be zoomed and panned.
 - Hover over a pigeon blip to display location information.
-- Load GTA IV gamesaves by dragging and dropping.
+- Load GTA IV gamesaves by dragging and dropping them into the program.
+
+## Author
+Copyright (C) 2018 W. Hampson (aka thehambone)
 
 ## Screenshots
 <img src="https://i.imgur.com/SdPySbW.png" width="50%" height="50%" />
 
-## Todo
-- [x] Drag'n'drop a file onto program icon to open the program and load file
-- [ ] Show collected pigeons
-- [ ] Allow blip size and color customization
-- [ ] Retain blip size while zooming
+## Version History
+### v1.0.0
+Released: 29 April 2018  
+Description: Initial release.
+
+## Special Thanks
+Special thanks to GTAKid667 for testing and providing feedback during the
+development process.
