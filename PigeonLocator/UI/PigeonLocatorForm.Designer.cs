@@ -200,7 +200,7 @@ namespace WHampson.PigeonLocator
             this.viewCollectedPigeonsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.viewCollectedPigeonsMenuItem.Name = "viewCollectedPigeonsMenuItem";
             this.viewCollectedPigeonsMenuItem.Size = new System.Drawing.Size(438, 38);
-            this.viewCollectedPigeonsMenuItem.Text = "Pigeons &Collected";
+            this.viewCollectedPigeonsMenuItem.Text = "Pigeons &Exterminated";
             this.viewCollectedPigeonsMenuItem.Visible = false;
             // 
             // viewMenuSeparator1
@@ -296,9 +296,9 @@ namespace WHampson.PigeonLocator
             this.statusLabel,
             this.statusStripPaddingLabel,
             this.pigeonCountLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 852);
+            this.statusStrip.Location = new System.Drawing.Point(0, 851);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1254, 37);
+            this.statusStrip.Size = new System.Drawing.Size(1254, 38);
             this.statusStrip.SizingGrip = false;
             this.statusStrip.TabIndex = 3;
             this.statusStrip.Text = "statusStrip";
@@ -306,19 +306,19 @@ namespace WHampson.PigeonLocator
             // statusLabel
             // 
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(109, 32);
+            this.statusLabel.Size = new System.Drawing.Size(109, 33);
             this.statusLabel.Text = "<status>";
             // 
             // statusStripPaddingLabel
             // 
             this.statusStripPaddingLabel.Name = "statusStripPaddingLabel";
-            this.statusStripPaddingLabel.Size = new System.Drawing.Size(1022, 32);
+            this.statusStripPaddingLabel.Size = new System.Drawing.Size(960, 33);
             this.statusStripPaddingLabel.Spring = true;
             // 
             // pigeonCountLabel
             // 
             this.pigeonCountLabel.Name = "pigeonCountLabel";
-            this.pigeonCountLabel.Size = new System.Drawing.Size(108, 32);
+            this.pigeonCountLabel.Size = new System.Drawing.Size(108, 33);
             this.pigeonCountLabel.Text = "<count>";
             // 
             // zoomTrackBar
