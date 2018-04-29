@@ -101,7 +101,7 @@ namespace WHampson.PigeonLocator
             this.debugMenu});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1254, 42);
+            this.menuStrip.Size = new System.Drawing.Size(1254, 40);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -115,7 +115,7 @@ namespace WHampson.PigeonLocator
             this.fileMenuSeparator2,
             this.exitMenuItem});
             this.fileMenu.Name = "fileMenu";
-            this.fileMenu.Size = new System.Drawing.Size(64, 38);
+            this.fileMenu.Size = new System.Drawing.Size(64, 36);
             this.fileMenu.Text = "&File";
             // 
             // fileOpenMenuItem
@@ -178,7 +178,7 @@ namespace WHampson.PigeonLocator
             this.increaseBlipSizeMenuItem,
             this.decreaseBlipSizeMenuItem});
             this.viewMenu.Name = "viewMenu";
-            this.viewMenu.Size = new System.Drawing.Size(78, 38);
+            this.viewMenu.Size = new System.Drawing.Size(78, 36);
             this.viewMenu.Text = "&View";
             // 
             // viewRemainingPigeonsMenuItem
@@ -245,7 +245,7 @@ namespace WHampson.PigeonLocator
             this.helpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutMenuItem});
             this.helpMenu.Name = "helpMenu";
-            this.helpMenu.Size = new System.Drawing.Size(77, 38);
+            this.helpMenu.Size = new System.Drawing.Size(77, 36);
             this.helpMenu.Text = "&Help";
             // 
             // aboutMenuItem
@@ -262,7 +262,7 @@ namespace WHampson.PigeonLocator
             this.exceptionsMenuItem});
             this.debugMenu.Enabled = false;
             this.debugMenu.Name = "debugMenu";
-            this.debugMenu.Size = new System.Drawing.Size(99, 38);
+            this.debugMenu.Size = new System.Drawing.Size(99, 36);
             this.debugMenu.Text = "Debug";
             this.debugMenu.Visible = false;
             // 
@@ -383,12 +383,12 @@ namespace WHampson.PigeonLocator
             this.mapPanel.Cursor = System.Windows.Forms.Cursors.Cross;
             this.mapPanel.Image = global::WHampson.PigeonLocator.Properties.Resources.Map_Blue_3072x2304;
             this.mapPanel.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
-            this.mapPanel.Location = new System.Drawing.Point(0, 0);
+            this.mapPanel.Location = new System.Drawing.Point(0, 46);
             this.mapPanel.Margin = new System.Windows.Forms.Padding(6);
             this.mapPanel.MaximumZoom = 2F;
             this.mapPanel.MinimumZoom = 0.2F;
             this.mapPanel.Name = "mapPanel";
-            this.mapPanel.Size = new System.Drawing.Size(1254, 738);
+            this.mapPanel.Size = new System.Drawing.Size(1254, 692);
             this.mapPanel.TabIndex = 6;
             this.mapPanel.ViewPosition = ((System.Drawing.PointF)(resources.GetObject("mapPanel.ViewPosition")));
             this.mapPanel.Zoom = 0.2F;

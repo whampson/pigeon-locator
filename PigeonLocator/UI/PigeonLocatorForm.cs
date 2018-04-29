@@ -750,7 +750,7 @@ namespace WHampson.PigeonLocator
             MapZoom = mapPanel.Zoom;
 
             // Center the map in the view window (approximate)
-            mapPanel.ViewPosition = new PointF(0, 4f / 7f);
+            mapPanel.ViewPosition = new PointF(0, 4.5f / 7f);
 
             // Ensure zoom and pan with mouse and keys works out-of-the-box
             mapPanel.Focus();
