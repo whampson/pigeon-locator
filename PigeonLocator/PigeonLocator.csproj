@@ -65,20 +65,22 @@
     <ApplicationIcon>Resources\Pigeon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GameData\Pigeons.Bohan.cs" />
-    <Compile Include="GameData\Pigeons.DukesBroker.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Extensions\BitmapExtensions.cs" />
     <Compile Include="FatalExceptionHandler.cs" />
     <Compile Include="FixedLengthUniqueQueue.cs" />
-    <Compile Include="GameData\EntityIDs.cs" />
-    <Compile Include="GameData\Savegame\Pickup.cs" />
     <Compile Include="IniFile.cs" />
-    <Compile Include="GameData\Savegame\Savegame.cs" />
-    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="GameData\Savegame\Vect3d.cs" />
+    <Compile Include="GameData\EntityIDs.cs" />
     <Compile Include="GameData\Pigeons.cs" />
+    <Compile Include="GameData\Pigeons.Alderney.cs" />
+    <Compile Include="GameData\Pigeons.Algonquin.cs" />
+    <Compile Include="GameData\Pigeons.Bohan.cs" />
+    <Compile Include="GameData\Pigeons.DukesBroker.cs" />
+    <Compile Include="GameData\Savegame\Pickup.cs" />
+    <Compile Include="GameData\Savegame\Savegame.cs" />
+    <Compile Include="GameData\Savegame\Vect3d.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Extensions\BitmapExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="UI\ImagePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
