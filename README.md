@@ -14,6 +14,10 @@ Copyright (C) 2018 W. Hampson (aka thehambone)
 <img src="https://i.imgur.com/SdPySbW.png" width="50%" height="50%" />
 
 ## Version History
+### v1.0.1
+Released: 25 June 2018  
+Description: Made the program DPI-aware so it looks nicer on high-resolution
+displays.
 ### v1.0.0
 Released: 29 April 2018  
 Description: Initial release.
