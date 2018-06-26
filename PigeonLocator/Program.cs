@@ -40,7 +40,12 @@ namespace WHampson.PigeonLocator
         public static void Main(string[] args)
         {
             FatalExceptionHandler.Initialize();
+
+            if (Environment.OSVersion.Version.Major >= 6) {
+                SetProcessDPIAware();
+            }
             Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
             if (args.Length > 0) {
                 Application.Run(new PigeonLocatorForm(args[0]));
@@ -125,6 +130,9 @@ namespace WHampson.PigeonLocator
             w.WriteLine("[{0}]: {1}: {2}",
                 l.ToString(), ex.GetType().FullName, ex.Message);
         }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool SetProcessDPIAware();
     }
 
     internal enum LogLevel
