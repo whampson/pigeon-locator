@@ -15,7 +15,7 @@ Copyright (C) 2018-2019 W. Hampson (aka thehambone)
 
 ## Version History
 ### v1.1.0
-Released: 27 January 2018  
+Released: 27 January 2019  
 Description: Added support for *The Lost and Damned* and *The Ballad of Gay Tony* saves.
 ### v1.0.1
 Released: 25 June 2018  
