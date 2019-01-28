@@ -67,6 +67,8 @@
   <ItemGroup>
     <Compile Include="FatalExceptionHandler.cs" />
     <Compile Include="FixedLengthUniqueQueue.cs" />
+    <Compile Include="GameData\Seagulls.cs" />
+    <Compile Include="GameData\Seagulls.TLAD.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="GameData\EntityIDs.cs" />
@@ -128,6 +130,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GameData\Seagulls.TBOGT.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
