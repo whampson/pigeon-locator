@@ -29,7 +29,8 @@ namespace WHampson.PigeonLocator.IvGameData
     internal enum ObjectId : short
     {
         Pigeon = 0x08DC,
-        Seagull = 0x0574
+        SeagullTlad = 0x01AF,
+        SeagullTbogt = 0x0574
     }
 
     /// <summary>
