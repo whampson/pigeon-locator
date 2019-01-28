@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018 W. Hampson
+/* Copyright (c) 2018-2019 W. Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,9 @@ namespace WHampson.PigeonLocator.IvGameData
     /// </summary>
     internal enum ObjectId : short
     {
-        Pigeon = 0x08DC
+        Pigeon = 0x08DC,
+        SeagullTlad = 0x01AF,
+        SeagullTbogt = 0x0574
     }
 
     /// <summary>
@@ -36,6 +38,6 @@ namespace WHampson.PigeonLocator.IvGameData
     /// </summary>
     internal enum PickupId : byte
     {
-        Pigeon = 3
+        HiddenPackage = 3
     }
 }

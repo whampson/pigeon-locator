@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018 W. Hampson
+/* Copyright (c) 2018-2019 W. Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -102,9 +102,11 @@ namespace WHampson.PigeonLocator
 
                 string labelText = "";
                 if (_savegame != null) {
+                    int total = (_savegame.Episode == Episode.IV)
+                        ? Pigeons.NumPigeons : Seagulls.NumSeagulls;
                     labelText = string.Format("{0}/{1} Exterminated",
-                        Pigeons.NumPigeons - _remainingPigeons.Length,
-                        Pigeons.NumPigeons);
+                        total - _remainingPigeons.Length,
+                        total);
                 }
                 pigeonCountLabel.Text = labelText;
             }
@@ -116,7 +118,8 @@ namespace WHampson.PigeonLocator
                 if (Savegame == null) {
                     return new Vect3d[0];
                 }
-                return Pigeons.GetAllPigeons().Keys.Except(RemainingPigeons).ToArray();
+
+                return _savegame.GetAllHiddenPackages().Keys.Except(RemainingPigeons).ToArray();
             }
         }
 
@@ -325,7 +328,7 @@ namespace WHampson.PigeonLocator
                 return;
             }
 
-            RemainingPigeons = Savegame.GetRemainingPigeonLocations();
+            RemainingPigeons = Savegame.GetRemainingHiddenPackageLocations();
             StatusText = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
 
             AddRecentFilePath(path);
@@ -529,11 +532,27 @@ namespace WHampson.PigeonLocator
         /// </summary>
         private void ShowFileInfoDialog()
         {
+            string ep;
+            if (Savegame.Episode == Episode.IV) {
+                ep = "Grand Theft Auto IV";
+            }
+            else if (Savegame.Episode == Episode.Tlad) {
+                ep = "The Lost and Damned";
+            }
+            else if (Savegame.Episode == Episode.Tbogt) {
+                ep = "The Ballad of Gay Tony";
+            }
+            else {
+                ep = "(unknown)";
+            }
+
             string fileInfo = string.Format(
-                "Mission Name: {0}\n" +
-                "Timestamp: {1}\n" +
-                "File Size: {2} bytes\n" +
-                "File Version: {3}",
+                "Episode: {0}\n" +
+                "Mission Name: {1}\n" +
+                "Timestamp: {2}\n" +
+                "File Size: {3} bytes\n" +
+                "File Version: {4}",
+                ep,
                 Savegame.LastMissionName,
                 Savegame.Timestamp.ToString("MMM d, yyyy HH:mm:ss"),
                 Savegame.FileSize,
@@ -731,12 +750,12 @@ namespace WHampson.PigeonLocator
 
 
                 // Append description
-                bool hasDesc = Pigeons.GetAllPigeons().TryGetValue(nearest[i], out string s);
+                bool hasDesc = _savegame.GetAllHiddenPackages().TryGetValue(nearest[i], out string s);
                 bool isCollected = CollectedPigeons.Contains(nearest[i]);
                 if (isCollected) {
-                    s = "(exterminated)\n" + s;
+                    desc += "(exterminated)\n";
                 }
-                if (hasDesc) {
+                if (hasDesc && !string.IsNullOrEmpty(s)) {
                     desc += s;
                 } else {
                     desc += "(no information available)";

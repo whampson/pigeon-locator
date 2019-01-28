@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018 W. Hampson
+/* Copyright (c) 2018-2019 W. Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using WHampson.PigeonLocator.Extensions;
+using WHampson.PigeonLocator.GameData;
 
 namespace WHampson.PigeonLocator.IvGameData
 {
+    public enum Episode
+    {
+        IV,
+        Tlad,
+        Tbogt
+    };
+
     /// <summary>
     /// Represents a GTA IV savedata file.
     /// </summary>
@@ -64,6 +72,7 @@ namespace WHampson.PigeonLocator.IvGameData
             FileHeader* header;
             IntPtr fileStartPtr;
             DateTime timestamp;
+            Episode ep;
 
             if (!File.Exists(path)) {
                 throw new FileNotFoundException("File does not exist.", path);
@@ -77,6 +86,7 @@ namespace WHampson.PigeonLocator.IvGameData
                 int headerLen;
                 long fileLen;
                 string sig;
+                string name;
 
                 headerLen = Marshal.SizeOf(typeof(FileHeader));
                 fileLen = fs.Length;
@@ -114,21 +124,35 @@ namespace WHampson.PigeonLocator.IvGameData
 
                 // Reassign header pointer because we re-allocated the buffer
                 header = (FileHeader*) fileStartPtr;
+
+                // Determine episode
+                // TODO: determine a more resilient way to do this; what if the name has been modified?
+                name = new string(header->LastMissionName);
+                if (name.StartsWith("TLAD", StringComparison.InvariantCultureIgnoreCase)) {
+                    ep = Episode.Tlad;
+                }
+                else if (name.StartsWith("TBoGT", StringComparison.InvariantCultureIgnoreCase)) {
+                    ep = Episode.Tbogt;
+                }
+                else {
+                    ep = Episode.IV;
+                }
             }
 
-            return new IvSavegame(fileStartPtr, header, timestamp);
+            return new IvSavegame(fileStartPtr, header, timestamp, ep);
         }
 
         private IntPtr dataPtr;
         private FileHeader* fileInfo;
         private bool hasBeenDisposed;
 
-        private IvSavegame(IntPtr dataPtr, FileHeader* fileInfo, DateTime timestamp)
+        private IvSavegame(IntPtr dataPtr, FileHeader* fileInfo, DateTime timestamp, Episode episode)
         {
             this.dataPtr = dataPtr;
             this.fileInfo = fileInfo;
             hasBeenDisposed = false;
             Timestamp = timestamp;
+            Episode = episode;
         }
 
         /// <summary>
@@ -168,29 +192,48 @@ namespace WHampson.PigeonLocator.IvGameData
             get;
         }
 
+        public Episode Episode
+        {
+            get;
+        }
+
         /// <summary>
-        /// Returns an array of map coordinates for each remaining pigeon.
+        /// Returns an array of map coordinates for each remaining pigeon/seagull.
         /// </summary>
         /// <returns>
         /// An array of <see cref="Vect3d"/> values, each corresponding to a pigeon location.
         /// </returns>
-        public Vect3d[] GetRemainingPigeonLocations()
+        public Vect3d[] GetRemainingHiddenPackageLocations()
         {
-            List<Vect3d> pigeonLocations = new List<Vect3d>();
+            List<Vect3d> hiddenPackageLocations = new List<Vect3d>();
             IntPtr cursor = LocateBlock(PickupsBlock);
             cursor = AdvancePointer(cursor, Marshal.SizeOf(typeof(BlockHeader)));
 
             for (int i = 0; i < PickupCount; i++) {
                 Pickup* pPickup = (Pickup*) cursor;
 
-                if (pPickup->Object == ObjectId.Pigeon) {
-                    pigeonLocations.Add(pPickup->Location);
+                if ((pPickup->Object == ObjectId.Pigeon && Episode == Episode.IV)
+                    || (pPickup->Object == ObjectId.SeagullTlad && Episode == Episode.Tlad)
+                    || (pPickup->Object == ObjectId.SeagullTbogt && Episode == Episode.Tbogt)) {
+                    hiddenPackageLocations.Add(pPickup->Location);
                 }
 
                 cursor = AdvancePointer(cursor, Marshal.SizeOf(typeof(Pickup)));
             }
 
-            return pigeonLocations.ToArray();
+            return hiddenPackageLocations.ToArray();
+        }
+
+        public Dictionary<Vect3d, string> GetAllHiddenPackages()
+        {
+            if (Episode == Episode.Tlad) {
+                return Seagulls.TladSeagulls;
+            }
+            else if (Episode == Episode.Tbogt) {
+                return Seagulls.TbogtSeagulls;
+            }
+
+            return Pigeons.GetAllPigeons();
         }
 
         /// <summary>

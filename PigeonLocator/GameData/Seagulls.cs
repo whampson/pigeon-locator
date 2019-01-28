@@ -21,24 +21,10 @@
  */
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using WHampson.PigeonLocator.IvGameData;
-
 namespace WHampson.PigeonLocator.GameData
 {
-    internal static partial class Pigeons
+    internal static partial class Seagulls
     {
-        public const int NumPigeons = 200;
-
-        public static Dictionary<Vect3d, string> GetAllPigeons()
-        {
-            return new Dictionary<Vect3d, string>()
-                .Union(AlderneyPigeons)
-                .Union(AlgonquinPigeons)
-                .Union(BohanPigeons)
-                .Union(DukesBrokerPigeons)
-                .ToDictionary(k => k.Key, v => v.Value);
-        }
+        public const int NumSeagulls = 50;
     }
 }
