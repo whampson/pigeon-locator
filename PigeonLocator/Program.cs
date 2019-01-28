@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018 W. Hampson
+/* Copyright (c) 2018-2019 W. Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -107,7 +107,7 @@ namespace WHampson.PigeonLocator
 
         public static string GetCopyrightString()
         {
-            return "Copyright (C) 2018 W. Hampson";
+            return "Copyright (C) 2018-2019 W. Hampson";
         }
 
         public static IniFile GetConfig()
