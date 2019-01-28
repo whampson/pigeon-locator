@@ -28,7 +28,8 @@ namespace WHampson.PigeonLocator.IvGameData
     /// </summary>
     internal enum ObjectId : short
     {
-        Pigeon = 0x08DC
+        Pigeon = 0x08DC,
+        Seagull = 0x0574
     }
 
     /// <summary>
@@ -36,6 +37,6 @@ namespace WHampson.PigeonLocator.IvGameData
     /// </summary>
     internal enum PickupId : byte
     {
-        Pigeon = 3
+        HiddenPackage = 3
     }
 }
