@@ -5,17 +5,17 @@ Shows a map of remaining pigeons in a GTA IV game.
 - Plots all remaining pigeons on a map of Liberty City.
 - Map can be zoomed and panned.
 - Hover over a pigeon blip to display location information.
-- Load GTA IV gamesaves by dragging and dropping them into the program.
+- Drag'n'drop saves onto the map to load them.
 
 ## Author
-Copyright (C) 2018 W. Hampson (aka thehambone)
+Copyright (C) 2018-2019 W. Hampson (aka thehambone)
 
 ## Screenshots
 <img src="https://i.imgur.com/KjYcjIh.jpg" width="50%" height="50%" />
 
 ## Version History
 ### v1.1.0
-Released: 27 January 2018
+Released: 27 January 2018  
 Description: Added support for *The Lost and Damned* and *The Ballad of Gay Tony* saves.
 ### v1.0.1
 Released: 25 June 2018  
