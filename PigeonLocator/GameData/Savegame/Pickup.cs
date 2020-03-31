@@ -21,6 +21,7 @@
  */
 #endregion
 
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace WHampson.PigeonLocator.IvGameData
@@ -40,7 +41,7 @@ namespace WHampson.PigeonLocator.IvGameData
         public uint _Unknown18;
         public uint _Unknown1C;
         public uint _Unknown20;
-        public Vect3d Location;
+        public Vector3 Location;
         public uint _Unknown30;
         public uint _Unknown34;
         public float _Unknown38;

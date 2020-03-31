@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using WHampson.PigeonLocator.IvGameData;
 
 namespace WHampson.PigeonLocator.GameData
@@ -31,9 +32,9 @@ namespace WHampson.PigeonLocator.GameData
     {
         public const int NumPigeons = 200;
 
-        public static Dictionary<Vect3d, string> GetAllPigeons()
+        public static Dictionary<Vector3, string> GetAllPigeons()
         {
-            return new Dictionary<Vect3d, string>()
+            return new Dictionary<Vector3, string>()
                 .Union(AlderneyPigeons)
                 .Union(AlgonquinPigeons)
                 .Union(BohanPigeons)

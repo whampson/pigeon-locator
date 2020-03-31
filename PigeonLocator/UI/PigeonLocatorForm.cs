@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Windows.Forms;
 using WHampson.PigeonLocator.Extensions;
 using WHampson.PigeonLocator.GameData;
@@ -48,7 +49,7 @@ namespace WHampson.PigeonLocator
         private readonly int[] BlipSizes = { 24, 32, 40, 48, 56, 64 };
 
         private IvSavegame _savegame;
-        private Vect3d[] _remainingPigeons;
+        private Vector3[] _remainingPigeons;
         private PointF _mapCoordinates;
         private bool _toolTipVisible;
         private int _blipSizeIndex;
@@ -94,9 +95,9 @@ namespace WHampson.PigeonLocator
         /// <remarks>
         /// Also sets the text of the 'Collected' label.
         /// </remarks>
-        private Vect3d[] RemainingPigeons
+        private Vector3[] RemainingPigeons
         {
-            get { return _remainingPigeons ?? new Vect3d[0]; }
+            get { return _remainingPigeons ?? new Vector3[0]; }
             set {
                 _remainingPigeons = value;
 
@@ -112,11 +113,11 @@ namespace WHampson.PigeonLocator
             }
         }
 
-        private Vect3d[] CollectedPigeons
+        private Vector3[] CollectedPigeons
         {
             get {
                 if (Savegame == null) {
-                    return new Vect3d[0];
+                    return new Vector3[0];
                 }
 
                 return _savegame.GetAllHiddenPackages().Keys.Except(RemainingPigeons).ToArray();
@@ -468,14 +469,14 @@ namespace WHampson.PigeonLocator
             // Draw blips on map
             if (viewRemainingPigeonsMenuItem.Checked) {
                 blipImage.FloodFill(new Point(40, 40), Color.FromArgb(224, 224, 224, 224));
-                foreach (Vect3d loc in RemainingPigeons) {
+                foreach (Vector3 loc in RemainingPigeons) {
                     DrawBlip(mapGraphics, blipImage, loc.X, loc.Y);
                 }
             }
 
             if (viewCollectedPigeonsMenuItem.Checked) {
                 blipImage.FloodFill(new Point(40, 40), Color.FromArgb(192, 255, 192, 192));
-                foreach (Vect3d loc in CollectedPigeons) {
+                foreach (Vector3 loc in CollectedPigeons) {
                     DrawBlip(mapGraphics, blipImage, loc.X, loc.Y);
                 }
             }
@@ -509,7 +510,7 @@ namespace WHampson.PigeonLocator
         /// <param name="loc"></param>
         /// <param name="squareDim"></param>
         /// <returns></returns>
-        private Vect3d[] GetNearestPigeons(PointF loc, float squareDim)
+        private Vector3[] GetNearestPigeons(PointF loc, float squareDim)
         {
             return RemainingPigeons
                 .Where(vect => IsPointInSquare(new PointF(vect.X, vect.Y), loc, squareDim) && viewRemainingPigeonsMenuItem.Checked)
@@ -729,7 +730,7 @@ namespace WHampson.PigeonLocator
                 return;
             }
 
-            Vect3d[] nearest = GetNearestPigeons(MapCoordinates, BlipSize * 2);
+            Vector3[] nearest = GetNearestPigeons(MapCoordinates, BlipSize * 2);
             if (nearest.Length == 0) {
                 if (ToolTipVisible) {
                     ToolTipVisible = false;
@@ -805,7 +806,7 @@ namespace WHampson.PigeonLocator
             if (Savegame == null) {
                 Savegame = null;
                 StatusText = "No file loaded.";
-                RemainingPigeons = new Vect3d[0];
+                RemainingPigeons = new Vector3[0];
             }
 
             // Initialize other components controlled by properties
