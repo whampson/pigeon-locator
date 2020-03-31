@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using WHampson.PigeonLocator.Extensions;
 using WHampson.PigeonLocator.GameData;
@@ -201,11 +202,11 @@ namespace WHampson.PigeonLocator.IvGameData
         /// Returns an array of map coordinates for each remaining pigeon/seagull.
         /// </summary>
         /// <returns>
-        /// An array of <see cref="Vect3d"/> values, each corresponding to a pigeon location.
+        /// An array of <see cref="Vector3"/> values, each corresponding to a pigeon location.
         /// </returns>
-        public Vect3d[] GetRemainingHiddenPackageLocations()
+        public Vector3[] GetRemainingHiddenPackageLocations()
         {
-            List<Vect3d> hiddenPackageLocations = new List<Vect3d>();
+            List<Vector3> hiddenPackageLocations = new List<Vector3>();
             IntPtr cursor = LocateBlock(PickupsBlock);
             cursor = AdvancePointer(cursor, Marshal.SizeOf(typeof(BlockHeader)));
 
@@ -224,7 +225,7 @@ namespace WHampson.PigeonLocator.IvGameData
             return hiddenPackageLocations.ToArray();
         }
 
-        public Dictionary<Vect3d, string> GetAllHiddenPackages()
+        public Dictionary<Vector3, string> GetAllHiddenPackages()
         {
             if (Episode == Episode.Tlad) {
                 return Seagulls.TladSeagulls;
