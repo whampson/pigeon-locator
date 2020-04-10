@@ -590,9 +590,9 @@ namespace WHampson.PigeonLocator
             ShowInfoMsgDialog("About",
                 $"{Program.GetAssemblyTitle()}\n" +
                 $"Version: {verString}\n\n" +
-                $"{desc}\n\n\n" +
-                $"{Program.GetCopyrightString()}\n\n" +
-                $"{specialThanks}");
+                $"{desc}\n\n" +
+                $"{specialThanks}\n\n\n" +
+                $"{Program.GetCopyrightString()}");
         }
 
         /// <summary>
