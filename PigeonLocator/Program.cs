@@ -36,6 +36,7 @@ namespace WHampson.PigeonLocator
         public const string ConfigBlipSize = "blipSize";
         public const string ConfigShowExterminated = "showExterminated";
         public const string ConfigShowRemaining = "showRemaining";
+        public const string ConfigLastDirectory = "lastDirectory";
 
         [STAThread]
         public static void Main(string[] args)

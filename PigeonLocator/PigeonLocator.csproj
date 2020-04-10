@@ -71,6 +71,7 @@
     <ApplicationIcon>Resources\Pigeon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="FatalExceptionHandler.cs" />
     <Compile Include="FixedLengthUniqueQueue.cs" />
     <Compile Include="GameData\Seagulls.cs" />
