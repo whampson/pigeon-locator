@@ -40,12 +40,12 @@ namespace WHampson.PigeonLocator
 {
     internal partial class PigeonLocatorForm : Form
     {
-        const int ScriptSpaceSizeConsoles = 64976;
-        const int ScriptSpaceSizePC = 65055;
-
-        const int ScriptSpaceSizePC_TLAD = 39203;
-        const int ScriptSpaceSizePC_TBOGT = 43697;
-
+        private const int ScriptSpaceSizePC = 65055;
+        private const int ScriptSpaceSizePC_TLAD = 39279;
+        private const int ScriptSpaceSizePC_TBOGT = 43847;
+        private const int ScriptSpaceSizeConsoles = 64976;
+        private const int ScriptSpaceSizeConsoles_TLAD = 39203;
+        private const int ScriptSpaceSizeConsoles_TBOGT = 43697;
         private const float ZoomControlScaleFactor = 100.0f;
         private const float GameWorldScaleFactor = 500f / 256f;
         private const int MapCenterOffsetX = 500;
@@ -295,6 +295,8 @@ namespace WHampson.PigeonLocator
             }
             viewRemainingPigeonsMenuItem.Checked = showRemaining;
 
+            lastDirectory = cfg.Read(Program.ConfigLastDirectory);
+
             LoadRecentFiles();
         }
 
@@ -336,9 +338,9 @@ namespace WHampson.PigeonLocator
 
             if (Savegame.ScriptSpace == ScriptSpaceSizePC || Savegame.ScriptSpace == ScriptSpaceSizeConsoles) {
                 Episode = EpisodeType.IV;
-            } else if (Savegame.ScriptSpace == ScriptSpaceSizePC_TLAD) {
+            } else if (Savegame.ScriptSpace == ScriptSpaceSizePC_TLAD || Savegame.ScriptSpace == ScriptSpaceSizeConsoles_TLAD) {
                 Episode = EpisodeType.TLAD;
-            } else if (Savegame.ScriptSpace == ScriptSpaceSizePC_TBOGT) {
+            } else if (Savegame.ScriptSpace == ScriptSpaceSizePC_TBOGT || Savegame.ScriptSpace == ScriptSpaceSizeConsoles_TBOGT) {
                 Episode = EpisodeType.TBOGT;
             } else {
                 string title = "Episode Unknown";
