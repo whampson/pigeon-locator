@@ -8,7 +8,7 @@ Shows a map of remaining pigeons in a GTA IV game.
 - Drag'n'drop saves onto the map to load them.
 
 ## Author
-Copyright (C) 2018-2019 W. Hampson (aka thehambone)
+Copyright (C) 2018-2020 Wes Hampson (aka thehambone)
 
 ## Screenshots
 <img src="https://i.imgur.com/KjYcjIh.jpg" width="50%" height="50%" />
