@@ -108,7 +108,7 @@ namespace WHampson.PigeonLocator
 
         public static string GetCopyrightString()
         {
-            return "Copyright (C) 2018-2020 W. Hampson";
+            return "Copyright (C) 2018-2020 Wes Hampson";
         }
 
         public static IniFile GetConfig()

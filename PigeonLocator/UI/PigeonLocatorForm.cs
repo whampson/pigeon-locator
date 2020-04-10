@@ -21,21 +21,30 @@
  */
 #endregion
 
+using GTASaveData;
+using GTASaveData.GTA4;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Windows.Forms;
 using WHampson.PigeonLocator.Extensions;
 using WHampson.PigeonLocator.GameData;
-using WHampson.PigeonLocator.IvGameData;
 using WHampson.PigeonLocator.Properties;
 
 namespace WHampson.PigeonLocator
 {
     internal partial class PigeonLocatorForm : Form
     {
+        const int ScriptSpaceSizeConsoles = 64976;
+        const int ScriptSpaceSizePC = 65055;
+
+        const int ScriptSpaceSizePC_TLAD = 39203;
+        const int ScriptSpaceSizePC_TBOGT = 43697;
+
         private const float ZoomControlScaleFactor = 100.0f;
         private const float GameWorldScaleFactor = 500f / 256f;
         private const int MapCenterOffsetX = 500;
@@ -47,14 +56,20 @@ namespace WHampson.PigeonLocator
 
         private readonly int[] BlipSizes = { 24, 32, 40, 48, 56, 64 };
 
-        private IvSavegame _savegame;
-        private Vect3d[] _remainingPigeons;
+        private GTA4Save _savegame;
+        private List<Vector3> _remainingPigeons;
         private PointF _mapCoordinates;
         private bool _toolTipVisible;
         private int _blipSizeIndex;
         private bool suppressZoomTrackBarUpdate;
         private bool suppressMapZoomUpdate;
-        private FixedLengthUniqueQueue<string> recentFilesQueue;
+        private readonly FixedLengthUniqueQueue<string> recentFilesQueue;
+
+        public PigeonLocatorForm(string path)
+            : this()
+        {
+            LoadFile(path);
+        }
 
         public PigeonLocatorForm()
         {
@@ -66,12 +81,6 @@ namespace WHampson.PigeonLocator
             LoadConfig();
         }
 
-        public PigeonLocatorForm(string path)
-            : this()
-        {
-            LoadFile(path);
-        }
-
         /// <summary>
         /// Gets or sets the currently-loaded GTA IV savegame.
         /// </summary>
@@ -79,7 +88,7 @@ namespace WHampson.PigeonLocator
         /// Enables the File > File Information menu item if the
         /// the value is not null.
         /// </remarks>
-        private IvSavegame Savegame
+        private GTA4Save Savegame
         {
             get { return _savegame; }
             set {
@@ -88,38 +97,57 @@ namespace WHampson.PigeonLocator
             }
         }
 
+        private EpisodeType Episode
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Gets or sets the array of coordinates for remaining pigeons.
         /// </summary>
         /// <remarks>
         /// Also sets the text of the 'Collected' label.
         /// </remarks>
-        private Vect3d[] RemainingPigeons
+        private List<Vector3> RemainingPigeons
         {
-            get { return _remainingPigeons ?? new Vect3d[0]; }
+            get { return _remainingPigeons ?? new List<Vector3>(); }
             set {
                 _remainingPigeons = value;
 
                 string labelText = "";
                 if (_savegame != null) {
-                    int total = (_savegame.Episode == Episode.IV)
+                    int total = (Episode == EpisodeType.IV)
                         ? Pigeons.NumPigeons : Seagulls.NumSeagulls;
                     labelText = string.Format("{0}/{1} Exterminated",
-                        total - _remainingPigeons.Length,
+                        total - _remainingPigeons.Count,
                         total);
                 }
                 pigeonCountLabel.Text = labelText;
             }
         }
 
-        private Vect3d[] CollectedPigeons
+        private List<Vector3> CollectedPigeons
         {
             get {
                 if (Savegame == null) {
-                    return new Vect3d[0];
+                    return new List<Vector3>();
                 }
 
-                return _savegame.GetAllHiddenPackages().Keys.Except(RemainingPigeons).ToArray();
+                return AllPigeons.Keys.Except(RemainingPigeons).ToList();
+            }
+        }
+
+        private Dictionary<Vector3, string> AllPigeons
+        {
+            get {
+                if (Episode == EpisodeType.TLAD) {
+                    return Seagulls.TladSeagulls;
+                } else if (Episode == EpisodeType.TBOGT) {
+                    return Seagulls.TbogtSeagulls;
+                }
+
+                return Pigeons.GetAllPigeons();
             }
         }
 
@@ -313,23 +341,47 @@ namespace WHampson.PigeonLocator
             }
 
             try {
-                Savegame = IvSavegame.Load(path);
+                bool valid = SaveFile.GetFileFormat<GTA4Save>(path, out SaveFileFormat fmt);
+                if (!valid) {
+                    string title = "Invalid File Format";
+                    string msg = "Not a valid GTA IV save file!";
+                    ShowErrorMsgDialog(title, msg);
+                    return;
+                }
+                Savegame = SaveFile.Load<GTA4Save>(path, fmt);
             } catch (FileNotFoundException ex) {
                 Program.LogException(LogLevel.Info, ex);
                 string title = "File Not Found";
                 string fmt = "The following file could not be found: {0}";
                 ShowErrorMsgDialog(title, string.Format(fmt, path));
                 return;
-            } catch (InvalidDataException ex) {
-                Program.LogException(LogLevel.Info, ex);
-                string title = "Invalid File Format";
-                string msg = "Not a valid GTA IV savedata file!";
-                ShowErrorMsgDialog(title, msg);
-                return;
             }
 
-            RemainingPigeons = Savegame.GetRemainingHiddenPackageLocations();
-            StatusText = string.Format("Loaded '{0}'.", Savegame.LastMissionName);
+            if (Savegame.ScriptSpace == ScriptSpaceSizePC || Savegame.ScriptSpace == ScriptSpaceSizeConsoles) {
+                Episode = EpisodeType.IV;
+            } else if (Savegame.ScriptSpace == ScriptSpaceSizePC_TLAD) {
+                Episode = EpisodeType.TLAD;
+            } else if (Savegame.ScriptSpace == ScriptSpaceSizePC_TBOGT) {
+                Episode = EpisodeType.TBOGT;
+            } else {
+                string title = "Episode Unknown";
+                string fmt = "Unable to determine episode!\n(script size = {0})\n\nAssuming vanilla GTA IV.";
+                ShowWarnMsgDialog(title, string.Format(fmt, Savegame.ScriptSpace));
+                Episode = EpisodeType.IV;
+            }
+
+            List<Vector3> hiddenPackages = new List<Vector3>();
+            foreach (Pickup p in Savegame.Pickups.PickupsArray) {
+                if (p.PickupType == (int) PickupType.HiddenPackage &&
+                   ((p.ObjectId == (int) ObjectType.Pigeon && Episode == EpisodeType.IV) ||
+                    (p.ObjectId == (int) ObjectType.Seagull_TLAD && Episode == EpisodeType.TLAD) ||
+                    (p.ObjectId == (int) ObjectType.Seagull_TBOGT && Episode == EpisodeType.TBOGT))) {
+                    hiddenPackages.Add(new Vector3(p.Position.X, p.Position.Y, p.Position.Z));  // TODO: why does implicit operator not work?
+                }
+            }
+
+            RemainingPigeons = hiddenPackages;
+            StatusText = string.Format("Loaded '{0}'.", Savegame.Name);
 
             AddRecentFilePath(path);
             RedrawPigeonBlips();
@@ -468,14 +520,14 @@ namespace WHampson.PigeonLocator
             // Draw blips on map
             if (viewRemainingPigeonsMenuItem.Checked) {
                 blipImage.FloodFill(new Point(40, 40), Color.FromArgb(224, 224, 224, 224));
-                foreach (Vect3d loc in RemainingPigeons) {
+                foreach (Vector3 loc in RemainingPigeons) {
                     DrawBlip(mapGraphics, blipImage, loc.X, loc.Y);
                 }
             }
 
             if (viewCollectedPigeonsMenuItem.Checked) {
                 blipImage.FloodFill(new Point(40, 40), Color.FromArgb(192, 255, 192, 192));
-                foreach (Vect3d loc in CollectedPigeons) {
+                foreach (Vector3 loc in CollectedPigeons) {
                     DrawBlip(mapGraphics, blipImage, loc.X, loc.Y);
                 }
             }
@@ -509,7 +561,7 @@ namespace WHampson.PigeonLocator
         /// <param name="loc"></param>
         /// <param name="squareDim"></param>
         /// <returns></returns>
-        private Vect3d[] GetNearestPigeons(PointF loc, float squareDim)
+        private Vector3[] GetNearestPigeons(PointF loc, float squareDim)
         {
             return RemainingPigeons
                 .Where(vect => IsPointInSquare(new PointF(vect.X, vect.Y), loc, squareDim) && viewRemainingPigeonsMenuItem.Checked)
@@ -532,31 +584,13 @@ namespace WHampson.PigeonLocator
         /// </summary>
         private void ShowFileInfoDialog()
         {
-            string ep;
-            if (Savegame.Episode == Episode.IV) {
-                ep = "Grand Theft Auto IV";
-            }
-            else if (Savegame.Episode == Episode.Tlad) {
-                ep = "The Lost and Damned";
-            }
-            else if (Savegame.Episode == Episode.Tbogt) {
-                ep = "The Ballad of Gay Tony";
-            }
-            else {
-                ep = "(unknown)";
-            }
-
-            string fileInfo = string.Format(
-                "Episode: {0}\n" +
-                "Mission Name: {1}\n" +
-                "Timestamp: {2}\n" +
-                "File Size: {3} bytes\n" +
-                "File Version: {4}",
-                ep,
-                Savegame.LastMissionName,
-                Savegame.Timestamp.ToString("MMM d, yyyy HH:mm:ss"),
-                Savegame.FileSize,
-                Savegame.FileVersion);
+            string fileInfo =
+                $"Platform: {Savegame.FileFormat}\n" +
+                $"Episode: {Episode}\n" +
+                $"Version: {Savegame.SaveVersion}\n" +
+                $"Name: {Savegame.Name}\n" +
+                $"Time Last Saved: {Savegame.TimeLastSaved : MMM d, yyyy HH:mm:ss}\n" +
+                $"File Size: {Savegame.SaveSizeInBytes} bytes";
             ShowInfoMsgDialog("File Information", fileInfo);
         }
 
@@ -565,25 +599,21 @@ namespace WHampson.PigeonLocator
         /// </summary>
         private void ShowAboutDialog()
         {
+            FileVersionInfo ver = Program.GetVersion();
+
             string desc = "Maps-out all remaining flying rats in a GTA IV savegame.";
             string specialThanks = "Special thanks to GTAKid667 for testing and " +
                 "providing feedback during the development process.";
-            FileVersionInfo vers = Program.GetVersion();
+            string verString = (ver != null)
+                ? string.Format("{0} (build {1})", ver.ProductVersion, ver.FilePrivatePart)
+                : "null";
 
-            string aboutString = string.Format(
-                "{0}\n" +
-                "Version: {1}\n\n" +
-                "{2}\n\n\n" +
-                "{3}\n\n" +
-                "{4}",
-                Program.GetAssemblyTitle(),
-                (vers == null)
-                    ? "null"
-                    : string.Format("{0} (build {1})", vers.ProductVersion, vers.FilePrivatePart),
-                desc,
-                Program.GetCopyrightString() + " (aka thehambone)",
-                specialThanks);
-            ShowInfoMsgDialog("About", aboutString);
+            ShowInfoMsgDialog("About",
+                $"{Program.GetAssemblyTitle()}\n" +
+                $"Version: {verString}\n\n" +
+                $"{desc}\n\n\n" +
+                $"{Program.GetCopyrightString()}\n\n" +
+                $"{specialThanks}");
         }
 
         /// <summary>
@@ -606,6 +636,12 @@ namespace WHampson.PigeonLocator
             MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        private void ShowWarnMsgDialog(string title, string msg)
+        {
+            MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        #region Event Handlers
         private void FileOpenMenuItem_OnClick(object sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
@@ -729,7 +765,7 @@ namespace WHampson.PigeonLocator
                 return;
             }
 
-            Vect3d[] nearest = GetNearestPigeons(MapCoordinates, BlipSize * 2);
+            Vector3[] nearest = GetNearestPigeons(MapCoordinates, BlipSize * 2);
             if (nearest.Length == 0) {
                 if (ToolTipVisible) {
                     ToolTipVisible = false;
@@ -750,7 +786,8 @@ namespace WHampson.PigeonLocator
 
 
                 // Append description
-                bool hasDesc = _savegame.GetAllHiddenPackages().TryGetValue(nearest[i], out string s);
+
+                bool hasDesc = AllPigeons.TryGetValue(nearest[i], out string s);
                 bool isCollected = CollectedPigeons.Contains(nearest[i]);
                 if (isCollected) {
                     desc += "(exterminated)\n";
@@ -805,7 +842,6 @@ namespace WHampson.PigeonLocator
             if (Savegame == null) {
                 Savegame = null;
                 StatusText = "No file loaded.";
-                RemainingPigeons = new Vect3d[0];
             }
 
             // Initialize other components controlled by properties
@@ -818,6 +854,26 @@ namespace WHampson.PigeonLocator
 
             // Ensure zoom and pan with mouse and keys works out-of-the-box
             mapPanel.Focus();
+        }
+        #endregion
+
+        enum EpisodeType
+        {
+            IV,
+            TLAD,
+            TBOGT
+        };
+
+        enum ObjectType
+        {
+            Pigeon = 0x08DC,
+            Seagull_TLAD = 0x01AF,
+            Seagull_TBOGT = 0x0574
+        }
+
+        enum PickupType
+        {
+            HiddenPackage = 3
         }
     }
 }
