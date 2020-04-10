@@ -21,6 +21,7 @@
  */
 #endregion
 
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -107,7 +108,7 @@ namespace WHampson.PigeonLocator
 
         public static string GetCopyrightString()
         {
-            return "Copyright (C) 2018-2019 W. Hampson";
+            return "Copyright (C) 2018-2020 W. Hampson";
         }
 
         public static IniFile GetConfig()
