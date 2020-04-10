@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018-2019 W. Hampson
+/* Copyright (c) 2018-2020 Wes Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,37 @@
  */
 #endregion
 
-namespace WHampson.PigeonLocator.IvGameData
-{
-    /// <summary>
-    /// IDs for each game object.
-    /// </summary>
-    internal enum ObjectId : short
-    {
-        Pigeon = 0x08DC,
-        SeagullTlad = 0x01AF,
-        SeagullTbogt = 0x0574
-    }
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 
-    /// <summary>
-    /// IDs for each <see cref="Pickup"/> type.
-    /// </summary>
-    internal enum PickupId : byte
+namespace WHampson.PigeonLocator.Extensions
+{
+    public static class EnumExtensions
     {
-        HiddenPackage = 3
+        public static T GetAttribute<T>(this Enum e) where T : Attribute
+        {
+            if (e == null) {
+                return null;
+            }
+
+            MemberInfo[] m = e.GetType().GetMember(e.ToString());
+            if (m.Count() == 0) {
+                return null;
+            }
+
+            return (T) Attribute.GetCustomAttribute(m[0], typeof(T));
+        }
+
+        public static string GetDescription(this Enum value)
+        {
+            DescriptionAttribute descAttr = GetAttribute<DescriptionAttribute>(value);
+            if (descAttr == null) {
+                return value.ToString();
+            }
+
+            return descAttr.Description;
+        }
     }
 }

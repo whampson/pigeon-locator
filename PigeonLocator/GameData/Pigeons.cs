@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018-2019 W. Hampson
+/* Copyright (c) 2018-2020 Wes Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using WHampson.PigeonLocator.IvGameData;
+using System.Numerics;
 
 namespace WHampson.PigeonLocator.GameData
 {
@@ -31,9 +31,9 @@ namespace WHampson.PigeonLocator.GameData
     {
         public const int NumPigeons = 200;
 
-        public static Dictionary<Vect3d, string> GetAllPigeons()
+        public static Dictionary<Vector3, string> GetAllPigeons()
         {
-            return new Dictionary<Vect3d, string>()
+            return new Dictionary<Vector3, string>()
                 .Union(AlderneyPigeons)
                 .Union(AlgonquinPigeons)
                 .Union(BohanPigeons)
