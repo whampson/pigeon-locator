@@ -51,11 +51,11 @@ namespace WHampson.PigeonLocator
         private const int MapCenterOffsetX = 500;
         private const int MapCenterOffsetY = 750;
         private const int MaximumRecentFiles = 9;
-        private const int DefaultBlipSize = 2;
+        private const int DefaultBlipSize = 5;
         private const bool DefaultShowExterminated = false;
         private const bool DefaultShowRemaining = true;
 
-        private readonly int[] BlipSizes = { 24, 32, 40, 48, 56, 64 };
+        private readonly int[] BlipSizes = { 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136 };
 
         private GTA4Save _savegame;
         private SaveFileFormat _platform;

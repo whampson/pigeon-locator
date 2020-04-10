@@ -10,7 +10,7 @@ Shows a map of remaining pigeons in a GTA IV game.
 
 
 ## Author
-Copyright (C) 2018-2020 Wes Hampson (aka thehambone)
+Copyright (C) 2018-2020 Wes Hampson
 
 
 ## Screenshots
