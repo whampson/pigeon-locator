@@ -271,6 +271,7 @@ namespace WHampson.PigeonLocator
 
             Savegame = null;
             StatusText = "No file loaded.";
+            MapZoom = 0.30f;
         }
 
         public void LoadConfig()
