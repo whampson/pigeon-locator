@@ -14,7 +14,7 @@ Copyright (C) 2018-2020 Wes Hampson
 
 
 ## Screenshots
-<img src="https://i.imgur.com/vWgAhu6.png" width="50%" height="50%" />
+<img src="https://i.imgur.com/ZfxgLwk.png" width="50%" height="50%" />
 
 
 ## Version History
