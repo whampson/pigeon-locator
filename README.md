@@ -1,21 +1,20 @@
 # GTA IV Pigeon Locator
-Shows a map of remaining pigeons in a GTA IV game.
-
+Reveals the remaining flying rats in a saved GTA IV game.
 
 ## Features
 - Plots all remaining pigeons on a map of Liberty City.
 - Map can be zoomed and panned.
 - Hover over a pigeon blip to display location information.
-- Drag'n'drop saves onto the map to load them.
+- Drag'n'drop save files onto the map to load them.
 
+# System Requirements
+.NET Framework v4.6.1 or newer.
 
 ## Author
 Copyright (C) 2018-2020 Wes Hampson
 
-
 ## Screenshots
 <img src="https://i.imgur.com/ZfxgLwk.png" width="50%" height="50%" />
-
 
 ## Version History
 ### v1.2.0
