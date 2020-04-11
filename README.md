@@ -17,7 +17,7 @@ Copyright (C) 2018-2020 Wes Hampson
 <img src="https://i.imgur.com/ZfxgLwk.png" width="50%" height="50%" />
 
 ## Version History
-### v1.2.0
+### v1.2.1
 *10 April 2020*  
 * Added support for Xbox 360 and PlayStation 3 saves.
 * Minuimum required .NET Framework version increased to 4.6.1.
