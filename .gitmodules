@@ -1,0 +1,4 @@
+[submodule "lib/GTASaveData"]
+	path = lib/GTASaveData
+	url = https://github.com/whampson/gta-save-data
+	branch = fixes/gta4-improved-x360-support
