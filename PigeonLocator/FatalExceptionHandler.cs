@@ -69,8 +69,12 @@ namespace WHampson.PigeonLocator
             }
             Console.Error.WriteLine("Crash dump written to {0}", Path.GetFullPath(dumpFileName));
 
+#if DEBUG
+            Debugger.Break();
+#else
             // Display error dialog
             DisplayFatalExceptionMessage(e, dumpFileName);
+#endif
         }
 
         private static void DisplayFatalExceptionMessage(Exception e, string crashDumpFileName)
