@@ -22,7 +22,7 @@
 #endregion
 
 using GTASaveData;
-using GTASaveData.GTA4;
+using GTASaveData.IV;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -58,9 +58,10 @@ namespace WHampson.PigeonLocator
         private readonly int[] BlipSizes = { 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136 };
 
         private GTA4Save _savegame;
-        private SaveFileFormat _platform;
+        private FileType _platform;
         private EpisodeType _episode;
         private List<Vector3> _remainingPigeons;
+        private List<Pickup> _hiddenPackages;
         private PointF _mapCoordinates;
         private bool _toolTipVisible;
         private int _blipSizeIndex;
@@ -77,6 +78,8 @@ namespace WHampson.PigeonLocator
 
         public PigeonLocatorForm()
         {
+            _remainingPigeons = new List<Vector3>();
+            _hiddenPackages = new List<Pickup>();
             suppressZoomTrackBarUpdate = false;
             suppressMapZoomUpdate = false;
             lastDirectory = GetDefaultSaveDirectory();
@@ -96,13 +99,13 @@ namespace WHampson.PigeonLocator
             }
         }
 
-        private SaveFileFormat Platform
+        private FileType Platform
         {
             get { return _platform; }
             set {
                 _platform = value;
-                platformLabel.Text = Savegame.FileFormat.Name;
-                platformLabel.ToolTipText = Savegame.FileFormat.Description;
+                platformLabel.Text = Savegame.Params.FileType.Id;
+                platformLabel.ToolTipText = Savegame.Params.FileType.Id;
             }
         }
 
@@ -118,7 +121,7 @@ namespace WHampson.PigeonLocator
 
         private List<Vector3> RemainingPigeons
         {
-            get { return _remainingPigeons ?? new List<Vector3>(); }
+            get { return _remainingPigeons; }
             set {
                 _remainingPigeons = value;
 
@@ -311,62 +314,101 @@ namespace WHampson.PigeonLocator
         /// </param>
         private void LoadFile(string path)
         {
+            string filename = Path.GetFileName(path);
+
             if (Directory.Exists(path)) {
-                string title = "Not A File";
-                string fmt = "{0} is a directory.";
-                ShowErrorMsgDialog(title, string.Format(fmt, path));
+                ShowErrorMsgDialog("Input Error", $"'{filename}' is a directory.");
                 return;
             }
 
             try {
-                bool valid = SaveFile.GetFileFormat<GTA4Save>(path, out SaveFileFormat fmt);
+                bool valid = GTA4Save.TryGetFileType(path, out FileType fmt);
                 if (!valid) {
-                    string title = "Invalid File Format";
-                    string msg = "Not a valid GTA IV save file!";
-                    ShowErrorMsgDialog(title, msg);
+                    ;
+                    string msg = $"'{filename}' is not a valid GTA IV save file!";
+                    ShowErrorMsgDialog("Invalid Save", msg);
                     return;
                 }
 
-                Savegame = SaveFile.Load<GTA4Save>(path, fmt);
+                GTA4Save newSave = GTA4Save.LoadFromFile(path, fmt);
+                if (newSave != null) {
+                    CloseCurrentFile();
+                }
+
+                Savegame = newSave;
                 Platform = fmt;
             } catch (FileNotFoundException ex) {
                 Program.LogException(LogLevel.Info, ex);
-                string title = "File Not Found";
-                string fmt = "The following file could not be found: {0}";
-                ShowErrorMsgDialog(title, string.Format(fmt, path));
+                ShowErrorMsgDialog("File Not Found", $"The following file does not exist: {path}");
+                return;
+            } catch (InvalidDataException ex) {
+                Program.LogException(LogLevel.Info, ex);
+                ShowErrorMsgDialog("Invalid Save", $"Error loading '{filename}'.\n\n{ex.Source}: {ex.Message}");
                 return;
             }
 
-            if (Savegame.ScriptSpace == ScriptSpaceSizePC || Savegame.ScriptSpace == ScriptSpaceSizeConsoles) {
+            int scriptSpaceSize = Savegame.Header.ScriptSpaceSize;
+            if (scriptSpaceSize == ScriptSpaceSizePC || scriptSpaceSize == ScriptSpaceSizeConsoles) {
                 Episode = EpisodeType.IV;
-            } else if (Savegame.ScriptSpace == ScriptSpaceSizePC_TLAD || Savegame.ScriptSpace == ScriptSpaceSizeConsoles_TLAD) {
+            } else if (scriptSpaceSize == ScriptSpaceSizePC_TLAD || scriptSpaceSize == ScriptSpaceSizeConsoles_TLAD) {
                 Episode = EpisodeType.TLAD;
-            } else if (Savegame.ScriptSpace == ScriptSpaceSizePC_TBOGT || Savegame.ScriptSpace == ScriptSpaceSizeConsoles_TBOGT) {
+            } else if (scriptSpaceSize == ScriptSpaceSizePC_TBOGT || scriptSpaceSize == ScriptSpaceSizeConsoles_TBOGT) {
                 Episode = EpisodeType.TBOGT;
             } else {
-                string title = "Episode Unknown";
                 string fmt = "Unable to determine episode!\n(script size = {0})\n\nAssuming vanilla GTA IV.";
-                ShowWarnMsgDialog(title, string.Format(fmt, Savegame.ScriptSpace));
+                ShowWarnMsgDialog("Episode Unknown", string.Format(fmt, scriptSpaceSize));
                 Episode = EpisodeType.IV;
             }
 
-            List<Vector3> hiddenPackages = new List<Vector3>();
-            foreach (Pickup p in Savegame.Pickups.PickupsArray) {
-                if (p.PickupType == (int) PickupType.HiddenPackage &&
-                   ((p.ObjectId == (int) ObjectType.Pigeon && Episode == EpisodeType.IV) ||
-                    (p.ObjectId == (int) ObjectType.Seagull_TLAD && Episode == EpisodeType.TLAD) ||
-                    (p.ObjectId == (int) ObjectType.Seagull_TBOGT && Episode == EpisodeType.TBOGT))) {
-                    hiddenPackages.Add(new Vector3(p.Position.X, p.Position.Y, p.Position.Z));  // TODO: why does implicit operator not work?
+#if DEBUG
+            Dictionary<ObjectType, List<Pickup>> objectIds = new Dictionary<ObjectType, List<Pickup>>();
+            Dictionary<PickupType, List<Pickup>> pickupTypes = new Dictionary<PickupType, List<Pickup>>();
+            Dictionary<byte, List<Pickup>> flags = new Dictionary<byte, List<Pickup>>();
+            Dictionary<byte, List<Pickup>> flags2 = new Dictionary<byte, List<Pickup>>();
+#endif
+
+            foreach (Pickup p in Savegame.Pickups) {
+                if (p.Index != -1 && p.PickupType == PickupType.PickupOnce &&
+                    ((p.ObjectId == ObjectType.cj_pigeon_05 && Episode == EpisodeType.IV) ||
+                     (p.ObjectId == ObjectType.tlad_cj_seagull && Episode == EpisodeType.TLAD) ||
+                     (p.ObjectId == ObjectType.tbogt_cj_seagull && Episode == EpisodeType.TBOGT))) {
+                     _hiddenPackages.Add(p);
                 }
+#if DEBUG
+                if (p.Index != -1)
+                {
+                    if (!objectIds.ContainsKey(p.ObjectId)) objectIds.Add(p.ObjectId, new List<Pickup>()); objectIds[p.ObjectId].Add(p);
+                    if (!pickupTypes.ContainsKey(p.PickupType)) pickupTypes.Add(p.PickupType, new List<Pickup>()); pickupTypes[p.PickupType].Add(p);
+                    if (!flags.ContainsKey(p.Flags)) flags.Add(p.Flags, new List<Pickup>()); flags[p.Flags].Add(p);
+                    if (!flags2.ContainsKey(p.Flags2)) flags2.Add(p.Flags2, new List<Pickup>()); flags2[p.Flags2].Add(p);
+                }
+#endif
             }
 
-            RemainingPigeons = hiddenPackages;
-            StatusText = string.Format("Loaded '{0}'.", Savegame.Name);
-            
+            string title = !string.IsNullOrEmpty(Savegame.Title) ? $"'{Savegame.Title}'" : "File";
+            int count = _hiddenPackages.Count;
+
+            RemainingPigeons = _hiddenPackages.Select(p => p.Position).ToList();
+            StatusText = string.Format($"{(title)} loaded. ");
+            StatusText += (count == 0)
+                ? "No more flying rats remaining!"
+                : $"{count} flying rat{(count != 1 ? "s" : "")} remaining.";
 
             AddRecentFilePath(path);
             RedrawPigeonBlips();
         }
+
+#if DEBUG
+        private Pickup GetPickupFromLocation(Vector3 location)
+        {
+            var result = _hiddenPackages.Where(p => p.Position == location);
+            if (result.Count() != 1)
+            {
+                Debugger.Break();
+            }
+            return result.FirstOrDefault();
+        }
+#endif
 
         /// <summary>
         /// Adds a new path to the queue of recently-opened files,
@@ -537,7 +579,7 @@ namespace WHampson.PigeonLocator
         }
 
         /// <summary>
-        /// Gets all nearest pigeons 
+        /// Gets all nearest pigeons
         /// </summary>
         /// <param name="loc"></param>
         /// <param name="squareDim"></param>
@@ -565,12 +607,12 @@ namespace WHampson.PigeonLocator
         private void ShowFileInfoDialog()
         {
             string fileInfo =
-                $"Platform: {Savegame.FileFormat}\n" +
+                $"Platform: {Savegame.Params.FileType}\n" +
                 $"Episode: {Episode}\n" +
-                $"Version: {Savegame.SaveVersion}\n" +
-                $"Name: {Savegame.Name}\n" +
-                $"Time Last Saved: {Savegame.TimeLastSaved : MMM d, yyyy HH:mm:ss}\n" +
-                $"File Size: {Savegame.SaveSizeInBytes} bytes";
+                $"Version: {Savegame.Header.Version}\n" +
+                $"Name: {Savegame.Title}\n" +
+                //$"Time Last Saved: {Savegame.TimeLastSaved : MMM d, yyyy HH:mm:ss}\n" +
+                $"File Size: {Savegame.Header.SaveSizeInBytes} bytes";
             ShowInfoMsgDialog("File Information", fileInfo);
         }
 
@@ -619,6 +661,12 @@ namespace WHampson.PigeonLocator
         private void ShowWarnMsgDialog(string title, string msg)
         {
             MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void CloseCurrentFile()
+        {
+            _hiddenPackages.Clear();
+            Savegame = null;
         }
 
         #region Event Handlers
@@ -689,17 +737,17 @@ namespace WHampson.PigeonLocator
 
         private void ThrowExceptionMenuItem_OnClick(object sender, EventArgs e)
         {
-            #if DEBUG
+#if DEBUG
             throw new Exception("Test exception.");
-            #endif
+#endif
         }
 
         private void CauseIndexOutOfRangeExceptionMenuItem_OnClick(object sender, EventArgs e)
         {
-            #if DEBUG
+#if DEBUG
             byte[] b = new byte[4];
             b[4] = 0xFE;
-            #endif
+#endif
         }
 
         private void ZoomTrackBar_OnMouseUp(object sender, MouseEventArgs e)
@@ -748,8 +796,8 @@ namespace WHampson.PigeonLocator
                 return;
             }
 
-            Vector3[] nearest = GetNearestPigeons(MapCoordinates, BlipSize * 2);
-            if (nearest.Length == 0) {
+            Vector3[] nearestPigeons = GetNearestPigeons(MapCoordinates, BlipSize * 2);
+            if (nearestPigeons.Length == 0) {
                 if (ToolTipVisible) {
                     ToolTipVisible = false;
                 }
@@ -761,17 +809,16 @@ namespace WHampson.PigeonLocator
             }
 
             string desc = "";
-            for (int i = 0; i < nearest.Length; i++) {
+            for (int i = 0; i < nearestPigeons.Length; i++) {
                 // Append index (if necessary)
-                if (nearest.Length > 1) {
+                if (nearestPigeons.Length > 1) {
                     desc += (i + 1) + ") ";
                 }
 
-
                 // Append description
-
-                bool hasDesc = AllPigeons.TryGetValue(nearest[i], out string s);
-                bool isCollected = CollectedPigeons.Contains(nearest[i]);
+                Vector3 pos = nearestPigeons[i];
+                bool hasDesc = AllPigeons.TryGetValue(pos, out string s);
+                bool isCollected = CollectedPigeons.Contains(pos);
                 if (isCollected) {
                     desc += "(exterminated)\n";
                 }
@@ -781,8 +828,16 @@ namespace WHampson.PigeonLocator
                     desc += "(no information available)";
                 }
 
+#if DEBUG
+                Pickup p = GetPickupFromLocation(pos);
+                desc += "\n";
+                desc += $"\n{p.Position}";
+                desc += $"\nType={p.PickupType:X}h Index={p.Index:X}h ObjectId={p.ObjectId:X}h";
+                desc += $"\nAmount={p.Amount} Timer={p.Timer} Flags={p.Flags:X}`{p.Flags2:X}h";
+#endif
+
                 // Add a blank line (if necessary)
-                if (nearest.Length > 1 && i != nearest.Length - 1) {
+                if (nearestPigeons.Length > 1 && i != nearestPigeons.Length - 1) {
                     desc += "\n\n";
                 }
             }
@@ -815,10 +870,10 @@ namespace WHampson.PigeonLocator
         {
             base.OnLoad(e);
 
-            #if DEBUG
+#if DEBUG
             debugMenu.Enabled = true;
             debugMenu.Visible = true;
-            #endif
+#endif
 
             // If no file was loaded at startup, ensure UI components reflect
             // that nothing was loaded
@@ -850,17 +905,5 @@ namespace WHampson.PigeonLocator
             [Description("The Ballad Of Gay Tony")]
             TBOGT
         };
-
-        enum ObjectType
-        {
-            Pigeon = 0x08DC,
-            Seagull_TLAD = 0x01AF,
-            Seagull_TBOGT = 0x0574
-        }
-
-        enum PickupType
-        {
-            HiddenPackage = 3
-        }
     }
 }
