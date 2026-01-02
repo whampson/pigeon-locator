@@ -624,8 +624,9 @@ namespace WHampson.PigeonLocator
             FileVersionInfo ver = Program.GetVersion();
 
             string desc = "Reveals the remaining flying rats in a saved GTA IV game.";
-            string specialThanks = "Special thanks to GTAKid667 for testing and " +
-                "providing feedback during the development process.";
+            string specialThanks = "Thanks to SendDoods, juanpab05, and benmaxsawyer for " +
+                "reporting issues and providing save files for testing. Special thanks to " +
+                "GTAKid667 for testing and providing feedback during development.";
             string verString = (ver != null)
                 ? string.Format("{0} (build {1})", ver.ProductVersion, ver.FilePrivatePart)
                 : "null";
@@ -635,7 +636,7 @@ namespace WHampson.PigeonLocator
                 $"Version: {verString}\n\n" +
                 $"{desc}\n\n" +
                 $"{specialThanks}\n\n\n" +
-                $"{Program.GetCopyrightString()}");
+                $"{Program.GetCopyrightString()}.");
         }
 
         /// <summary>
