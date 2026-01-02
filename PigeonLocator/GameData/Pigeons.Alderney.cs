@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018-2020 Wes Hampson
+/* Copyright (c) 2018-2026 Wes Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -201,7 +201,7 @@ namespace WHampson.PigeonLocator.GameData
                 "Berchem\n" +
                 "On top of the construction shed, on the\n" +
                 "side of the road, in front of Cluckin' Bell." },
-            
+
             // Alderney 28
             { new Vector3(-1246.1f, 626.62f, -1.97f),
                 "Normandy\n" +
@@ -380,7 +380,7 @@ namespace WHampson.PigeonLocator.GameData
             { new Vector3(-1678.84f, -486.32f, 51.728f),
                 "Acter Industrial Park\n" +
                 "On the center median of Plumbers Skyway." },
-            
+
             // Alderney 56
             { new Vector3(-1445f, -540.52f, 8.6f),
                 "Acter Industrial Park\n" +

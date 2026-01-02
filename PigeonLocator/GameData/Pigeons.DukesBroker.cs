@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018-2020 Wes Hampson
+/* Copyright (c) 2018-2026 Wes Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -299,34 +299,34 @@ namespace WHampson.PigeonLocator.GameData
                 "back alley. Toss a grenade or Molotov onto the\n" +
                 "rooftop, or climb onto the roof using the dumpster\n" +
                 "below the fire escape." },
-                
+
             // Dukes/Broker 41
             { new Vector3(956.22f, -292.42f, 24.628f),
                 "Hove Beach\n" +
                 "On top of the Perestroika theater marquee." },
-                
+
             // Dukes/Broker 42
             { new Vector3(1288.84f, -316.48f, 24.05f),
                 "Firefly Projects\n" +
                 "On a sidewalk brick wall, near the broken\n" +
                 "section under the tracks and expressway." },
-                
+
             // Dukes/Broker 43
             { new Vector3(724.28f, -440.55f, 2.265f),
                 "Hove Beach\n" +
                 "On a pier post under the Broker Bridge." },
-                
+
             // Dukes/Broker 44
             { new Vector3(1162.44f, -458f, 17.195f),
                 "Hove Beach\n" +
                 "On top of a door that faces the small\n" +
                 "courtyard park in an alley." },
-                
+
             // Dukes/Broker 45
             { new Vector3(1513.12f, -420.3f, 32.502f),
                 "Firefly Projects\n" +
                 "On the center median on the expressway." },
-                
+
             // Dukes/Broker 46
             { new Vector3(822.59f, -585.99f, 16.785f),
                 "Firefly Island\n" +
