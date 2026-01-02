@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018-2020 Wes Hampson
+/* Copyright (c) 2018-2026 Wes Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -69,8 +69,12 @@ namespace WHampson.PigeonLocator
             }
             Console.Error.WriteLine("Crash dump written to {0}", Path.GetFullPath(dumpFileName));
 
+#if DEBUG
+            Debugger.Break();
+#else
             // Display error dialog
             DisplayFatalExceptionMessage(e, dumpFileName);
+#endif
         }
 
         private static void DisplayFatalExceptionMessage(Exception e, string crashDumpFileName)

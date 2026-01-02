@@ -1,5 +1,5 @@
 ﻿#region License
-/* Copyright (c) 2018-2020 Wes Hampson
+/* Copyright (c) 2018-2026 Wes Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -92,9 +92,9 @@ namespace WHampson.PigeonLocator
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.zoomTrackBar)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // menuStrip
-            // 
+            //
             this.menuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenu,
@@ -107,9 +107,9 @@ namespace WHampson.PigeonLocator
             this.menuStrip.Size = new System.Drawing.Size(840, 26);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
-            // 
+            //
             // fileMenu
-            // 
+            //
             this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileOpenMenuItem,
             this.fileOpenRecentMenuItem,
@@ -120,58 +120,58 @@ namespace WHampson.PigeonLocator
             this.fileMenu.Name = "fileMenu";
             this.fileMenu.Size = new System.Drawing.Size(46, 24);
             this.fileMenu.Text = "&File";
-            // 
+            //
             // fileOpenMenuItem
-            // 
+            //
             this.fileOpenMenuItem.Name = "fileOpenMenuItem";
             this.fileOpenMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.fileOpenMenuItem.Size = new System.Drawing.Size(233, 26);
             this.fileOpenMenuItem.Text = "&Open...";
             this.fileOpenMenuItem.Click += new System.EventHandler(this.FileOpenMenuItem_OnClick);
-            // 
+            //
             // fileOpenRecentMenuItem
-            // 
+            //
             this.fileOpenRecentMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.noRecentItemsMenuItem});
             this.fileOpenRecentMenuItem.Name = "fileOpenRecentMenuItem";
             this.fileOpenRecentMenuItem.Size = new System.Drawing.Size(233, 26);
             this.fileOpenRecentMenuItem.Text = "Open Recent";
-            // 
+            //
             // noRecentItemsMenuItem
-            // 
+            //
             this.noRecentItemsMenuItem.Enabled = false;
             this.noRecentItemsMenuItem.Name = "noRecentItemsMenuItem";
             this.noRecentItemsMenuItem.Size = new System.Drawing.Size(204, 26);
             this.noRecentItemsMenuItem.Text = "(no recent items)";
-            // 
+            //
             // fileMenuSeparator1
-            // 
+            //
             this.fileMenuSeparator1.Name = "fileMenuSeparator1";
             this.fileMenuSeparator1.Size = new System.Drawing.Size(230, 6);
-            // 
+            //
             // fileInformationMenuItem
-            // 
+            //
             this.fileInformationMenuItem.Enabled = false;
             this.fileInformationMenuItem.Name = "fileInformationMenuItem";
             this.fileInformationMenuItem.Size = new System.Drawing.Size(233, 26);
             this.fileInformationMenuItem.Text = "View File &Information";
             this.fileInformationMenuItem.Click += new System.EventHandler(this.FileInformationMenuItem_OnClick);
-            // 
+            //
             // fileMenuSeparator2
-            // 
+            //
             this.fileMenuSeparator2.Name = "fileMenuSeparator2";
             this.fileMenuSeparator2.Size = new System.Drawing.Size(230, 6);
-            // 
+            //
             // exitMenuItem
-            // 
+            //
             this.exitMenuItem.Name = "exitMenuItem";
             this.exitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
             this.exitMenuItem.Size = new System.Drawing.Size(233, 26);
             this.exitMenuItem.Text = "E&xit";
             this.exitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_OnClick);
-            // 
+            //
             // viewMenu
-            // 
+            //
             this.viewMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewRemainingPigeonsMenuItem,
             this.viewCollectedPigeonsMenuItem,
@@ -183,9 +183,9 @@ namespace WHampson.PigeonLocator
             this.viewMenu.Name = "viewMenu";
             this.viewMenu.Size = new System.Drawing.Size(55, 24);
             this.viewMenu.Text = "&View";
-            // 
+            //
             // viewRemainingPigeonsMenuItem
-            // 
+            //
             this.viewRemainingPigeonsMenuItem.Checked = true;
             this.viewRemainingPigeonsMenuItem.CheckOnClick = true;
             this.viewRemainingPigeonsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -194,23 +194,23 @@ namespace WHampson.PigeonLocator
             this.viewRemainingPigeonsMenuItem.Size = new System.Drawing.Size(295, 26);
             this.viewRemainingPigeonsMenuItem.Text = "Pigeons &Remaining";
             this.viewRemainingPigeonsMenuItem.Click += new System.EventHandler(this.ViewRemainingPigeonsMenuItem_OnClick);
-            // 
+            //
             // viewCollectedPigeonsMenuItem
-            // 
+            //
             this.viewCollectedPigeonsMenuItem.CheckOnClick = true;
             this.viewCollectedPigeonsMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.viewCollectedPigeonsMenuItem.Name = "viewCollectedPigeonsMenuItem";
             this.viewCollectedPigeonsMenuItem.Size = new System.Drawing.Size(295, 26);
             this.viewCollectedPigeonsMenuItem.Text = "Pigeons &Exterminated";
             this.viewCollectedPigeonsMenuItem.Click += new System.EventHandler(this.ViewCollectedPigeonsMenuItem_OnClick);
-            // 
+            //
             // viewMenuSeparator1
-            // 
+            //
             this.viewMenuSeparator1.Name = "viewMenuSeparator1";
             this.viewMenuSeparator1.Size = new System.Drawing.Size(292, 6);
-            // 
+            //
             // viewLocationToolTipsMenuItem
-            // 
+            //
             this.viewLocationToolTipsMenuItem.Checked = true;
             this.viewLocationToolTipsMenuItem.CheckOnClick = true;
             this.viewLocationToolTipsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -218,46 +218,46 @@ namespace WHampson.PigeonLocator
             this.viewLocationToolTipsMenuItem.Name = "viewLocationToolTipsMenuItem";
             this.viewLocationToolTipsMenuItem.Size = new System.Drawing.Size(295, 26);
             this.viewLocationToolTipsMenuItem.Text = "Location &Tooltips";
-            // 
+            //
             // viewMenuSeparator2
-            // 
+            //
             this.viewMenuSeparator2.Name = "viewMenuSeparator2";
             this.viewMenuSeparator2.Size = new System.Drawing.Size(292, 6);
-            // 
+            //
             // increaseBlipSizeMenuItem
-            // 
+            //
             this.increaseBlipSizeMenuItem.Name = "increaseBlipSizeMenuItem";
             this.increaseBlipSizeMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
             this.increaseBlipSizeMenuItem.Size = new System.Drawing.Size(295, 26);
             this.increaseBlipSizeMenuItem.Text = "&Increase Blip Size";
             this.increaseBlipSizeMenuItem.Click += new System.EventHandler(this.IncreaseBlipSizeMenuItem_OnClick);
-            // 
+            //
             // decreaseBlipSizeMenuItem
-            // 
+            //
             this.decreaseBlipSizeMenuItem.Name = "decreaseBlipSizeMenuItem";
             this.decreaseBlipSizeMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
             this.decreaseBlipSizeMenuItem.Size = new System.Drawing.Size(295, 26);
             this.decreaseBlipSizeMenuItem.Text = "&Decrease Blip Size";
             this.decreaseBlipSizeMenuItem.Click += new System.EventHandler(this.DecreaseBlipSizeMenuItem_OnClick);
-            // 
+            //
             // helpMenu
-            // 
+            //
             this.helpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutMenuItem});
             this.helpMenu.Name = "helpMenu";
             this.helpMenu.Size = new System.Drawing.Size(55, 24);
             this.helpMenu.Text = "&Help";
-            // 
+            //
             // aboutMenuItem
-            // 
+            //
             this.aboutMenuItem.Name = "aboutMenuItem";
             this.aboutMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
             this.aboutMenuItem.Size = new System.Drawing.Size(157, 26);
             this.aboutMenuItem.Text = "&About";
             this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_OnClick);
-            // 
+            //
             // debugMenu
-            // 
+            //
             this.debugMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exceptionsMenuItem});
             this.debugMenu.Enabled = false;
@@ -265,32 +265,32 @@ namespace WHampson.PigeonLocator
             this.debugMenu.Size = new System.Drawing.Size(68, 24);
             this.debugMenu.Text = "Debug";
             this.debugMenu.Visible = false;
-            // 
+            //
             // exceptionsMenuItem
-            // 
+            //
             this.exceptionsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.throwExceptionMenuItem,
             this.causeIndexOutOfRangeExceptionMenuItem});
             this.exceptionsMenuItem.Name = "exceptionsMenuItem";
             this.exceptionsMenuItem.Size = new System.Drawing.Size(163, 26);
             this.exceptionsMenuItem.Text = "Exceptions";
-            // 
+            //
             // throwExceptionMenuItem
-            // 
+            //
             this.throwExceptionMenuItem.Name = "throwExceptionMenuItem";
             this.throwExceptionMenuItem.Size = new System.Drawing.Size(318, 26);
             this.throwExceptionMenuItem.Text = "Throw Test Exception";
             this.throwExceptionMenuItem.Click += new System.EventHandler(this.ThrowExceptionMenuItem_OnClick);
-            // 
+            //
             // causeIndexOutOfRangeExceptionMenuItem
-            // 
+            //
             this.causeIndexOutOfRangeExceptionMenuItem.Name = "causeIndexOutOfRangeExceptionMenuItem";
             this.causeIndexOutOfRangeExceptionMenuItem.Size = new System.Drawing.Size(318, 26);
             this.causeIndexOutOfRangeExceptionMenuItem.Text = "Cause IndexOutOfRangeException";
             this.causeIndexOutOfRangeExceptionMenuItem.Click += new System.EventHandler(this.CauseIndexOutOfRangeExceptionMenuItem_OnClick);
-            // 
+            //
             // statusStrip
-            // 
+            //
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel,
@@ -306,48 +306,48 @@ namespace WHampson.PigeonLocator
             this.statusStrip.SizingGrip = false;
             this.statusStrip.TabIndex = 3;
             this.statusStrip.Text = "statusStrip";
-            // 
+            //
             // statusLabel
-            // 
+            //
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(67, 24);
             this.statusLabel.Text = "<status>";
-            // 
+            //
             // statusStripPaddingLabel
-            // 
+            //
             this.statusStripPaddingLabel.Name = "statusStripPaddingLabel";
             this.statusStripPaddingLabel.Size = new System.Drawing.Size(496, 24);
             this.statusStripPaddingLabel.Spring = true;
-            // 
+            //
             // pigeonCountLabel
-            // 
+            //
             this.pigeonCountLabel.AutoSize = false;
             this.pigeonCountLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.pigeonCountLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
             this.pigeonCountLabel.Name = "pigeonCountLabel";
             this.pigeonCountLabel.Size = new System.Drawing.Size(75, 24);
             this.pigeonCountLabel.Text = "<count>";
-            // 
+            //
             // episodeLabel
-            // 
+            //
             this.episodeLabel.AutoSize = false;
             this.episodeLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.episodeLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
             this.episodeLabel.Name = "episodeLabel";
             this.episodeLabel.Size = new System.Drawing.Size(75, 24);
             this.episodeLabel.Text = "<episode>";
-            // 
+            //
             // platformLabel
-            // 
+            //
             this.platformLabel.AutoSize = false;
             this.platformLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.platformLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
             this.platformLabel.Name = "platformLabel";
             this.platformLabel.Size = new System.Drawing.Size(75, 24);
             this.platformLabel.Text = "<platform>";
-            // 
+            //
             // zoomTrackBar
-            // 
+            //
             this.zoomTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.zoomTrackBar.LargeChange = 20;
             this.zoomTrackBar.Location = new System.Drawing.Point(607, 588);
@@ -363,9 +363,9 @@ namespace WHampson.PigeonLocator
             this.zoomTrackBar.Value = 20;
             this.zoomTrackBar.Scroll += new System.EventHandler(this.ZoomTrackBar_OnScroll);
             this.zoomTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ZoomTrackBar_OnMouseUp);
-            // 
+            //
             // mapXLabel
-            // 
+            //
             this.mapXLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.mapXLabel.AutoSize = true;
             this.mapXLabel.Location = new System.Drawing.Point(11, 598);
@@ -373,9 +373,9 @@ namespace WHampson.PigeonLocator
             this.mapXLabel.Size = new System.Drawing.Size(73, 17);
             this.mapXLabel.TabIndex = 7;
             this.mapXLabel.Text = "X: <x_val>";
-            // 
+            //
             // mapYLabel
-            // 
+            //
             this.mapYLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.mapYLabel.AutoSize = true;
             this.mapYLabel.Location = new System.Drawing.Point(11, 618);
@@ -383,15 +383,15 @@ namespace WHampson.PigeonLocator
             this.mapYLabel.Size = new System.Drawing.Size(74, 17);
             this.mapYLabel.TabIndex = 8;
             this.mapYLabel.Text = "Y: <y_val>";
-            // 
+            //
             // toolTipTimer
-            // 
+            //
             this.toolTipTimer.Enabled = true;
             this.toolTipTimer.Interval = 500;
             this.toolTipTimer.Tick += new System.EventHandler(this.ToolTipTimer_OnTick);
-            // 
+            //
             // zoomLabel
-            // 
+            //
             this.zoomLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.zoomLabel.Location = new System.Drawing.Point(733, 640);
             this.zoomLabel.Name = "zoomLabel";
@@ -399,11 +399,11 @@ namespace WHampson.PigeonLocator
             this.zoomLabel.TabIndex = 9;
             this.zoomLabel.Text = "<percent>";
             this.zoomLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
+            //
             // mapPanel
-            // 
-            this.mapPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.mapPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mapPanel.CanvasSize = new System.Drawing.Size(3072, 2304);
             this.mapPanel.Cursor = System.Windows.Forms.Cursors.Cross;
@@ -420,9 +420,9 @@ namespace WHampson.PigeonLocator
             this.mapPanel.Zoom = 0.2F;
             this.mapPanel.ZoomEvent += new WHampson.PigeonLocator.ImagePanel.ZoomEventHandler(this.MapPanel_OnZoom);
             this.mapPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MapPanel_OnMouseMove);
-            // 
+            //
             // PigeonLocatorForm
-            // 
+            //
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

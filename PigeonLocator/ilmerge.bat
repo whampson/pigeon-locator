@@ -1,6 +1,8 @@
 @echo off
+pushd %~dp0
 
-set VERSION=3.0.29
+:: set VERSION=3.0.29
+set VERSION=3.0.41
 set ILMERGE=..\packages\ILMerge.%VERSION%\tools\net452\ILMerge.exe
 
 set EXENAME=PigeonLocator.exe
@@ -17,6 +19,8 @@ echo Merging dependencies...
     bin\%CONFIG%\WpfEssentials.dll ^
     bin\%CONFIG%\WpfEssentials.Win32.dll ^
     bin\%CONFIG%\GTASaveData.Core.dll ^
-    bin\%CONFIG%\GTASaveData.GTA4.dll
+    bin\%CONFIG%\GTASaveData.IV.dll
 
 if errorlevel 0 echo Wrote file: %OUTFILE%
+
+popd
