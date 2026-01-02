@@ -1,5 +1,5 @@
 #region License
-/* Copyright (c) 2018-2020 Wes Hampson
+/* Copyright (c) 2018-2026 Wes Hampson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,14 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("GTA IV Pigeon Locator")]
-[assembly: AssemblyDescription("Reveals the remaining flying rats in a saved GTA IV game.")]
+[assembly: AssemblyDescription("Find that last flying rat!")]
 [assembly: AssemblyProduct("GTA IV Pigeon Locator")]
-[assembly: AssemblyCopyright("Copyright (C) 2018-2020 Wes Hampson")]
+[assembly: AssemblyCopyright("Copyright (C) 2018-2026 Wes Hampson")]
 
 [assembly: ComVisible(false)]
 [assembly: Guid("79650479-48f6-4af7-aa25-f64435d1c574")]
 
 
-[assembly: AssemblyVersion("1.2.1.809")]
-[assembly: AssemblyFileVersion("1.2.1.809")]
-[assembly: AssemblyInformationalVersion("1.2.1")]
+[assembly: AssemblyVersion("1.3.0.882")]
+[assembly: AssemblyFileVersion("1.3.0.882")]
+[assembly: AssemblyInformationalVersion("1.3.0")]
