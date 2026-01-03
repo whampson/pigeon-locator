@@ -8,7 +8,7 @@ Reveals the remaining flying rats in a saved GTA IV game.
 - Drag'n'drop save files onto the map to load them.
 
 # System Requirements
-[.NET Framework v4.8.1](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481) or newer.
+[.NET Framework v4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48) or newer.
 
 ## Author
 Copyright (C) 2018-2026 Wes Hampson
@@ -20,7 +20,7 @@ Copyright (C) 2018-2026 Wes Hampson
 ### v1.3.0
 *02 January 2026*
 * Fixed bugs causing issues with Xbox 360 and PlayStation 3 saves.
-* Minimum required .NET Framework version bumped to 4.8.1.
+* Minimum required .NET Framework version bumped to 4.8.
 
 ### v1.2.1
 *10 April 2020*
